@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import 'leaflet';
-import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
+import {Component} from "@angular/core";
+import "leaflet";
+import {MapComponent} from "../../components/map/map";
+import {NavController} from "ionic-angular";
 
 @Component({
   selector: 'page-home',
@@ -9,34 +9,23 @@ import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 })
 export class HomePage {
 
+  /** Instance of a Leaflet Map. */
+  map: any;
+
   constructor(
     public navCtrl: NavController,
-    public geoLoc: GeoLocComponent
+    public mapComponent: MapComponent
   ) {
 
   }
 
-  /**
-   * Bringing up the map centered on current location.
-   */
   ngOnInit(): void {
-    let zoomLevel = 14,
-      map = L.map('map');
-      // .setView(this.geoLoc.currentPosition(), zoomLevel);
+    /* Bringing up the map centered on current location. */
+    this.mapComponent.showMap();
+  }
 
-    this.geoLoc.watchPosition((position) => {
-      zoomLevel = map.getZoom();
-      map.setView([
-        position.coords.latitude,
-        position.coords.longitude
-      ], zoomLevel);
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-         '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-    }).addTo(map);
-
+  ngOnDestroy(): void {
+    this.mapComponent.closeMap();
   }
 
 }

@@ -25,6 +25,8 @@ export class GeoLocComponent {
     timeout: 10000,
     enableHighAccuracy: true
   };
+  /* Tracks which watch we're paying attention to. */
+  private watchId: number;
 
   public onSuccess(resp) {
     this.latLon = [resp.coords.latitude, resp.coords.longitude];
@@ -70,6 +72,10 @@ export class GeoLocComponent {
   }
 
   public watchPosition(param: (position) => any) {
-    navigator.geolocation.watchPosition(param);
+    this.watchId = navigator.geolocation.watchPosition(param);
+  }
+
+  public clearWatch() {
+    navigator.geolocation.clearWatch(this.watchId);
   }
 }
