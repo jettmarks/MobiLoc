@@ -9,13 +9,15 @@ import { ListPage } from '../pages/list/list';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { GeoLocComponent } from '../components/geo-loc/geo-loc';
+import { MapComponent } from '../components/map/map';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    GeoLocComponent
+    GeoLocComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
@@ -29,6 +31,7 @@ import { GeoLocComponent } from '../components/geo-loc/geo-loc';
   ],
   providers: [
     GeoLocComponent,
+    MapComponent,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
