@@ -2,6 +2,7 @@ import {Component, Injectable} from "@angular/core";
 import {GeoLocComponent} from "../geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
+import LatLngExpression = L.LatLngExpression;
 
 /**
  * Generated class for the MapComponent component.
@@ -20,6 +21,7 @@ export class MapComponent {
   zoomLevel: number;
   map: any;
   lastPosition: [number, number];
+  private autoCenter: boolean = false;
 
   constructor(
     public geoLoc: GeoLocComponent,
@@ -42,7 +44,9 @@ export class MapComponent {
       ];
 
       /* Move map so current location is centered. */
-      this.map.panTo(this.lastPosition);
+      if (this.autoCenter) {
+        this.map.panTo(this.lastPosition);
+      }
     });
   }
 
@@ -57,19 +61,29 @@ export class MapComponent {
       this.map = L.map('map');
     }
 
-    this.map.setView(
-      this.lastPosition,
-      this.zoomLevel
+    /* Read current position and center the map there to start. */
+    this.geoLoc.prepareCenteredMap(
+      (position: LatLngExpression) => {
+        this.map.setView(
+          position,
+          this.zoomLevel
+        );
+      }
     );
 
-    this.setWatch();
 
+    /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(this.map);
 
+    /* Add a "here I am" marker. */
     this.markers.getHeadingMarker(this.lastPosition).addTo(this.map);
+
+    /* Set map to update when position changes. */
+    this.setWatch();
+
   }
 
   public closeMap() {

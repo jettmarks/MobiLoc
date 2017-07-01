@@ -71,11 +71,30 @@ export class GeoLocComponent {
     });
   }
 
-  public watchPosition(param: (position) => any) {
-    this.watchId = navigator.geolocation.watchPosition(param);
+  /**
+   * Sets up a callback function (passed as a parameter) to be called whenever the position changes.
+   * @param callbackFunction is called when the position is ready to be updated.
+   */
+  public watchPosition(callbackFunction: (position) => any) {
+    this.watchId = navigator.geolocation.watchPosition(callbackFunction);
   }
 
   public clearWatch() {
     navigator.geolocation.clearWatch(this.watchId);
   }
+
+  public prepareCenteredMap(callbackFunction: (position: L.LatLngExpression) => any) {
+    navigator.geolocation.getCurrentPosition(
+      (response) => {
+        console.dir(response);
+        callbackFunction([
+          response.coords.latitude,
+          response.coords.longitude,
+        ])
+      },
+      this.onError,
+      this.geoLocOptions
+    )
+  }
+
 }
