@@ -21,7 +21,7 @@ export class HomePage {
 
   ngOnInit(): void {
     /* Bringing up the map centered on current location. */
-    this.mapComponent.showMap();
+    this.mapComponent.openMap();
   }
 
   ngOnDestroy(): void {

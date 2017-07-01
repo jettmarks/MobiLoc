@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, Injectable} from "@angular/core";
 import {GeoLocComponent} from "../geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
+import {MarkersComponent} from "../markers/markers";
 
 /**
  * Generated class for the MapComponent component.
@@ -8,12 +9,12 @@ import {isDefined} from "ionic-angular/util/util";
  * See https://angular.io/docs/ts/latest/api/core/index/ComponentMetadata-class.html
  * for more info on Angular Components.
  */
+@Injectable()
 @Component({
   selector: 'cr-map',
   templateUrl: 'map.html'
 })
 export class MapComponent {
-  currentPosition: any;
 
   /** Holds the current zoom for the map. */
   zoomLevel: number;
@@ -21,18 +22,39 @@ export class MapComponent {
   lastPosition: [number, number];
 
   constructor(
-    public geoLoc: GeoLocComponent
+    public geoLoc: GeoLocComponent,
+    private markers: MarkersComponent
   ) {
-    console.log('MapComponent Initializing');
     this.zoomLevel = 14;
     this.lastPosition = [33.77, -84.37];
   }
 
-  public showMap() {
-    /* If map is already initialized, nothing to do. */
-    if (!isDefined(this.map) || this.map === null) {
+  public setWatch() {
+    console.log('Setting Watch for current position');
+    this.geoLoc.watchPosition((position) => {
+
+      this.markers.updateCurrentLocationMarker(position.coords);
+
+      /* Save for later. */
+      this.lastPosition = [
+        position.coords.latitude,
+        position.coords.longitude
+      ];
+
+      /* Move map so current location is centered. */
+      this.map.panTo(this.lastPosition);
+    });
+  }
+
+  /**
+   * @ngDoc
+   * Prepares the Leaflet map to be shown, initializing leaflet if not already initialized.
+   */
+  public openMap() {
+    /* If map is already initialized, no need to re-initialize. */
+    if (!this.map) {
+      console.log('MapComponent Initializing');
       this.map = L.map('map');
-      // .setView(this.geoLoc.currentPosition(), zoomLevel);
     }
 
     this.map.setView(
@@ -40,19 +62,14 @@ export class MapComponent {
       this.zoomLevel
     );
 
-    console.log('Setting Watch for current position');
-    this.geoLoc.watchPosition((position) => {
-      this.zoomLevel = this.map.getZoom();
-      this.map.setView([
-        position.coords.latitude,
-        position.coords.longitude
-      ], this.zoomLevel);
-    });
+    this.setWatch();
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(this.map);
+
+    this.markers.getHeadingMarker(this.lastPosition).addTo(this.map);
   }
 
   public closeMap() {

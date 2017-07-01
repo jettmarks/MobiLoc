@@ -14,7 +14,8 @@
     "target": "es5"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "plugins/cordova-plugin-device-orientation/types/index.d.ts"
   ],
   "exclude": [
     "node_modules"
