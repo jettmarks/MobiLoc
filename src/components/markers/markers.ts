@@ -12,10 +12,12 @@ export class MarkersComponent {
 
   private headingIcon: L.Icon;
   private headingMarker: any;
+  private deviceHasCompass: boolean;
 
   constructor()
   {
-    console.log('Hello MarkersComponent Component');
+    this.deviceHasCompass = !!navigator.compass;
+    console.log('Hello MarkersComponent Component: has ' + (this.deviceHasCompass ? '' : ' no ') + 'compass');
 
     /**
      * Tight coupling with the image being used as a marker.
@@ -97,6 +99,12 @@ export class MarkersComponent {
     this.updateHeadingMarkerLocation(coordinates);
 
     /* ... good time to update the compass heading too. */
+    if (this.deviceHasCompass) {
+      this.pollForHeadingUpdate();
+    }
+  }
+
+  private pollForHeadingUpdate() {
     navigator.compass.getCurrentHeading(
       (heading: CompassHeading) => {    // success
         this.updateHeadingMarkerHeading(heading);
