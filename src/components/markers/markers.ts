@@ -1,4 +1,5 @@
 import {Component, Injectable} from '@angular/core';
+import PointExpression = L.PointExpression;
 
 /**
  * Component for providing Markers and marker services.
@@ -10,36 +11,57 @@ import {Component, Injectable} from '@angular/core';
 })
 export class MarkersComponent {
 
-  private headingIcon: L.Icon;
+  private hereIAmIcon: L.Icon;
+  private hereIAmHeadingIcon: L.Icon;
+  private hereIAmTetheredIcon: L.Icon;
+  private hereIAmHeadingTetheredIcon: L.Icon;
   private headingMarker: any;
   private deviceHasCompass: boolean;
 
+  /** Marker size and anchor are common across all images. */
+  static readonly commonIconSize: PointExpression = [20, 50];
+  static readonly commonIconAnchor: PointExpression = [10, 25];
+
   constructor()
   {
+    /* This may be happening too early (LE-19). */
     this.deviceHasCompass = !!navigator.compass;
     console.log('Hello MarkersComponent Component: has ' + (this.deviceHasCompass ? '' : ' no ') + 'compass');
 
     /**
-     * Tight coupling with the image being used as a marker.
      * This particular icon is used to show direction the device is facing.
+     * See README.md for more details.
      * @type {L.Icon}
      */
-    this.headingIcon = L.icon({
-      iconUrl: "https://www.clueride.com/wp-content/uploads/2017/06/heading-marker.png",
-      // iconUrl: "/assets/markers/heading-marker.png",
-      iconSize: [64, 64],
-      iconAnchor: [32, 32]
-    });
+    this.hereIAmIcon = this.iconFromImage(
+      "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm.png",
+    );
 
-    /**
-     * TODO: Want Icons for
-     * <li>Location without heading.
-     * <li>tethered location.
-     */
+    this.hereIAmHeadingIcon = this.iconFromImage(
+      "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading.png",
+    );
+
+    this.hereIAmTetheredIcon = this.iconFromImage(
+      "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-tethered.png",
+    );
+
+    this.hereIAmHeadingTetheredIcon = this.iconFromImage(
+      "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading-tethered.png",
+    );
+
+  }
+
+  private iconFromImage(iconUrl: string): L.Icon {
+    return L.icon({
+      iconUrl: iconUrl,
+      // iconUrl: "/assets/markers/hearIAm-heading.png",
+      iconSize: MarkersComponent.commonIconSize,
+      iconAnchor: MarkersComponent.commonIconAnchor
+    });
   }
 
   /**
-   * Lazy-init for a Heading Marker.
+   * Lazy-init for a "Here I Am" Marker.
    *
    * Learned that this marker implementation will create the '_icon' property only if we provide the
    * rotationAngle and rotationOrigin arguments to the constructor.  We need that '_icon' property since that
@@ -47,17 +69,25 @@ export class MarkersComponent {
    *
    * @returns L.Marker at the given position.
    */
-  public getHeadingMarker(position) {
+  public getHereIAmMarker(position) {
     if (!this.headingMarker) {
-      this.headingMarker = L.marker(
-        position,
-        <any>{
-          icon: this.headingIcon,
-          rotationAngle: 0.0,
-          rotationOrigin: 'center center'
-        }
-      );
-      this.updateHeadingMarkerHeading(position);
+      if (this.deviceHasCompass) {
+        this.headingMarker = L.marker(
+          position,
+          <any>{
+            icon: this.hereIAmHeadingIcon,
+            rotationAngle: 0.0,
+            rotationOrigin: 'center center'
+          }
+        );
+      } else {
+        this.headingMarker = L.marker(
+          position,
+          {
+            icon: this.hereIAmIcon
+          }
+        );
+      }
     }
     return this.headingMarker;
   }
