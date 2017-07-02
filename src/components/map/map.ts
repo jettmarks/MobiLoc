@@ -3,6 +3,7 @@ import {GeoLocComponent} from "../geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import LatLngExpression = L.LatLngExpression;
+import {SplashScreen} from "@ionic-native/splash-screen";
 
 /**
  * Generated class for the MapComponent component.
@@ -22,13 +23,16 @@ export class MapComponent {
   map: any;
   lastPosition: [number, number];
   private autoCenter: boolean = false;
+  private splashScreen: SplashScreen;
 
   constructor(
     public geoLoc: GeoLocComponent,
-    private markers: MarkersComponent
+    private markers: MarkersComponent,
+    private screen: SplashScreen
   ) {
     this.zoomLevel = 14;
     this.lastPosition = [33.77, -84.37];
+    this.splashScreen = screen;
   }
 
   public setWatch() {
@@ -68,6 +72,9 @@ export class MapComponent {
           position,
           this.zoomLevel
         );
+
+        /* Map is ready; turn off splash screen. */
+        this.splashScreen.hide();
       }
     );
 
