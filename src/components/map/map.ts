@@ -86,7 +86,7 @@ export class MapComponent {
     }).addTo(this.map);
 
     /* Add a "here I am" marker. */
-    this.markers.getHeadingMarker(this.lastPosition).addTo(this.map);
+    this.markers.getHereIAmMarker(this.lastPosition).addTo(this.map);
 
     /* Set map to update when position changes. */
     this.setWatch();
