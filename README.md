@@ -1,10 +1,9 @@
 # MobiLoc
-Location Editor for Clue Ride
+____Location Editor for Clue Ride____
 
-This page describes what the app does. 
-See the CONTRIBUTING.md for building and contributing to this app.
+_See the CONTRIBUTING.md for building and contributing to this app._
 
-# Usage
+# Features
 This application is used to maintain Places, Attractions, and Features for the Clue Ride Game.
 Places, Attractions and Features are collectively called "Locations" with increasing level of detail:
 
