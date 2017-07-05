@@ -47,7 +47,7 @@ Not yet ready for release, but expected to follow Ionic's recommendations.
 * Using GitHub as git repo.  
   * Clone a local copy for your branches.
   * Pull Requests
-* Issue Tracking is [You Track](https://yourtrack.clueride.com/) instead of GitHub's issue tracking.
+* Issue Tracking is [You Track](https://youtrack.clueride.com/) instead of GitHub's issue tracking.
 
 
 # Conventions
