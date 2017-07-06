@@ -16,6 +16,9 @@ This app is based on a starter template for [Ionic](http://ionicframework.com/do
 Version info for each component is maintained within the repo itself.
 
 # Building and Running
+## Prerequisites
+* npm 3.x+ 
+* node.js 4.x+
 
 ## Serving the App as a webapp (Development)
 
@@ -23,8 +26,7 @@ Version info for each component is maintained within the repo itself.
 $ git clone <this repo> MobiLoc
 $ cd MobiLoc
 $ sudo npm install -g ionic cordova
-$ ionic cordova platform add android ios (unsure if this is needed or not)
-$ npm i @ionic/app-scripts (expected this to already be installed)
+$ ionic cordova platform add android ios
 $ ionic serve
 ```
 
