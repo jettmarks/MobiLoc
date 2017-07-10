@@ -39,3 +39,6 @@ under the `imports`:
 
 ## Initial set of interfaces and objects
 _Modeled after  examples in README.md for the `ngx-resource` module._
+
+- Could use a namespace to avoid name collisions (Location popped out as a collision).
+
