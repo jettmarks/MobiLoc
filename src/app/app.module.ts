@@ -14,6 +14,8 @@ import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {LoginPage} from "../pages/login/login";
+import {LocationProvider} from "../providers/resources/location/location.service";
+import {ResourceModule} from "ngx-resource";
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -42,6 +44,7 @@ const cloudSettings: CloudSettings = {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     CloudModule.forRoot(cloudSettings),
+    ResourceModule.forRoot(),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -52,11 +55,12 @@ const cloudSettings: CloudSettings = {
   ],
   providers: [
     GeoLocComponent,
+    LocationProvider,
     MapComponent,
     MarkersComponent,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}

@@ -54,8 +54,9 @@ Not yet ready for release, but expected to follow Ionic's recommendations.
 
 # Conventions
 link in 
+* Angular 2 Style Guide: https://angular.io/guide/styleguide
 * semantic versioning (once this is released)
 * "Check Style" rules for Code
 * Documentation
 * Jasmine tests
-* File Naming
+* File Naming conventions (covered in https://angular.io/guide/styleguide)
