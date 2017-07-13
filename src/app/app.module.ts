@@ -14,7 +14,7 @@ import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {LoginPage} from "../pages/login/login";
-import {LocationProvider} from "../providers/resources/location/location.service";
+import {LocationResource} from "../providers/resources/location/location.service";
 import {ResourceModule} from "ngx-resource";
 
 const cloudSettings: CloudSettings = {
@@ -55,7 +55,7 @@ const cloudSettings: CloudSettings = {
   ],
   providers: [
     GeoLocComponent,
-    LocationProvider,
+    LocationResource,
     MapComponent,
     MarkersComponent,
     StatusBar,

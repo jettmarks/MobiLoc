@@ -1,18 +1,20 @@
 import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
-import "rxjs/add/operator/map";
+import {Resource, ResourceAction, ResourceMethod, ResourceParams} from "ngx-resource";
 
-/*
-  Generated class for the LocationProvider provider.
-
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
+/**
+ * Service for REST API against Locations.
+ */
 @Injectable()
-export class LocationProvider {
+@ResourceParams({
+  url: 'https://player.clueride.com/rest/location'
+})
+export class LocationResource extends Resource {
 
-  constructor(public http: Http) {
-    console.log('Hello LocationProvider Provider');
-  }
+  /* Retrieve the Locations nearest to the given point. */
+  @ResourceAction({
+    isArray: true,
+    path: '/nearest?lat={!lat}&lon={!lon}'
+  })
+  nearest: ResourceMethod<{lat: number, lon: number}, Location[]>;
 
 }

@@ -36,9 +36,12 @@ under the `imports`:
 - The sub-directory/package for REST API resources is being called resources as implied by the examples given in the README.md for ngx-resource.
 
 ## Handling Authorization
+- The back-end is setup to redirect to the login page if the XHR requests cannot provide the JSESSION cookie.
 
 ## Initial set of interfaces and objects
 _Modeled after  examples in README.md for the `ngx-resource` module._
 
-- Could use a namespace to avoid name collisions (Location popped out as a collision).
+- Using a namespace to avoid name collisions (Location popped out as a collision).
+- Currently, more than one class is defined in the location.ts file; want to break these out.
+- Untested until we can get the response back from the back-end.
 
