@@ -60,3 +60,11 @@ link in
 * Documentation
 * Jasmine tests
 * File Naming conventions (covered in https://angular.io/guide/styleguide)
+
+# Workarounds
+
+## Cross Origin Resource Sharing (CORS)
+There is a Chrome plugin that will ignore CORS, but this is only part of the problem.
+- Discussion: http://blog.ionic.io/handling-cors-issues-in-ionic/
+- Example: https://github.com/ionic-team/ionic-proxy-example
+

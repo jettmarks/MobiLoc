@@ -6,7 +6,8 @@ import {Resource, ResourceAction, ResourceMethod, ResourceParams} from "ngx-reso
  */
 @Injectable()
 @ResourceParams({
-  url: 'https://player.clueride.com/rest/location'
+  // url: 'https://player.clueride.com/rest/location'
+  url: 'http://localhost:8080/rest/location'
 })
 export class LocationResource extends Resource {
 

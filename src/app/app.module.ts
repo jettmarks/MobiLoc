@@ -16,6 +16,7 @@ import {MarkersComponent} from "../components/markers/markers";
 import {LoginPage} from "../pages/login/login";
 import {LocationResource} from "../providers/resources/location/location.service";
 import {ResourceModule} from "ngx-resource";
+import {BadgeResource} from "../providers/resources/badge/badge.service";
 
 const cloudSettings: CloudSettings = {
   'core': {
@@ -61,6 +62,7 @@ const cloudSettings: CloudSettings = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    BadgeResource,
   ]
 })
 export class AppModule {}
