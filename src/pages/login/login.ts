@@ -1,8 +1,9 @@
+///<reference path="../../providers/resources/badge/badge.ts"/>
+import Badge = clueRide.Badge;
 import {Component} from "@angular/core";
 import {IonicPage, NavController, NavParams} from "ionic-angular";
 import {GoogleAuth, User} from "@ionic/cloud-angular";
 import {BadgeResource} from "../../providers/resources/badge/badge.service";
-import Badge = clueRide.Badge;
 
 /**
  * Generated class for the LoginPage page.
