@@ -1,21 +1,24 @@
 import {BrowserModule} from "@angular/platform-browser";
+import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
 import {ErrorHandler, NgModule} from "@angular/core";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
-import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
 
 import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 
+import {RestangularConfigFactory} from "../providers/resources/resource.config";
+import {RestangularModule} from "ngx-restangular/dist/esm/src";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {GeoLocComponent} from "../components/geo-loc/geo-loc";
+import {LoginPage} from "../pages/login/login";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
-import {LoginPage} from "../pages/login/login";
 
-const cloudSettings: CloudSettings = {
+/* TODO: place this inside the Google-specific OAuth module. */
+export const cloudSettings: CloudSettings = {
   'core': {
     'app_id': 'd7271bbc'
   },
@@ -28,6 +31,7 @@ const cloudSettings: CloudSettings = {
   }
 };
 
+
 @NgModule({
   declarations: [
     MyApp,
@@ -36,12 +40,13 @@ const cloudSettings: CloudSettings = {
     LoginPage,
     GeoLocComponent,
     MapComponent,
-    MarkersComponent
+    MarkersComponent,
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
     CloudModule.forRoot(cloudSettings),
+    IonicModule.forRoot(MyApp),
+    RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -56,7 +61,7 @@ const cloudSettings: CloudSettings = {
     MarkersComponent,
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
   ]
 })
 export class AppModule {}
