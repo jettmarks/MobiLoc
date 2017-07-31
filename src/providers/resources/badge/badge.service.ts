@@ -16,4 +16,5 @@ export class BadgeService {
   post(param: { name: string; password: string }): Badge[] {
     return this.resource.post(param);
   }
+
 }

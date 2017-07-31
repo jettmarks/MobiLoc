@@ -59,3 +59,9 @@ link in
 * Documentation
 * Jasmine tests
 * File Naming
+
+# Addressing CORS 
+Over the course of development, the application accesses APIs across
+different domains.
+
+

@@ -55,7 +55,8 @@ browser-based webapps.  Cookies are a bit of trouble when developing
 however because of CORS.
 
 A token-based authentication method would be more robust and the 
-beginnings of that implementation are in place.
+beginnings of that implementation are in place. JWT is being explored:
+https://github.com/auth0/java-jwt
 
 ## Badges
 _Longer discussion elsewhere._
