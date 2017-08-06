@@ -1,23 +1,56 @@
+import {Injectable} from "@angular/core";
+import {JwtHelper} from "angular2-jwt";
+import {Storage} from "@ionic/storage";
 /**
  * Created by jett on 7/30/17.
  * Provides local storage for Credentials.
  * If unset, will return "GuestToken".
  */
+@Injectable()
 export class Creds {
-  static TOKEN_KEY: string = "token.key";
+  TOKEN_KEY: string = "token.key";
+  PRINCIPAL_KEY: string = "principal.key";
+  jwtHelper: JwtHelper;
+  principalName: string;
+  badges: string[];
 
-  public static setAuthToken(authToken: string) {
+  constructor(
+    private storage: Storage
+  ) {
+    this.jwtHelper = new JwtHelper();
+  }
+
+  public setAuthToken(authToken: string) {
     console.log("Recording new Auth Token: " + authToken);
-    window.localStorage.setItem(Creds.TOKEN_KEY, authToken);
+    let jwt = this.jwtHelper.decodeToken(authToken);
+    let payload = this.decodePayload(authToken);
+    this.principalName = payload.email;
+    this.badges = payload.badges;
+    this.storage.set(this.PRINCIPAL_KEY, this.principalName);
+    this.storage.set(this.TOKEN_KEY, authToken);
   }
 
-  public static getBearerToken(): string {
-    let bearerToken = window.localStorage.getItem(Creds.TOKEN_KEY);
-    if (bearerToken && bearerToken.length > 0) {
-      return bearerToken;
-    } else {
-      return "GuestToken";
+  public getBearerToken(): Promise<string> {
+    return this.storage.get(this.TOKEN_KEY);
+  }
+
+  public getPrincipalName(): string {
+    return this.principalName;
+  }
+
+  private decodePayload(fullToken: string): any {
+    let parts = fullToken.split('.');
+    if (parts.length !== 3) {
+      throw new Error('JWT must have 3 parts');
     }
+    let decoded = this.jwtHelper.urlBase64Decode(parts[0]);
+    if (!decoded) {
+      throw new Error('Cannot decode the token');
+    }
+    return JSON.parse(decoded);
   }
 
+  public getBadges() {
+    return this.badges;
+  }
 }
