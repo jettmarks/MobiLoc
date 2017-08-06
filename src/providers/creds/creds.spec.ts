@@ -3,8 +3,6 @@ import {TestBed} from "@angular/core/testing";
 import {Platform} from "ionic-angular";
 import {IonicStorageModule} from "@ionic/storage";
 import {MyApp} from "../../app/app.component";
-import Expected = jasmine.Expected;
-import any = jasmine.any;
 
 let toTest: Creds;
 let validToken: string = "eyJhbGciOiJIUzI1NiIsImJhZGdlcyI6WyJMT0NBVElPTl9FRElUT1IiXSwiZW1haWwiOiJndWVzdC5kdW1teUBjbHVlcmlkZS5jb20iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJjbHVlcmlkZS5jb20iLCJqdGkiOiJ2NGY1MDBvNWw0dHB1N2I4NXNtc2RlNjdlOCJ9.mknl-JguS5TbT-HJ0-2zotOWEVkXF_JstFiXPIZvPQ8";

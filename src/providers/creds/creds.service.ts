@@ -22,7 +22,6 @@ export class Creds {
 
   public setAuthToken(authToken: string) {
     console.log("Recording new Auth Token: " + authToken);
-    let jwt = this.jwtHelper.decodeToken(authToken);
     let payload = this.decodePayload(authToken);
     this.principalName = payload.email;
     this.badges = payload.badges;
