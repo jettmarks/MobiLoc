@@ -60,6 +60,10 @@ link in
 * Jasmine tests
 * File Naming
 
+## Testing Tools
+AngularJS provides a TestBed component described here:
+* https://www.joshmorony.com/how-to-unit-test-an-ionic-2-application/
+
 # Addressing CORS 
 Over the course of development, the application accesses APIs across
 different domains.

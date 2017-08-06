@@ -4,6 +4,7 @@ import {IonicPage, NavController, NavParams} from "ionic-angular";
 import {GoogleAuth, User} from "@ionic/cloud-angular";
 import {badgeServiceProvider} from "../../providers/resources/badge/badge.service.provider";
 import {BadgeService} from "../../providers/resources/badge/badge.service";
+import {Creds} from "../../providers/creds/creds.service";
 
 /**
  * Generated class for the LoginPage page.
@@ -29,6 +30,7 @@ export class LoginPage {
     public navParams: NavParams,
     public googleAuth: GoogleAuth,
     public user: User,
+    public creds: Creds,
   ) {
   }
 

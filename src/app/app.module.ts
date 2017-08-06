@@ -2,6 +2,7 @@ import {BrowserModule} from "@angular/platform-browser";
 import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
 import {ErrorHandler, NgModule} from "@angular/core";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
+import {IonicStorageModule} from "@ionic/storage";
 
 import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
@@ -16,6 +17,7 @@ import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {LoginPage} from "../pages/login/login";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
+import {Creds} from "../providers/creds/creds.service";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -46,6 +48,7 @@ export const cloudSettings: CloudSettings = {
     BrowserModule,
     CloudModule.forRoot(cloudSettings),
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(MyApp),
     RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
@@ -56,6 +59,7 @@ export const cloudSettings: CloudSettings = {
     LoginPage,
   ],
   providers: [
+    Creds,
     GeoLocComponent,
     MapComponent,
     MarkersComponent,

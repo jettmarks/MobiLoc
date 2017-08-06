@@ -1,3 +1,4 @@
+import {Creds} from "../../creds/creds.service";
 import {Restangular} from "ngx-restangular/dist/esm/src";
 import {OpaqueToken} from "@angular/core";
 
@@ -5,10 +6,22 @@ export const LOCATION_REST = new OpaqueToken('LocationResource');
 
 function RestFactory(
   restangular: Restangular,
+  creds: Creds,
 ) {
   restangular.withConfig(
-    (RestangularConfigurer) => {
-      RestangularConfigurer.addElementTransformer('location', true,
+    (configurer) => {
+
+      configurer.addRequestInterceptor(
+        (element, operation, path, url, headers, params) => {
+          let bearerToken = creds.getBearerToken();
+
+          return {
+            headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
+          };
+        }
+      );
+
+      configurer.addElementTransformer('location', true,
         (resource) => {
           resource.addRestangularMethod(
             'nearest',
@@ -30,6 +43,6 @@ function RestFactory(
 export let locationServiceProvider =
   { provide: LOCATION_REST,
     useFactory: RestFactory,
-    deps: [Restangular]
+    deps: [Restangular,Creds]
   };
 

@@ -4,16 +4,30 @@ import {Restangular} from "ngx-restangular/dist/esm/src";
 
 export const BADGES_REST = new OpaqueToken('BadgeResource');
 
-export function BadgesRestFactory(
+function RestFactory(
   restangular: Restangular,
+  creds: Creds,
 ) {
-  /* Configure this particular resource to capture the Authentication-Token header. */
+  /* Configure this particular resource to capture the Authorization header. */
   restangular.withConfig(
     (configurer) => {
+
+      configurer.addRequestInterceptor(
+        (element, operation, path, url, headers, params) => {
+          let bearerToken = creds.getBearerToken();
+
+          return {
+            headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
+          };
+        }
+      );
+
       configurer.addResponseInterceptor(
         (data, operation, what, url, response) => {
-          if (response.headers.get('Authentication-Token')) {
-            Creds.setAuthToken(response.headers.get('Authentication-Token'));
+          /* Check if we should pick up this token to use in subsequent requests. */
+          if (response.headers.get('Authorization')) {
+            let token = response.headers.get('Authorization').split(" ")[1];
+            creds.setAuthToken(token);
           }
           /* Response Interceptors are required to return the data property */
           return data;
@@ -28,6 +42,6 @@ export function BadgesRestFactory(
 
 export let badgeServiceProvider =
   { provide: BADGES_REST,
-    useFactory: BadgesRestFactory,
-    deps: [Restangular]
+    useFactory: RestFactory,
+    deps: [Restangular,Creds]
   };
