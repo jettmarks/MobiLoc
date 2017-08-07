@@ -11,7 +11,7 @@ function RestFactory(
   restangular.withConfig(
     (configurer) => {
 
-      configurer.addRequestInterceptor(
+      configurer.addFullRequestInterceptor(
         (element, operation, path, url, headers, params) => {
           let bearerToken = creds.getBearerToken();
 

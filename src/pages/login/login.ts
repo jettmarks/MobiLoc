@@ -67,7 +67,7 @@ export class LoginPage {
   private authViaGuest() {
     // this.badges = this.badgeResource.clueRideLogin({
     this.badges = this.badgeService.post({
-      name: "Jett",
+      name: "jett.marks@bellsouth.net",
       password: "adfhg"
     });
   }

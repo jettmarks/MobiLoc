@@ -12,16 +12,6 @@ function RestFactory(
   restangular.withConfig(
     (configurer) => {
 
-      configurer.addRequestInterceptor(
-        (element, operation, path, url, headers, params) => {
-          let bearerToken = creds.getBearerToken();
-
-          return {
-            headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
-          };
-        }
-      );
-
       configurer.addResponseInterceptor(
         (data, operation, what, url, response) => {
           /* Check if we should pick up this token to use in subsequent requests. */
