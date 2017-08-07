@@ -13,24 +13,35 @@ export class Creds {
   jwtHelper: JwtHelper;
   principalName: string;
   badges: string[];
+  token: string;
 
   constructor(
     private storage: Storage
   ) {
     this.jwtHelper = new JwtHelper();
+    storage.get(this.TOKEN_KEY).then(
+      (token) => {
+        this.cacheToken(token);
+      }
+    );
+  }
+
+  private cacheToken(authToken: string) {
+    let payload = this.decodePayload(authToken);
+    this.token = authToken;
+    this.principalName = payload.email;
+    this.badges = payload.badges;
   }
 
   public setAuthToken(authToken: string) {
     console.log("Recording new Auth Token: " + authToken);
-    let payload = this.decodePayload(authToken);
-    this.principalName = payload.email;
-    this.badges = payload.badges;
+    this.cacheToken(authToken);
     this.storage.set(this.PRINCIPAL_KEY, this.principalName);
     this.storage.set(this.TOKEN_KEY, authToken);
   }
 
-  public getBearerToken(): Promise<string> {
-    return this.storage.get(this.TOKEN_KEY);
+  public getBearerToken(): string {
+    return this.token;
   }
 
   public getPrincipalName(): string {
