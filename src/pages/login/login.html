@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>login</ion-title>
+    <ion-title>info</ion-title>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -17,13 +17,74 @@
 
 
 <ion-content padding>
-  <div id="version">
-    git SHA: {{GITVERSIONSTRING}}
+
+  <div class="login-box" *ngIf="!creds.isLoggedIn()">
+    <form (ngSubmit)="login()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+
+            <ion-item>
+              <ion-input type="text" placeholder="Email" name="email" [(ngModel)]="crCreds.name" required></ion-input>
+            </ion-item>
+
+            <ion-item>
+              <ion-input type="password" placeholder="Password" name="password" [(ngModel)]="crCreds.password" required></ion-input>
+            </ion-item>
+
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit" [disabled]="!registerForm.form.valid">Login</button>
+          <!-- <button ion-button class="register-btn" block clear (click)="createAccount()">Create New Account</button> -->
+        </ion-col>
+      </ion-row>
+
+    </form>
   </div>
-  <div id="principal">
-    Logged in as: {{creds.getPrincipalName()}}
+
+  <div class="login-box" *ngIf="creds.isLoggedIn()">
+    <form (ngSubmit)="logout()" #registerForm="ngForm">
+      <ion-row>
+        <ion-col class="signup-col">
+          <button ion-button class="submit-btn" full type="submit">Logout</button>
+        </ion-col>
+      </ion-row>
+    </form>
   </div>
-  <div id="badges">
-    Badges: {{creds.getBadges()}}
+
+  <div id="user-info">
+    <ion-row>
+      <div id="principal">
+        Logged in as: {{creds.getPrincipalName()}}
+      </div>
+    </ion-row>
+    <ion-row>
+      <div id="badges">
+        Badges: {{creds.getBadges()}}
+      </div>
+    </ion-row>
+    <ion-row>
+      <div id="guest">
+        Guest?: {{creds.isGuest()}}
+      </div>
+    </ion-row>
+    <ion-row>
+      <div *ngIf="creds.isLoggedIn()">
+        Logged in?: Yes
+      </div>
+      <div *ngIf="!creds.isLoggedIn()">
+        Logged in?: No
+      </div>
+    </ion-row>
+    <ion-row>
+      <div id="version">
+        git SHA: {{GITVERSIONSTRING}}
+      </div>
+    </ion-row>
   </div>
+
 </ion-content>

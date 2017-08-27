@@ -23,6 +23,7 @@ import {Creds} from "../../providers/creds/creds.service";
 })
 export class LoginPage {
   badges: Badge[];
+  crCreds: any = {name: "", password: ""};
 
   constructor(
     private badgeService: BadgeService,
@@ -61,7 +62,7 @@ export class LoginPage {
   ionViewDidLoad() {
     console.log('On the Login Page');
     // this.authViaGoogle();
-    this.authViaGuest();
+    // this.authViaGuest();
   }
 
   private authViaGuest() {
@@ -70,6 +71,14 @@ export class LoginPage {
       name: "jett.marks@bellsouth.net",
       password: "adfhg"
     });
+  }
+
+  public logout() {
+    this.creds.logout();
+  }
+
+  public login() {
+    this.badges = this.badgeService.post(this.crCreds);
   }
 
 }

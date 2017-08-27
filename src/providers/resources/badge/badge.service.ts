@@ -13,6 +13,10 @@ export class BadgeService {
   ) {
   }
 
+  /**
+   * Send credentials and receive Badges.
+   * @param param
+   */
   post(param: { name: string; password: string }): Badge[] {
     return this.resource.post(param);
   }

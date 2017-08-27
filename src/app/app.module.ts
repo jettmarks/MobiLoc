@@ -1,6 +1,6 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
-import {ErrorHandler, NgModule} from "@angular/core";
+import {APP_INITIALIZER, ErrorHandler, NgModule} from "@angular/core";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {IonicStorageModule} from "@ionic/storage";
 
@@ -33,6 +33,10 @@ export const cloudSettings: CloudSettings = {
   }
 };
 
+/* Assures credentials are loaded from storage before trying to show initial page. */
+function loadCreds(creds: Creds) {
+  return () => creds.loadToken();
+}
 
 @NgModule({
   declarations: [
@@ -66,6 +70,7 @@ export const cloudSettings: CloudSettings = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    {provide: APP_INITIALIZER, useFactory: loadCreds, deps: [Creds], multi: true}
   ]
 })
 export class AppModule {}
