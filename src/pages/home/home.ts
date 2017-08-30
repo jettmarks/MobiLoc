@@ -32,11 +32,19 @@ export class HomePage {
     this.mapComponent.openMap();
 
     /* Retrieving nearest locations. */
-    this.locationList = this.locationService.nearest({
-      lat: 33.775,
-      lon: -84.365
-    });
-
+    this.locationService.nearest({
+        lat: 33.775,
+        lon: -84.365
+    }).subscribe(
+      (locations) => {
+        locations.forEach(
+          (value, key) => {
+            console.log(key + ": " + value.name);
+            this.mapComponent.addLocation(value);
+          }
+        );
+      }
+    );
   }
 
   ngOnDestroy(): void {

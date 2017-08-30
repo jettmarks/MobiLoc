@@ -6,7 +6,7 @@ namespace clueRide {
 
     id: number;
     nodeId: number;   // Provides Lat/Lon
-    node: Node;
+    point: Node;
     name?: string;
     description?: string;
     locationGroupId?: number;
@@ -26,6 +26,7 @@ namespace clueRide {
     // May want one of the geographical types understood by leaflet
     lat: number;
     lon: number;
+    lng: number;
   }
 
 

@@ -12,7 +12,12 @@ export class LocationService {
   ) {
   }
 
+  feature(params: any) {
+    return this.resource.feature(params);
+  }
+
   nearest(params: any) {
     return this.resource.nearest(params);
   }
+
 }

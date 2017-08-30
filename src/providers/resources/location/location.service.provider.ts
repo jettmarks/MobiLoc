@@ -21,12 +21,13 @@ function RestFactory(
         }
       );
 
+      /* Resource providing Nearest Location instances suitable for edit. */
       configurer.addElementTransformer('location', true,
         (resource) => {
           resource.addRestangularMethod(
             'nearest',
             'get',
-            'nearest',
+            'nearest-marker',
             {
               lat: 33.4,
               lon: -84.7,
@@ -35,6 +36,36 @@ function RestFactory(
           return resource;
         }
       );
+
+    }
+  );
+
+  restangular.withConfig(
+    (configurer) => {
+
+      configurer.addFullRequestInterceptor(
+        (element, operation, path, url, headers, params) => {
+          let bearerToken = creds.getBearerToken();
+
+          return {
+            headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
+          };
+        }
+      );
+
+      /* For a given locationId, provide a feature set (geometry) for the location. */
+      configurer.addElementTransformer('location', true,
+        (resource) => {
+          resource.addRestangularMethod(
+            'feature',
+            'get',
+            'map',
+            { locationId: 1 }
+          );
+          return resource;
+        }
+      );
+
     }
   );
   return restangular.service('location');
