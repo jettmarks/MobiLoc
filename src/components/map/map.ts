@@ -98,4 +98,12 @@ export class MapComponent {
     }
     this.map = null;
   }
+
+  /**
+   * Given a Location, place it on the map.
+   * @param location
+   */
+  public addLocation(location: clueRide.Location) {
+    this.markers.getLocationMarker(location).addTo(this.map);
+  }
 }

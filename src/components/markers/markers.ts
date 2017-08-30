@@ -1,4 +1,4 @@
-import {Component, Injectable} from '@angular/core';
+import {Component, Injectable} from "@angular/core";
 import PointExpression = L.PointExpression;
 
 /**
@@ -145,4 +145,7 @@ export class MarkersComponent {
     );
   }
 
+  public getLocationMarker(location: clueRide.Location) {
+    return L.marker(location.point);
+  }
 }
