@@ -52,10 +52,10 @@ export class MyApp {
     console.log("App is initialized");
     /* This is dependent on the loadToken having been run (promise resolved) as the initialization of the app. */
     if (this.credsService.isGuest()) {
-      console.log("Running as Guest");
+      console.log("1. Running as Guest");
       this.nav.setRoot(LoginPage);
     } else {
-      console.log("Running as " + this.credsService.getPrincipalName());
+      console.log("1. Running as " + this.credsService.getPrincipalName());
       this.nav.setRoot(HomePage);
     }
   }

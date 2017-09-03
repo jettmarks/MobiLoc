@@ -3,6 +3,7 @@ import {GeoLocComponent} from "../geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
+import {Geoposition} from "@ionic-native/geolocation";
 import LatLngExpression = L.LatLngExpression;
 
 /**
@@ -35,47 +36,46 @@ export class MapComponent {
 
   public setWatch() {
     console.log('Setting Watch for current position');
-    this.geoLoc.watchPosition((position) => {
 
-      this.markers.updateCurrentLocationMarker(position.coords);
+    this.geoLoc.getPositionWatch().subscribe(
+      (position) => {
 
-      /* Save for later. */
-      this.lastPosition = [
-        position.coords.latitude,
-        position.coords.longitude
-      ];
+        this.markers.updateCurrentLocationMarker(position.coords);
 
-      /* Move map so current location is centered. */
-      if (this.autoCenter) {
-        this.map.panTo(this.lastPosition);
+        /* Save for later. */
+        this.lastPosition = [
+          position.coords.latitude,
+          position.coords.longitude
+        ];
+
+        /* Move map so current location is centered. */
+        if (this.autoCenter) {
+          this.map.panTo(this.lastPosition);
+        }
       }
-    });
+    );
+
   }
 
   /**
    * @ngDoc
    * Prepares the Leaflet map to be shown, initializing leaflet if not already initialized.
+   * Source of position info should be settled prior to calling this function.
    */
-  public openMap() {
+  public openMap(position: Geoposition) {
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
       this.map = L.map('map');
     }
 
-    /* Read current position and center the map there to start. */
-    this.geoLoc.prepareCenteredMap(
-      (position: LatLngExpression) => {
-        this.map.setView(
-          position,
-          this.zoomLevel
-        );
+    /* Assemble Leaflet position object. */
+    let leafletPosition = [
+      position.coords.latitude,
+      position.coords.longitude
+    ];
 
-        /* Map is ready; turn off splash screen. */
-        this.splashScreen.hide();
-      }
-    );
-
+    this.map.setView(leafletPosition, this.zoomLevel);
 
     /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -84,10 +84,13 @@ export class MapComponent {
     }).addTo(this.map);
 
     /* Add a "here I am" marker. */
-    this.markers.getHereIAmMarker(this.lastPosition).addTo(this.map);
+    this.markers.getHereIAmMarker(leafletPosition).addTo(this.map);
 
     /* Set map to update when position changes. */
     this.setWatch();
+
+    /* Map is ready; turn off splash screen. */
+    this.splashScreen.hide();
 
   }
 

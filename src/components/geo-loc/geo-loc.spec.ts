@@ -1,8 +1,7 @@
 /**
  * Created by jett on 6/25/17.
  */
-import {Geolocation} from '@ionic-native/geolocation';
-import {GeoLocComponent} from './geo-loc';
+import {GeoLocComponent} from "./geo-loc";
 import {TestBed} from "@angular/core/testing";
 import {Platform} from "ionic-angular";
 
@@ -13,7 +12,6 @@ describe("Geo-Location", () => {
     TestBed.configureTestingModule({
       // declarations: [GeoLocComponent],
       providers: [
-        Geolocation,
         GeoLocComponent,
         Platform
       ]
@@ -23,28 +21,6 @@ describe("Geo-Location", () => {
 
   it("should be defined", () => {
     expect(toTest).toBeDefined();
-  });
-
-  xit("should define current position", () => {
-    let actual = toTest.currentPosition();
-    expect(actual).toBeDefined();
-    expect(actual).not.toBe(null);
-  });
-
-  xit("should have two values in an array", () => {
-    let actual = toTest.currentPosition();
-    expect(actual.length).toBe(2);
-  });
-
-  it("should be inactive if the underlying system isn't ready", () => {
-    let actual = toTest.isReady();
-    expect(actual).toBeFalsy();
-  });
-
-  xit("should be active once we ask it to turn on", () => {
-    toTest.checkPlatform();
-    let actual = toTest.isReady();
-    expect(actual).toBeTruthy();
   });
 
   describe("Watching Tether", () => {
@@ -58,4 +34,31 @@ describe("Geo-Location", () => {
 
     });
   });
+
+  describe("Resolving which location source to use", () => {
+
+    it("should give us Observable in any case", () => {
+      let positionObservable = toTest.getPositionWatch();
+      expect(positionObservable).toBeDefined();
+      expect(positionObservable.subscribe).toBeDefined();
+      positionObservable.subscribe((actual) => {
+        expect(actual.timestamp).toBeDefined();
+        expect(actual.timestamp).toBeFalsy();
+      });
+    });
+
+  });
+
+  describe("Watch management", () => {
+
+    it("should open a watch when starting", () => {
+
+    });
+
+    it("should close the watch when done", () => {
+
+    });
+
+  });
+
 });

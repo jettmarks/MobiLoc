@@ -4,6 +4,7 @@ import {MapComponent} from "../../components/map/map";
 import {NavController} from "ionic-angular";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationService} from "../../providers/resources/location/location.service";
+import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 
 @Component({
   selector: 'page-home',
@@ -23,28 +24,38 @@ export class HomePage {
     public navCtrl: NavController,
     public mapComponent: MapComponent,
     public locationService: LocationService,
+    private geoLoc: GeoLocComponent,
   ) {
 
   }
 
   ngOnInit(): void {
-    /* Bringing up the map centered on current location. */
-    this.mapComponent.openMap();
+    /* Sort out how we obtain our positioning. */
+    let positionObservable = this.geoLoc.getPositionWatch();
 
-    /* Retrieving nearest locations. */
-    this.locationService.nearest({
-        lat: 33.775,
-        lon: -84.365
-    }).subscribe(
-      (locations) => {
-        locations.forEach(
-          (value, key) => {
-            console.log(key + ": " + value.name);
-            this.mapComponent.addLocation(value);
+    /* Bringing up the map centered on current location. */
+    let disposeMe = positionObservable.subscribe(
+      (position) => {
+        this.mapComponent.openMap(position);
+        disposeMe.unsubscribe();
+
+        /* Retrieving nearest locations. */
+        this.locationService.nearest({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        }).subscribe(
+          (locations) => {
+            locations.forEach(
+              (value, key) => {
+                console.log(key + ": " + value.name);
+                this.mapComponent.addLocation(value);
+              }
+            );
           }
         );
       }
     );
+
   }
 
   ngOnDestroy(): void {

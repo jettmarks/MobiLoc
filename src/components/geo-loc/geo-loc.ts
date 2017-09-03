@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
-import {GeolocationOptions} from '@ionic-native/geolocation';
-import {Platform} from "ionic-angular";
+import {Component} from "@angular/core";
+import {GeolocationOptions, Geoposition} from "@ionic-native/geolocation";
+import {Observable} from "rxjs/Observable";
+import {Subject} from "rxjs/Subject";
 
 /**
  * Generated class for the GeoLocComponent component.
@@ -14,10 +15,27 @@ import {Platform} from "ionic-angular";
 })
 export class GeoLocComponent {
 
-  /** Current Location; shaped as a two-element array [latitude, longitude] in degrees. */
-  private latLon: [number, number];
+  /** The observable we use to update the client. */
+  private positionSubject: Subject<Geoposition>;
 
-  private readyState: boolean = false;
+  /** A Subject for Tethered Position; only instantiated if needed. */
+  private tetheredPosition: Subject<Geoposition>;
+
+  /** Type of Position Observable this component provides. */
+  private positionType: string = undefined;
+
+  private defaultGeoposition: Geoposition = {
+    coords: {
+      latitude: 33.77,
+      longitude: -84.37,
+      accuracy: 0.0,
+      altitude: null,
+      altitudeAccuracy: null,
+      heading: null,
+      speed: null
+    },
+    timestamp: null
+  };
 
   /** May want to make this configurable.
    */
@@ -28,47 +46,8 @@ export class GeoLocComponent {
   /* Tracks which watch we're paying attention to. */
   private watchId: number;
 
-  public onSuccess(resp) {
-    this.latLon = [resp.coords.latitude, resp.coords.longitude];
-  }
-
-  public onError(error) {
-    console.log('Error getting location', error);
-  }
-
   constructor(
-    private platform: Platform
   ) {
-    this.platform.ready().then(() => {
-      console.log('Platform Ready for GeoLocComponent');
-
-      navigator.geolocation.getCurrentPosition(
-        (resp) => {
-          this.latLon = [resp.coords.latitude, resp.coords.longitude];
-        },
-        this.onError,
-        this.geoLocOptions
-      );
-    });
-  }
-
-  public currentPosition(): [number, number] {
-    return this.latLon;
-  }
-
-  public isReady() {
-    return this.readyState;
-  }
-
-  public checkPlatform() {
-    this.platform.ready().then(() => {
-      this.readyState = true;
-      navigator.geolocation.getCurrentPosition(
-        this.onSuccess,
-        this.onError,
-        this.geoLocOptions
-      );
-    });
   }
 
   /**
@@ -83,18 +62,59 @@ export class GeoLocComponent {
     navigator.geolocation.clearWatch(this.watchId);
   }
 
-  public prepareCenteredMap(callbackFunction: (position: L.LatLngExpression) => any) {
-    navigator.geolocation.getCurrentPosition(
-      (response) => {
-        console.dir(response);
-        callbackFunction([
-          response.coords.latitude,
-          response.coords.longitude,
-        ])
-      },
-      this.onError,
-      this.geoLocOptions
-    )
+  getTetheredPosition(): Observable<Geoposition> {
+    this.tetheredPosition = new Subject();
+    this.tetheredPosition.next(this.defaultGeoposition);
+    this.positionType = "Tethered";
+    return this.tetheredPosition.asObservable();
   }
 
+  /**
+   * Returns an observable that gives the current position when updated.
+   * This will be sourced by one of two things:
+   * <ul>
+   *     <li>Observable against the native location of the device this is running on, or if it fails,
+   *     <li>A tethered value that comes from the server for the user's session, or if it fails, a fake value.
+   * </ul>
+   */
+  getPositionWatch(): Observable<Geoposition> {
+    if (this.positionSubject) {
+      console.log("Reusing existing position watch: " + this.positionType);
+    }
+    else {
+      console.log("2. Determining position sources");
+      this.positionSubject = new Subject;
+      /* Steer the logic based on whether we obtain device location. */
+      navigator.geolocation.getCurrentPosition(
+
+        /* A good response means we can use GPS. */
+        (response) => {
+          console.log("3. Can retrieve position");
+          this.positionType = "Device";
+          /* Send this recent position ... */
+          this.positionSubject.next(response);
+          /* ... and setup watch to continue updating. */
+          this.watchId = navigator.geolocation.watchPosition(
+            (response) => {
+              this.positionSubject.next(response);
+            }
+          );
+        },
+
+        /* Error response means we try tethered. */
+        (error) => {
+          console.log(error);
+          console.log("3. Use Tether instead");
+          this.getTetheredPosition().subscribe(
+            (response) => {
+              this.positionSubject.next(response);
+            }
+          );
+        },
+
+        this.geoLocOptions
+      );
+    }
+    return this.positionSubject.asObservable();
+  }
 }
