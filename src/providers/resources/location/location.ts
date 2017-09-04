@@ -16,6 +16,7 @@ namespace clueRide {
     imageUrls?: string[];
     establishmentId?: number;
     tagScores?: TagScores;
+    readiness: Level;
   }
 
   /**
@@ -29,6 +30,23 @@ namespace clueRide {
     lng: number;
   }
 
+  export class Level {
+    id: number = undefined;
+    name: string;
+    color: string;
+
+    constructor(name: string) {
+      let lowerCaseName = name.toLowerCase();
+
+      if (lowerCaseName == 'node') {
+        this.id = 0;
+        this.color = undefined;
+      } else if (lowerCaseName == 'issue') {
+        this.id = 1;
+        this.color = '#FF0000';
+      }
+    }
+  }
 
   /**
    * Shell class at this time, but expected to contain a map of tags to scores.

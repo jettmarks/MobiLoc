@@ -17,7 +17,6 @@ import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 export class HomePage {
 
   /** Instance of a Leaflet Map. */
-  map: any;
   locationList: Location[] = [];
 
   constructor(
