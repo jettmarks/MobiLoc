@@ -5,7 +5,6 @@ import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
-import LatLngExpression = L.LatLngExpression;
 
 /**
  * Generated class for the MapComponent component.

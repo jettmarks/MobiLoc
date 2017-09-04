@@ -110,6 +110,8 @@ export class GeoLocComponent {
               this.positionSubject.next(response);
             }
           );
+          /* TODO: temp until this is service-backed. */
+          this.tetheredPosition.next(this.defaultGeoposition);
         },
 
         this.geoLocOptions
