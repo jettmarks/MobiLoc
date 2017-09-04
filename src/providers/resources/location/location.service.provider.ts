@@ -1,5 +1,5 @@
 import {Creds} from "../../creds/creds.service";
-import {Restangular} from "ngx-restangular/dist/esm/src";
+import {Restangular} from "ngx-restangular";
 import {OpaqueToken} from "@angular/core";
 
 export const LOCATION_REST = new OpaqueToken('LocationResource');

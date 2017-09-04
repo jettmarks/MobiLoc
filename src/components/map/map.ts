@@ -4,6 +4,7 @@ import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geoposition} from "@ionic-native/geolocation";
+import * as L from "leaflet";
 import LatLngExpression = L.LatLngExpression;
 
 /**
