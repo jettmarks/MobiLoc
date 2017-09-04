@@ -6,8 +6,6 @@ import "leaflet.awesome-markers/dist/leaflet.awesome-markers";
 import PointExpression = L.PointExpression;
 import MarkerOptions = L.MarkerOptions;
 
-import LIcon = L.Icon;
-
 /**
  * Component for providing Markers and marker services.
  */
@@ -18,18 +16,24 @@ import LIcon = L.Icon;
 })
 export class MarkersComponent {
 
-  private hereIAmIcon: LIcon;
-  private hereIAmHeadingIcon: LIcon;
-  private hereIAmTetheredIcon: LIcon;
-  private hereIAmHeadingTetheredIcon: LIcon;
+  private hereIAmIcon: L.Icon;
+  private hereIAmHeadingIcon: L.Icon;
+  private hereIAmTetheredIcon: L.Icon;
+  private hereIAmHeadingTetheredIcon: L.Icon;
   private headingMarker: any;
   private deviceHasCompass: boolean;
+
+  private index: number = 0;
 
   /** Marker size and anchor are common across all images. */
   static readonly commonIconSize: PointExpression = [20, 50];
   static readonly commonIconAnchor: PointExpression = [10, 25];
 
+  private attractionIcon: L.AwesomeMarkers.Icon;
+  private draftIcon: L.AwesomeMarkers.Icon;
+  private featuredIcon: L.AwesomeMarkers.Icon;
   private issueIcon: L.AwesomeMarkers.Icon;
+  private placeIcon: L.AwesomeMarkers.Icon;
 
   constructor()
   {
@@ -58,15 +62,38 @@ export class MarkersComponent {
       "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading-tethered.png",
     );
 
-    // L.AwesomeMarkers.Icon.prototype.options.prefix = 'ion';
+    this.attractionIcon = L.AwesomeMarkers.icon({
+      icon: 'exclamation',
+      markerColor: 'blue',
+      prefix: "fa"
+    });
+
+    this.draftIcon = L.AwesomeMarkers.icon({
+      icon: 'exclamation',
+      markerColor: 'orange',
+      prefix: "fa"
+    });
+
+    this.featuredIcon = L.AwesomeMarkers.icon({
+      icon: 'exclamation',
+      markerColor: 'purple',
+      prefix: "fa"
+    });
+
     this.issueIcon = L.AwesomeMarkers.icon({
-      icon: 'heart-broken',    /* Heart with a crack */
+      icon: 'exclamation',
       markerColor: 'red',
+      prefix: "fa"
+    });
+
+    this.placeIcon = L.AwesomeMarkers.icon({
+      icon: 'exclamation',
+      markerColor: 'green',
       prefix: "fa"
     });
   }
 
-  private iconFromImage(iconUrl: string): LIcon {
+  private iconFromImage(iconUrl: string): L.Icon {
     return icon({
       iconUrl: iconUrl,
       iconSize: MarkersComponent.commonIconSize,
@@ -160,6 +187,25 @@ export class MarkersComponent {
   }
 
   public getLocationMarker(location: clueRide.Location) {
+    /* TODO: set these on the server. */
+    this.index++;
+    switch(this.index % 5) {
+      case 0:
+        location.readiness = {id: this.index % 5, name: 'issue', color: 'red'};
+        break;
+      case 1:
+        location.readiness = {id: this.index % 5, name: 'draft', color: 'orange'};
+        break;
+      case 2:
+        location.readiness = {id: this.index % 5, name: 'place', color: 'green'};
+        break;
+      case 3:
+        location.readiness = {id: this.index % 5, name: 'attraction', color: 'blue'};
+        break;
+      case 4:
+        location.readiness = {id: this.index % 5, name: 'featured', color: 'purple'};
+        break;
+    }
     let markerOptions: MarkerOptions = {
       icon: this.getLocationMarkerIcon(location.readiness)
     };
@@ -167,14 +213,20 @@ export class MarkersComponent {
   }
 
   private getLocationMarkerIcon(readiness: clueRide.Level): L.AwesomeMarkers.Icon {
-    /* TODO: Temp workaround */
-    if (!readiness) return this.issueIcon;
-
     switch(readiness.name.toUpperCase()) {
       case 'ISSUE':
+        return this.issueIcon;
+      case 'DRAFT':
+        return this.draftIcon;
+      case 'PLACE':
+        return this.placeIcon;
+      case 'ATTRACTION':
+        return this.attractionIcon;
+      case 'FEATURED':
+        return this.featuredIcon;
       case 'NODE':
       default:
-        return this.issueIcon;
+        return null;
     }
 
   }
