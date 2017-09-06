@@ -187,33 +187,14 @@ export class MarkersComponent {
   }
 
   public getLocationMarker(location: clueRide.Location) {
-    /* TODO: set these on the server. */
-    this.index++;
-    switch(this.index % 5) {
-      case 0:
-        location.readiness = {id: this.index % 5, name: 'issue', color: 'red'};
-        break;
-      case 1:
-        location.readiness = {id: this.index % 5, name: 'draft', color: 'orange'};
-        break;
-      case 2:
-        location.readiness = {id: this.index % 5, name: 'place', color: 'green'};
-        break;
-      case 3:
-        location.readiness = {id: this.index % 5, name: 'attraction', color: 'blue'};
-        break;
-      case 4:
-        location.readiness = {id: this.index % 5, name: 'featured', color: 'purple'};
-        break;
-    }
     let markerOptions: MarkerOptions = {
-      icon: this.getLocationMarkerIcon(location.readiness)
+      icon: this.getLocationMarkerIcon(location.readinessLevel)
     };
     return marker(location.point, markerOptions);
   }
 
-  private getLocationMarkerIcon(readiness: clueRide.Level): L.AwesomeMarkers.Icon {
-    switch(readiness.name.toUpperCase()) {
+  private getLocationMarkerIcon(readinessLevel: string): L.AwesomeMarkers.Icon {
+    switch(readinessLevel.toUpperCase()) {
       case 'ISSUE':
         return this.issueIcon;
       case 'DRAFT':
@@ -228,6 +209,6 @@ export class MarkersComponent {
       default:
         return null;
     }
-
   }
+
 }
