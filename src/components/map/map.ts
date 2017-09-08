@@ -5,6 +5,8 @@ import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
+import {CRMarker} from "../markers/crMarker";
+import {Subject} from "rxjs/Subject";
 
 /**
  * Generated class for the MapComponent component.
@@ -24,6 +26,7 @@ export class MapComponent {
   map: any;
   lastPosition: [number, number];
   private autoCenter: boolean = false;
+  markerEventSubject: Subject<CRMarker>;
 
   constructor(
     public geoLoc: GeoLocComponent,
@@ -62,12 +65,17 @@ export class MapComponent {
    * Prepares the Leaflet map to be shown, initializing leaflet if not already initialized.
    * Source of position info should be settled prior to calling this function.
    */
-  public openMap(position: Geoposition) {
+  public openMap(
+    position: Geoposition,
+    markerEventSubject: Subject<CRMarker>,
+  ) {
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
       this.map = L.map('map');
     }
+
+    this.markerEventSubject = markerEventSubject;
 
     /* Assemble Leaflet position object. */
     let leafletPosition = [
@@ -103,10 +111,30 @@ export class MapComponent {
   }
 
   /**
+   * Invoked whenever there is a mouse click on any of the Location Icons displayed on the Map.
+   * Target contains the Location ID which is passed to the appropriate edit page.
+   * @param {MouseEvent} mouseEvent
+   * @returns {null}
+  private markerOnClick(mouseEvent: MouseEvent): LeafletEventHandlerFn {
+    console.log(mouseEvent);
+    let crMarker: CRMarker = <any> mouseEvent.target;
+    this.markerEventSubject.next(crMarker);
+    return null;
+  }
+   */
+
+  /**
    * Given a Location, place it on the map.
    * @param location
    */
   public addLocation(location: clueRide.Location) {
-    this.markers.getLocationMarker(location).addTo(this.map);
+    let locationMarker = this.markers.getLocationMarker(location)
+      .on('click', (mouseEvent) => {
+        console.log(mouseEvent);
+        let crMarker: CRMarker = <any> mouseEvent.target;
+        this.markerEventSubject.next(crMarker);
+        return null;
+      });
+    locationMarker.addTo(this.map);
   }
 }

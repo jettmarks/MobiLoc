@@ -1,10 +1,12 @@
 import {Component} from "@angular/core";
-import "leaflet";
 import {MapComponent} from "../../components/map/map";
 import {NavController} from "ionic-angular";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
+import {Subject} from "rxjs/Subject";
+import {CRMarker} from "../../components/markers/crMarker";
+import {LocEditPage} from "../loc-edit/loc-edit";
 
 @Component({
   selector: 'page-home',
@@ -16,8 +18,8 @@ import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 })
 export class HomePage {
 
-  /** Instance of a Leaflet Map. */
-  locationList: Location[] = [];
+  locationMap = {};
+  markerEventSubject: Subject<CRMarker>;
 
   constructor(
     public navCtrl: NavController,
@@ -25,7 +27,7 @@ export class HomePage {
     public locationService: LocationService,
     private geoLoc: GeoLocComponent,
   ) {
-
+    this.markerEventSubject = new Subject();
   }
 
   ngOnInit(): void {
@@ -35,7 +37,10 @@ export class HomePage {
     /* Bringing up the map centered on current location. */
     let disposeMe = positionObservable.subscribe(
       (position) => {
-        this.mapComponent.openMap(position);
+        this.mapComponent.openMap(
+          position,
+          this.markerEventSubject,
+        );
         disposeMe.unsubscribe();
 
         /* Retrieving nearest locations. */
@@ -44,10 +49,12 @@ export class HomePage {
           lon: position.coords.longitude
         }).subscribe(
           (locations) => {
+            this.locationMap = {};
             locations.forEach(
-              (value, key) => {
-                console.log(key + ": " + value.name);
-                this.mapComponent.addLocation(value);
+              (location, key) => {
+                console.log(key + ": " + location.name);
+                this.mapComponent.addLocation(location);
+                this.locationMap[location.id] = location;
               }
             );
           }
@@ -55,6 +62,31 @@ export class HomePage {
       }
     );
 
+    /* Setup response to Marker Events. */
+    this.markerEventSubject.asObservable().subscribe(
+      (crMarker: CRMarker) => {
+        let locId = crMarker.locationId;
+        let loc = this.locationMap[locId];
+        let tabId = this.getTabIdForLocation(loc);
+
+        this.navCtrl.push(LocEditPage, {
+          location: loc,
+          tabId: tabId
+        });
+      }
+    );
+
+  }
+
+  private getTabIdForLocation(loc: clueRide.Location) {
+    switch(loc.readinessLevel) {
+      case 'FEATURED':
+        return 2;
+      case 'ATTRACTION':
+        return 1;
+      default:
+        return 0;
+    }
   }
 
   ngOnDestroy(): void {
