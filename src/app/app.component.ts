@@ -6,6 +6,7 @@ import {Creds} from "../providers/creds/creds.service";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {LoginPage} from "../pages/login/login";
+import {LocEditPage} from "../pages/loc-edit/loc-edit";
 
 @Component({
   templateUrl: 'app.html'
@@ -26,8 +27,9 @@ export class MyApp {
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
+      { title: 'Map', component: HomePage },
       { title: 'List', component: ListPage },
+      { title: 'Edit', component: LocEditPage },
       { title: 'Login', component: LoginPage },
     ];
 

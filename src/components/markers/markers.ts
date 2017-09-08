@@ -1,8 +1,8 @@
 import {Component, Injectable} from "@angular/core";
 import * as L from "leaflet";
 import {icon, marker} from "leaflet";
-// import "leaflet.awesome-markers";
 import "leaflet.awesome-markers/dist/leaflet.awesome-markers";
+import {CRMarker} from "./crMarker";
 import PointExpression = L.PointExpression;
 import MarkerOptions = L.MarkerOptions;
 
@@ -22,8 +22,6 @@ export class MarkersComponent {
   private hereIAmHeadingTetheredIcon: L.Icon;
   private headingMarker: any;
   private deviceHasCompass: boolean;
-
-  private index: number = 0;
 
   /** Marker size and anchor are common across all images. */
   static readonly commonIconSize: PointExpression = [20, 50];
@@ -186,11 +184,13 @@ export class MarkersComponent {
     );
   }
 
-  public getLocationMarker(location: clueRide.Location) {
+  public getLocationMarker(location: clueRide.Location): CRMarker {
     let markerOptions: MarkerOptions = {
       icon: this.getLocationMarkerIcon(location.readinessLevel)
     };
-    return marker(location.point, markerOptions);
+    let clueRideMarker: CRMarker = new CRMarker(location, markerOptions);
+    clueRideMarker.locationId = location.id;
+    return clueRideMarker;
   }
 
   private getLocationMarkerIcon(readinessLevel: string): L.AwesomeMarkers.Icon {

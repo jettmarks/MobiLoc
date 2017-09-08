@@ -18,6 +18,7 @@ import {LoginPage} from "../pages/login/login";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {Creds} from "../providers/creds/creds.service";
+import {LocEditPage} from "../pages/loc-edit/loc-edit";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -41,6 +42,7 @@ function loadCreds(creds: Creds) {
 @NgModule({
   declarations: [
     MyApp,
+    LocEditPage,
     HomePage,
     ListPage,
     LoginPage,
@@ -58,6 +60,7 @@ function loadCreds(creds: Creds) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    LocEditPage,
     HomePage,
     ListPage,
     LoginPage,
