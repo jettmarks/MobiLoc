@@ -14,16 +14,44 @@ import {IonicPage, NavController, NavParams} from "ionic-angular";
 @IonicPage()
 export class LocEditPage {
 
-  draftRoot = 'DraftPage';
-  attractionRoot = 'AttractionPage';
-  featuredRoot = 'FeaturedPage';
   editSegment: string;
-  locationId: number;
   location: clueRide.Location;
   private editSegments = [
     'draft',
     'attraction',
     'featured'
+  ];
+
+  /* TODO: LE-44: Retrieve these values from the back-end. */
+  locTypes = [
+    {
+      value: 'PICNIC',
+      text: 'Picnic'
+    },
+    {
+      value: 'TINY_DOOR',
+      text: 'Tiny Door',
+    },
+    {
+      value: 'ART_SCULPTURE',
+      text: 'Sculpture',
+    },
+    {
+      value: 'FOOD_TO_GO',
+      text: 'Food (To Go)',
+    },
+    {
+      value: 3,
+      text: 'Mural',
+    },
+    {
+      value: 4,
+      text: 'Bar',
+    },
+    {
+      value: 5,
+      text: 'Restaurant'
+    }
   ];
 
   constructor(
