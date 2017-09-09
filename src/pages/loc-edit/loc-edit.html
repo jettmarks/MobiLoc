@@ -17,7 +17,45 @@
 
 <ion-content>
   <div [ngSwitch]="editSegment">
-    <div *ngSwitchCase="'draft'">Draft</div>
+    <div *ngSwitchCase="'draft'">
+      <ion-grid>
+        <!-- Name -->
+        <ion-row>
+          <ion-col col-4>
+            <ion-label>Name</ion-label>
+          </ion-col>
+          <ion-col col-8>
+            <ion-input [(ngModel)]="location.name"></ion-input>
+          </ion-col>
+        </ion-row>
+
+        <!-- Type -->
+        <ion-row>
+          <ion-col col-4>
+            <ion-label>Type</ion-label>
+          </ion-col>
+          <ion-col col-8>
+            <ion-select [(ngModel)]="location.locationType">
+              <ion-option *ngFor="let o of locTypes" [value]="o.value">{{o.text}}</ion-option>
+            </ion-select>
+          </ion-col>
+        </ion-row>
+
+        <!-- Description -->
+        <ion-row>
+          <ion-col col-4>
+            <ion-label>Description</ion-label>
+          </ion-col>
+          <ion-col col-8>
+            <ion-textarea [(ngModel)]="location.description"></ion-textarea>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+      <!-- Featured Image -->
+      <ion-label>Featured Image</ion-label>
+      <img src="{{location.imageUrls[0]}}"/>
+    </div>
     <div *ngSwitchCase="'attraction'">Attraction</div>
     <div *ngSwitchCase="'featured'">Featured</div>
   </div>
