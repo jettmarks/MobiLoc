@@ -1,5 +1,25 @@
-<ion-tabs [selectedIndex]="tabId">
-    <ion-tab [root]="draftRoot" [rootParams]="location" tabTitle="Draft" tabIcon="information-circle"></ion-tab>
-    <ion-tab [root]="attractionRoot" [rootParams]="location" tabTitle="Attraction" tabIcon="information-circle"></ion-tab>
-    <ion-tab [root]="featuredRoot" [rootParams]="location" tabTitle="Featured" tabIcon="information-circle"></ion-tab>
-</ion-tabs>
+<ion-header>
+  <ion-navbar>
+    <ion-title>Editing: {{location.name}}</ion-title>
+    <ion-segment [(ngModel)]="editSegment" color="secondary">
+      <ion-segment-button value="draft">
+        Location
+      </ion-segment-button>
+      <ion-segment-button value="attraction">
+        Clues
+      </ion-segment-button>
+      <ion-segment-button value="featured">
+        Features
+      </ion-segment-button>
+    </ion-segment>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div [ngSwitch]="editSegment">
+    <div *ngSwitchCase="'draft'">Draft</div>
+    <div *ngSwitchCase="'attraction'">Attraction</div>
+    <div *ngSwitchCase="'featured'">Featured</div>
+  </div>
+</ion-content>
+
