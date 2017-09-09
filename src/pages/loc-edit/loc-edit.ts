@@ -17,12 +17,20 @@ export class LocEditPage {
   draftRoot = 'DraftPage';
   attractionRoot = 'AttractionPage';
   featuredRoot = 'FeaturedPage';
-  tabId: number;
+  editSegment: string;
   locationId: number;
   location: clueRide.Location;
+  private editSegments = [
+    'draft',
+    'attraction',
+    'featured'
+  ];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.tabId = navParams.get("tabId");
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+  ) {
+    this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
   }
 
