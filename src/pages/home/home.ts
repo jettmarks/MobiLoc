@@ -4,9 +4,6 @@ import {NavController} from "ionic-angular";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
-import {Subject} from "rxjs/Subject";
-import {CRMarker} from "../../components/markers/crMarker";
-import {LocEditPage} from "../loc-edit/loc-edit";
 
 @Component({
   selector: 'page-home',
@@ -19,7 +16,6 @@ import {LocEditPage} from "../loc-edit/loc-edit";
 export class HomePage {
 
   locationMap = {};
-  markerEventSubject: Subject<CRMarker>;
 
   constructor(
     public navCtrl: NavController,
@@ -27,7 +23,6 @@ export class HomePage {
     public locationService: LocationService,
     private geoLoc: GeoLocComponent,
   ) {
-    this.markerEventSubject = new Subject();
   }
 
   ngOnInit(): void {
@@ -38,8 +33,7 @@ export class HomePage {
     let disposeMe = positionObservable.subscribe(
       (position) => {
         this.mapComponent.openMap(
-          position,
-          this.markerEventSubject,
+          position
         );
         disposeMe.unsubscribe();
 
@@ -61,32 +55,6 @@ export class HomePage {
         );
       }
     );
-
-    /* Setup response to Marker Events. */
-    this.markerEventSubject.asObservable().subscribe(
-      (crMarker: CRMarker) => {
-        let locId = crMarker.locationId;
-        let loc = this.locationMap[locId];
-        let tabId = this.getTabIdForLocation(loc);
-
-        this.navCtrl.push(LocEditPage, {
-          location: loc,
-          tabId: tabId
-        });
-      }
-    );
-
-  }
-
-  private getTabIdForLocation(loc: clueRide.Location) {
-    switch(loc.readinessLevel) {
-      case 'FEATURED':
-        return 2;
-      case 'ATTRACTION':
-        return 1;
-      default:
-        return 0;
-    }
   }
 
   ngOnDestroy(): void {

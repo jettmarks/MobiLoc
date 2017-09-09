@@ -7,6 +7,8 @@ import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
 import {CRMarker} from "../markers/crMarker";
 import {Subject} from "rxjs/Subject";
+import {LocEditPage} from "../../pages/loc-edit/loc-edit";
+import {App} from "ionic-angular";
 
 /**
  * Generated class for the MapComponent component.
@@ -27,11 +29,13 @@ export class MapComponent {
   lastPosition: [number, number];
   private autoCenter: boolean = false;
   markerEventSubject: Subject<CRMarker>;
+  locationMap = {};
 
   constructor(
     public geoLoc: GeoLocComponent,
     private markers: MarkersComponent,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public appCtrl: App
   ) {
     this.zoomLevel = 14;
     this.lastPosition = [33.77, -84.37];
@@ -67,15 +71,13 @@ export class MapComponent {
    */
   public openMap(
     position: Geoposition,
-    markerEventSubject: Subject<CRMarker>,
   ) {
     /* If map is already initialized, no need to re-initialize. */
     if (!this.map) {
       console.log('MapComponent Initializing');
+      this.locationMap = {};
       this.map = L.map('map');
     }
-
-    this.markerEventSubject = markerEventSubject;
 
     /* Assemble Leaflet position object. */
     let leafletPosition = [
@@ -111,30 +113,42 @@ export class MapComponent {
   }
 
   /**
-   * Invoked whenever there is a mouse click on any of the Location Icons displayed on the Map.
-   * Target contains the Location ID which is passed to the appropriate edit page.
-   * @param {MouseEvent} mouseEvent
-   * @returns {null}
-  private markerOnClick(mouseEvent: MouseEvent): LeafletEventHandlerFn {
-    console.log(mouseEvent);
-    let crMarker: CRMarker = <any> mouseEvent.target;
-    this.markerEventSubject.next(crMarker);
-    return null;
-  }
-   */
-
-  /**
    * Given a Location, place it on the map.
    * @param location
    */
   public addLocation(location: clueRide.Location) {
+    this.locationMap[location.id] = location;
     let locationMarker = this.markers.getLocationMarker(location)
       .on('click', (mouseEvent) => {
         console.log(mouseEvent);
         let crMarker: CRMarker = <any> mouseEvent.target;
-        this.markerEventSubject.next(crMarker);
+        let locId = crMarker.locationId;
+        let loc = this.locationMap[locId];
+        let tabId = MapComponent.getTabIdForLocation(loc);
+
+        this.appCtrl.getRootNav().push(LocEditPage, {
+          location: loc,
+          tabId: tabId
+        });
         return null;
       });
     locationMarker.addTo(this.map);
   }
+
+  /**
+   * Reads the Location's readiness level to determine which tab to show.
+   * @param {clueRide.Location} loc instance carrying a readinessLevel.
+   * @returns {number} representing an offset from Draft.
+   */
+  private static getTabIdForLocation(loc: clueRide.Location) {
+    switch(loc.readinessLevel) {
+      case 'FEATURED':
+        return 2;
+      case 'ATTRACTION':
+        return 1;
+      default:
+        return 0;
+    }
+  }
+
 }
