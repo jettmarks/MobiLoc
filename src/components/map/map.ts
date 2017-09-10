@@ -6,9 +6,9 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
 import {CRMarker} from "../markers/crMarker";
-import {Subject} from "rxjs/Subject";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {App} from "ionic-angular";
+import {LatLonComponent} from "../lat-lon/lat-lon";
 
 /**
  * Generated class for the MapComponent component.
@@ -25,11 +25,13 @@ export class MapComponent {
 
   /** Holds the current zoom for the map. */
   zoomLevel: number;
-  map: any;
+  static map: any;
   lastPosition: [number, number];
   private autoCenter: boolean = false;
-  markerEventSubject: Subject<CRMarker>;
-  locationMap = {};
+  static locationMap = {};
+  showLatLon: boolean = true;
+  showCrosshairs: boolean = false;
+  static latLon: LatLonComponent;
 
   constructor(
     public geoLoc: GeoLocComponent,
@@ -57,7 +59,7 @@ export class MapComponent {
 
         /* Move map so current location is centered. */
         if (this.autoCenter) {
-          this.map.panTo(this.lastPosition);
+          MapComponent.map.panTo(this.lastPosition);
         }
       }
     );
@@ -73,10 +75,13 @@ export class MapComponent {
     position: Geoposition,
   ) {
     /* If map is already initialized, no need to re-initialize. */
-    if (!this.map) {
+    if (!MapComponent.map) {
       console.log('MapComponent Initializing');
-      this.locationMap = {};
-      this.map = L.map('map');
+      MapComponent.locationMap = {};
+      MapComponent.map = L.map('map');
+      MapComponent.latLon = new LatLonComponent(this.geoLoc);
+      MapComponent.latLon.addTo(MapComponent.map);
+      MapComponent.latLon.setContent(this.showLatLon);
     }
 
     /* Assemble Leaflet position object. */
@@ -85,16 +90,16 @@ export class MapComponent {
       position.coords.longitude
     ];
 
-    this.map.setView(leafletPosition, this.zoomLevel);
+    MapComponent.map.setView(leafletPosition, this.zoomLevel);
 
     /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-    }).addTo(this.map);
+    }).addTo(MapComponent.map);
 
     /* Add a "here I am" marker. */
-    this.markers.getHereIAmMarker(leafletPosition).addTo(this.map);
+    this.markers.getHereIAmMarker(leafletPosition).addTo(MapComponent.map);
 
     /* Set map to update when position changes. */
     this.setWatch();
@@ -105,11 +110,11 @@ export class MapComponent {
   }
 
   public closeMap() {
-    if (isDefined(this.map) && this.map !== null) {
+    if (isDefined(MapComponent.map) && MapComponent.map !== null) {
       this.geoLoc.clearWatch();
-      this.map.remove();
+      MapComponent.map.remove();
     }
-    this.map = null;
+    MapComponent.map = null;
   }
 
   /**
@@ -117,13 +122,13 @@ export class MapComponent {
    * @param location
    */
   public addLocation(location: clueRide.Location) {
-    this.locationMap[location.id] = location;
+    MapComponent.locationMap[location.id] = location;
     let locationMarker = this.markers.getLocationMarker(location)
       .on('click', (mouseEvent) => {
         console.log(mouseEvent);
         let crMarker: CRMarker = <any> mouseEvent.target;
         let locId = crMarker.locationId;
-        let loc = this.locationMap[locId];
+        let loc = MapComponent.locationMap[locId];
         let tabId = MapComponent.getTabIdForLocation(loc);
 
         this.appCtrl.getRootNav().push(LocEditPage, {
@@ -132,7 +137,7 @@ export class MapComponent {
         });
         return null;
       });
-    locationMarker.addTo(this.map);
+    locationMarker.addTo(MapComponent.map);
   }
 
   /**
@@ -149,6 +154,28 @@ export class MapComponent {
       default:
         return 0;
     }
+  }
+
+  settingsFabAction() {
+    console.log("Settings Toggle");
+  }
+
+  settingsToggleCrosshairs() {
+    this.showCrosshairs = !this.showCrosshairs;
+    console.log("Crosshairs: " + this.showCrosshairs);
+  }
+
+  settingsToggleLatLon() {
+    this.showLatLon = !this.showLatLon;
+    MapComponent.latLon.setContent(this.showLatLon);
+    console.log("Lat/Lon: " + this.showLatLon);
+  }
+
+  /**
+   * Responds to FAB button to add a new location.
+   */
+  addFabAction() {
+    console.log(MapComponent.map.getCenter());
   }
 
 }

@@ -1,3 +1,32 @@
 <!-- Generated template for the MapComponent component -->
 <div class="map-content" id="map">
+
+  <ion-fab right top>
+    <button ion-fab mini (tap)="settingsFabAction()">
+      <ion-icon name="settings"></ion-icon>
+    </button>
+    <ion-fab-list>
+
+      <div class="labeledFab">
+        <ion-label>Toggle Lat/Lon</ion-label>
+        <button ion-fab (click)="settingsToggleLatLon()">
+          <ion-icon name="checkmark"></ion-icon>
+        </button>
+      </div>
+
+      <div class="labeledFab">
+        <ion-label>Toggle Crosshairs</ion-label>
+        <button ion-fab (click)="settingsToggleCrosshairs()">
+          <ion-icon name="locate"></ion-icon>
+        </button>
+      </div>
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <ion-fab right bottom>
+    <button ion-fab mini (tap)="addFabAction()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
 </div>

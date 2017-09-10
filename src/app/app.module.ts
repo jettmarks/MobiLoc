@@ -19,6 +19,7 @@ import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {Creds} from "../providers/creds/creds.service";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
+import {LatLonComponent} from "../components/lat-lon/lat-lon";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -49,6 +50,7 @@ function loadCreds(creds: Creds) {
     GeoLocComponent,
     MapComponent,
     MarkersComponent,
+    LatLonComponent,
   ],
   imports: [
     BrowserModule,
