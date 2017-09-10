@@ -1,0 +1,12 @@
+.lat-lon-component {
+  margin: 0px;
+  background: rgba(255,255,255,0.7);
+  color: #333;
+  font-size: 11px;
+  line-height: 18px;
+  border-radius: 5px;
+}
+
+.lat-lon-component:empty {
+  display: none;
+}
