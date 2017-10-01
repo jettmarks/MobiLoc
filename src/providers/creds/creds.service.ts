@@ -33,8 +33,10 @@ export class Creds {
   private updateToken(token: string) {
     this.token = token;
     if(token) {
+      console.log("Token Retrieved and cached");
       return this.cacheToken(token);
     } else {
+      console.log("Token not found");
       this.hasAuthToken = false;
       this.payload = {
         badges: [],

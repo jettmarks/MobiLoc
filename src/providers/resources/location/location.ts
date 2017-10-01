@@ -6,7 +6,7 @@ namespace clueRide {
 
     id: number;
     nodeId: number;   // Provides Lat/Lon
-    point: Node;
+    latLon: LatLon;
     name?: string;
     description?: string;
     locationGroupId?: number;
@@ -22,7 +22,7 @@ namespace clueRide {
   /**
    * How we place this on the Map.
    */
-  export class Node {
+  export class LatLon {
     id: number;
     // May want one of the geographical types understood by leaflet
     lat: number;

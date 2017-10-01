@@ -13,13 +13,14 @@ import {RestangularModule} from "ngx-restangular/dist/esm/src";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
+import {Creds} from "../providers/creds/creds.service";
 import {GeoLocComponent} from "../components/geo-loc/geo-loc";
+import {LatLonComponent} from "../components/lat-lon/lat-lon";
+import {LocEditPage} from "../pages/loc-edit/loc-edit";
 import {LoginPage} from "../pages/login/login";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
-import {Creds} from "../providers/creds/creds.service";
-import {LocEditPage} from "../pages/loc-edit/loc-edit";
-import {LatLonComponent} from "../components/lat-lon/lat-lon";
+import {Resource} from "../providers/resources/resource";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -56,7 +57,7 @@ function loadCreds(creds: Creds) {
     BrowserModule,
     CloudModule.forRoot(cloudSettings),
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(MyApp),
+    IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
     RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
@@ -72,6 +73,7 @@ function loadCreds(creds: Creds) {
     GeoLocComponent,
     MapComponent,
     MarkersComponent,
+    Resource,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},

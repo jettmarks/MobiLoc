@@ -18,7 +18,7 @@
 
 <ion-content padding>
 
-  <div class="login-box" *ngIf="!creds.isLoggedIn()">
+  <div id="login" class="login-box" *ngIf="!creds.isLoggedIn()">
     <form (ngSubmit)="login()" #registerForm="ngForm">
       <ion-row>
         <ion-col>
@@ -46,7 +46,7 @@
     </form>
   </div>
 
-  <div class="login-box" *ngIf="creds.isLoggedIn()">
+  <div id="logout" class="login-box" *ngIf="creds.isLoggedIn()">
     <form (ngSubmit)="logout()" #registerForm="ngForm">
       <ion-row>
         <ion-col class="signup-col">

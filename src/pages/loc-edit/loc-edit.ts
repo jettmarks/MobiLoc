@@ -1,5 +1,7 @@
 import {Component} from "@angular/core";
-import {IonicPage, NavController, NavParams} from "ionic-angular";
+import {IonicPage, NavParams} from "ionic-angular";
+import {LocationService} from "../../providers/resources/location/location.service";
+import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -9,7 +11,11 @@ import {IonicPage, NavController, NavParams} from "ionic-angular";
  */
 @Component({
   selector: 'page-loc-edit',
-  templateUrl: 'loc-edit.html'
+  templateUrl: 'loc-edit.html',
+  providers: [
+    locationServiceProvider,
+    LocationService
+  ]
 })
 @IonicPage()
 export class LocEditPage {
@@ -55,11 +61,20 @@ export class LocEditPage {
   ];
 
   constructor(
-    public navCtrl: NavController,
     public navParams: NavParams,
+    private locationService: LocationService,
   ) {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
+  }
+
+  //noinspection JSMethodCanBeStatic
+  /**
+   * Invoked when the user is ready to persist changes.
+   */
+  save() {
+    console.log("Saving");
+    this.locationService.update(this.location);
   }
 
 }
