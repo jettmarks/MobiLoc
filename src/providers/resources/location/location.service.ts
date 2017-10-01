@@ -20,4 +20,8 @@ export class LocationService {
     return this.resource.nearest(params);
   }
 
+  update(params: any) {
+    return this.resource.update(params);
+  }
+
 }

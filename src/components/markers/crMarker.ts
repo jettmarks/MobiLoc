@@ -12,7 +12,7 @@ export class CRMarker extends Marker {
     location: clueRide.Location,
     options: MarkerOptions,
   ) {
-    super(location.point, options);
+    super(location.latLon, options);
     this.locationId = location.id;
   }
 }

@@ -186,7 +186,9 @@ export class MarkersComponent {
 
   public getLocationMarker(location: clueRide.Location): CRMarker {
     let markerOptions: MarkerOptions = {
-      icon: this.getLocationMarkerIcon(location.readinessLevel)
+      icon: this.getLocationMarkerIcon(location.readinessLevel),
+      alt: "locId:"+location.id,
+      title: location.name + " : " + location.id
     };
     let clueRideMarker: CRMarker = new CRMarker(location, markerOptions);
     clueRideMarker.locationId = location.id;

@@ -8,6 +8,6 @@ import {LocEditPage} from "./loc-edit";
   ],
   imports: [
     IonicPageModule.forChild(LocEditPage),
-  ]
+  ],
 })
 export class LocEditPageModule {}
