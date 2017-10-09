@@ -37,9 +37,4 @@ namespace clueRide {
 
   }
 
-  export class LocationType {
-    // At this time, the enumeration of Location Types is maintained on the server
-    // (in preparation to move to a DB table)
-  }
-
 }
