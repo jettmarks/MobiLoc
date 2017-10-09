@@ -24,4 +24,8 @@ export class LocationService {
     return this.resource.update(params);
   }
 
+  types(params: any) {
+    return this.resource.types(params);
+  }
+
 }
