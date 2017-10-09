@@ -1,5 +1,7 @@
 import {Component} from "@angular/core";
-import {IonicPage, NavController, NavParams} from "ionic-angular";
+import {IonicPage, NavParams} from "ionic-angular";
+import {LocationService} from "../../providers/resources/location/location.service";
+import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -9,7 +11,11 @@ import {IonicPage, NavController, NavParams} from "ionic-angular";
  */
 @Component({
   selector: 'page-loc-edit',
-  templateUrl: 'loc-edit.html'
+  templateUrl: 'loc-edit.html',
+  providers: [
+    locationServiceProvider,
+    LocationService
+  ]
 })
 @IonicPage()
 export class LocEditPage {
@@ -22,44 +28,38 @@ export class LocEditPage {
     'featured'
   ];
 
-  /* TODO: LE-44: Retrieve these values from the back-end. */
-  locTypes = [
-    {
-      value: 'PICNIC',
-      text: 'Picnic'
-    },
-    {
-      value: 'TINY_DOOR',
-      text: 'Tiny Door',
-    },
-    {
-      value: 'ART_SCULPTURE',
-      text: 'Sculpture',
-    },
-    {
-      value: 'FOOD_TO_GO',
-      text: 'Food (To Go)',
-    },
-    {
-      value: 3,
-      text: 'Mural',
-    },
-    {
-      value: 4,
-      text: 'Bar',
-    },
-    {
-      value: 5,
-      text: 'Restaurant'
-    }
-  ];
+  locTypes = [];
 
   constructor(
-    public navCtrl: NavController,
     public navParams: NavParams,
+    private locationService: LocationService,
   ) {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
+
+    this.locationService.types({}).subscribe(
+      (locationTypes) => {
+        locationTypes.forEach(
+          (locationType, key) => {
+            this.locTypes.push(
+              {
+                value: locationType.id,
+                text: locationType.name
+              }
+            );
+          }
+        );
+      }
+    );
+  }
+
+  //noinspection JSMethodCanBeStatic
+  /**
+   * Invoked when the user is ready to persist changes.
+   */
+  save() {
+    console.log("Saving");
+    this.locationService.update(this.location);
   }
 
 }
