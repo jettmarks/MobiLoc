@@ -2,7 +2,30 @@ page-loc-edit {
 
 }
 
-.form-footer {
+img {
+  display: block;
+  margin: auto;
+  width: 200px;
+  height: 200px;
+}
+
+.value-field {
+  border: cornflowerblue solid thin;
+}
+
+ion-label {
+  float: right;
+}
+
+ion-select {
+  max-width: 100%;
+}
+
+.text-input-ios {
+  margin: 11px 8px 11px 3px;
+}
+
+.form-buttons-row {
   position: absolute;
   bottom: 0;
 }
