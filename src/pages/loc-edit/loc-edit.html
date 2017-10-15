@@ -38,7 +38,7 @@
           </ion-col>
           <ion-col col-8>
             <ion-select class="value-field"
-                        [(ngModel)]="location.locationType">
+                        [(ngModel)]="location.locationTypeId">
               <ion-option *ngFor="let o of locTypes" [value]="o.value">
                 {{o.text}}
               </ion-option>
