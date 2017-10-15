@@ -10,12 +10,10 @@ namespace clueRide {
     name?: string;
     description?: string;
     locationGroupId?: number;
-    locationType?: LocationType;
-    clueIds?: number[];
+    locationTypeName?: string;
+    locationTypeId: number;
     featuredImageUrl?: string;
-    imageUrls?: string[];
     establishmentId?: number;
-    tagScores?: TagScores;
     readinessLevel: string;
   }
 
@@ -28,13 +26,6 @@ namespace clueRide {
     lat: number;
     lon: number;
     lng: number;
-  }
-
-  /**
-   * Shell class at this time, but expected to contain a map of tags to scores.
-   */
-  export class TagScores {
-
   }
 
 }
