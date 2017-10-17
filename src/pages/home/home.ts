@@ -4,13 +4,17 @@ import {NavController} from "ionic-angular";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
+import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
+import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
   providers: [
     locationServiceProvider,
-    LocationService
+    locationTypeServiceProvider,
+    LocationService,
+    LocationTypeService
   ],
 })
 export class HomePage {
@@ -21,8 +25,41 @@ export class HomePage {
     public navCtrl: NavController,
     public mapComponent: MapComponent,
     public locationService: LocationService,
+    public locationTypeService: LocationTypeService,
     private geoLoc: GeoLocComponent,
   ) {
+  }
+
+  /**
+   * Given a position, retrieve the locations nearest that position.
+   * @param position
+   */
+  loadNearestLocations(position) {
+    this.locationService.nearest({
+      lat: position.coords.latitude,
+      lon: position.coords.longitude
+    }).subscribe(
+      (locations) => {
+        this.locationMap = {};
+        locations.forEach(
+          (location) => {
+            this.assembleAndAddLocation(location);
+          }
+        );
+      }
+    )
+  }
+
+  /**
+   * There are multiple pieces of data that build up a Location; this puts
+   * them all together.
+   * @param location
+   */
+  assembleAndAddLocation(location: clueRide.Location) {
+    let locationType = this.locationTypeService.getById(location.locationTypeId);
+    console.log(location.id + ": " + location.name);
+    this.mapComponent.addLocation(location, locationType.icon);
+    this.locationMap[location.id] = location;
   }
 
   ngOnInit(): void {
@@ -36,23 +73,7 @@ export class HomePage {
           position
         );
         disposeMe.unsubscribe();
-
-        /* Retrieving nearest locations. */
-        this.locationService.nearest({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude
-        }).subscribe(
-          (locations) => {
-            this.locationMap = {};
-            locations.forEach(
-              (location, key) => {
-                console.log(key + ": " + location.name);
-                this.mapComponent.addLocation(location);
-                this.locationMap[location.id] = location;
-              }
-            );
-          }
-        );
+        this.loadNearestLocations(position);
       }
     );
   }

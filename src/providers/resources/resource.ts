@@ -4,26 +4,25 @@ import {Injectable} from "@angular/core";
  * Created by jett on 9/24/17.
  */
 
-// namespace clueRide {
-  @Injectable()
-  export class Resource {
+@Injectable()
+export class Resource {
 
-    constructor(
-      private creds: Creds
-    ) {
-    }
+  constructor(
+    private creds: Creds
+  ) {
+  }
 
-    addTokenRequestInterceptor(configurer) {
-      configurer.addFullRequestInterceptor(
-        (element, operation, path, url, headers, params) => {
-          let bearerToken = this.creds.getBearerToken();
+  addTokenRequestInterceptor(configurer) {
+    configurer.addFullRequestInterceptor(
+      (element, operation, path, url, headers, params) => {
+        let bearerToken = this.creds.getBearerToken();
 
-          return {
-            headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
-          };
-        }
-      );
-    }
+        return {
+          headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
+        };
+      }
+    );
+  }
 
   defineMethod(configurer, methodConfig) {
     this.addTokenRequestInterceptor(configurer);
@@ -38,8 +37,7 @@ import {Injectable} from "@angular/core";
         return resource;
       }
     );
-
   }
+
 }
 
-// }
