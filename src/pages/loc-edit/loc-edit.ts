@@ -2,6 +2,8 @@ import {Component} from "@angular/core";
 import {IonicPage, NavParams} from "ionic-angular";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
+import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
+import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -13,8 +15,10 @@ import {locationServiceProvider} from "../../providers/resources/location/locati
   selector: 'page-loc-edit',
   templateUrl: 'loc-edit.html',
   providers: [
+    LocationService,
     locationServiceProvider,
-    LocationService
+    LocationTypeService,
+    locationTypeServiceProvider,
   ]
 })
 @IonicPage()
@@ -33,11 +37,12 @@ export class LocEditPage {
   constructor(
     public navParams: NavParams,
     private locationService: LocationService,
+    private locationTypeService: LocationTypeService,
   ) {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
 
-    this.locationService.types({}).subscribe(
+    this.locationTypeService.allLocationTypes({}).subscribe(
       (locationTypes) => {
         locationTypes.forEach(
           (locationType, key) => {

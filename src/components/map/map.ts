@@ -119,11 +119,15 @@ export class MapComponent {
 
   /**
    * Given a Location, place it on the map.
-   * @param location
+   * @param location to be added.
+   * @param iconName string name of the icon to represent the location (based on location type).
    */
-  public addLocation(location: clueRide.Location) {
+  public addLocation(
+    location: clueRide.Location,
+    iconName: string
+  ) {
     MapComponent.locationMap[location.id] = location;
-    let locationMarker = this.markers.getLocationMarker(location)
+    let locationMarker = this.markers.getLocationMarker(location, iconName)
       .on('click', (mouseEvent) => {
         console.log(mouseEvent);
         let crMarker: CRMarker = <any> mouseEvent.target;

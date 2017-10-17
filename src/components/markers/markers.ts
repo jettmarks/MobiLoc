@@ -5,6 +5,7 @@ import "leaflet.awesome-markers/dist/leaflet.awesome-markers";
 import {CRMarker} from "./crMarker";
 import PointExpression = L.PointExpression;
 import MarkerOptions = L.MarkerOptions;
+import LocationType = clueRide.LocationType;
 
 /**
  * Component for providing Markers and marker services.
@@ -28,12 +29,13 @@ export class MarkersComponent {
   static readonly commonIconAnchor: PointExpression = [10, 25];
 
   private attractionIcon: L.AwesomeMarkers.Icon;
-  private draftIcon: L.AwesomeMarkers.Icon;
   private featuredIcon: L.AwesomeMarkers.Icon;
   private issueIcon: L.AwesomeMarkers.Icon;
   private placeIcon: L.AwesomeMarkers.Icon;
+  private unknownIcon: L.AwesomeMarkers.Icon;
 
-  constructor()
+  constructor(
+  )
   {
     /* This may be happening too early (LE-19). */
     this.deviceHasCompass = !!navigator.compass;
@@ -66,12 +68,6 @@ export class MarkersComponent {
       prefix: "fa"
     });
 
-    this.draftIcon = L.AwesomeMarkers.icon({
-      icon: 'exclamation',
-      markerColor: 'orange',
-      prefix: "fa"
-    });
-
     this.featuredIcon = L.AwesomeMarkers.icon({
       icon: 'exclamation',
       markerColor: 'purple',
@@ -89,6 +85,13 @@ export class MarkersComponent {
       markerColor: 'green',
       prefix: "fa"
     });
+
+    this.unknownIcon = L.AwesomeMarkers.icon({
+      icon: 'question',
+      markerColor: 'darkred',
+      prefix: "fa"
+    });
+
   }
 
   private iconFromImage(iconUrl: string): L.Icon {
@@ -184,9 +187,12 @@ export class MarkersComponent {
     );
   }
 
-  public getLocationMarker(location: clueRide.Location): CRMarker {
+  public getLocationMarker(
+    location: clueRide.Location,
+    iconName: string
+  ): CRMarker {
     let markerOptions: MarkerOptions = {
-      icon: this.getLocationMarkerIcon(location.readinessLevel),
+      icon: this.getLocationMarkerIcon(location.readinessLevel, iconName),
       alt: "locId:"+location.id,
       title: location.name + " : " + location.id
     };
@@ -195,21 +201,50 @@ export class MarkersComponent {
     return clueRideMarker;
   }
 
-  private getLocationMarkerIcon(readinessLevel: string): L.AwesomeMarkers.Icon {
+  /**
+   * Prepares a Font Awesome Marker of the requested icon and color.
+   */
+  private static getFontAwesomeMarker(
+    iconName: string,
+    markerColor: any
+  ):L.AwesomeMarkers.Icon {
+    return L.AwesomeMarkers.icon({
+      icon: iconName,
+      markerColor: markerColor,
+      prefix: "fa"
+    });
+  }
+
+  private static getDraftUsingIcon(
+    iconName: string
+  ):L.AwesomeMarkers.Icon {
+     return MarkersComponent.getFontAwesomeMarker(iconName, 'orange');
+  }
+
+  private static getPlaceUsingIcon(
+    iconName: string
+  ):L.AwesomeMarkers.Icon {
+    return MarkersComponent.getFontAwesomeMarker(iconName, 'green');
+  }
+
+  private getLocationMarkerIcon(
+    readinessLevel: string,
+    iconName: string,
+  ): L.AwesomeMarkers.Icon {
     switch(readinessLevel.toUpperCase()) {
       case 'ISSUE':
         return this.issueIcon;
       case 'DRAFT':
-        return this.draftIcon;
+        return MarkersComponent.getDraftUsingIcon(iconName);
       case 'PLACE':
-        return this.placeIcon;
+        return MarkersComponent.getPlaceUsingIcon(iconName);
       case 'ATTRACTION':
-        return this.attractionIcon;
+        return MarkersComponent.getFontAwesomeMarker(iconName, 'blue');
       case 'FEATURED':
         return this.featuredIcon;
       case 'NODE':
       default:
-        return null;
+        return this.unknownIcon;
     }
   }
 

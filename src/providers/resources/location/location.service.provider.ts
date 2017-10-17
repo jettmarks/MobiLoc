@@ -35,15 +35,6 @@ const UPDATE =
     path: 'update',
   };
 
-const TYPES =
-  {
-    resourceName: 'location',
-    name: 'types',
-    httpMethod: 'get',
-    path: 'types',
-  };
-
-
 function RestFactory(
   restangular: Restangular,
   crResource: Resource,
@@ -64,12 +55,6 @@ function RestFactory(
   restangular.withConfig(
     (configurer) => {
       crResource.defineMethod(configurer, UPDATE);
-    }
-  );
-
-  restangular.withConfig(
-    (configurer) => {
-      crResource.defineMethod(configurer, TYPES);
     }
   );
 
