@@ -6,7 +6,7 @@
         Location
       </ion-segment-button>
       <ion-segment-button value="attraction">
-        Clues
+        Puzzles
       </ion-segment-button>
       <ion-segment-button value="featured">
         Features
@@ -52,7 +52,7 @@
             <ion-label>Description</ion-label>
           </ion-col>
           <ion-col col-8>
-            <ion-textarea class="value-field"[(ngModel)]="location.description"></ion-textarea>
+            <ion-textarea class="value-field" [(ngModel)]="location.description"></ion-textarea>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -89,7 +89,10 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div *ngSwitchCase="'attraction'">Attraction</div>
+    <div *ngSwitchCase="'attraction'">
+      <puzzle-list>
+      </puzzle-list>
+    </div>
     <div *ngSwitchCase="'featured'">Featured</div>
   </div>
   <ion-grid class="form-buttons-row">
