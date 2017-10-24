@@ -21,6 +21,7 @@ import {LoginPage} from "../pages/login/login";
 import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {Resource} from "../providers/resources/resource";
+import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -44,7 +45,6 @@ function loadCreds(creds: Creds) {
 @NgModule({
   declarations: [
     MyApp,
-    LocEditPage,
     HomePage,
     ListPage,
     LoginPage,
@@ -58,6 +58,7 @@ function loadCreds(creds: Creds) {
     CloudModule.forRoot(cloudSettings),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
+    LocEditPageModule,
     RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
