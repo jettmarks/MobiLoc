@@ -90,7 +90,7 @@
       </ion-grid>
     </div>
     <div *ngSwitchCase="'attraction'">
-      <puzzle-list>
+      <puzzle-list [locationId]="location.id">
       </puzzle-list>
     </div>
     <div *ngSwitchCase="'featured'">Featured</div>
