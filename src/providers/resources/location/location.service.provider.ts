@@ -1,6 +1,6 @@
-import {Restangular} from "ngx-restangular";
 import {OpaqueToken} from "@angular/core";
 import {Resource} from "../resource";
+import {Restangular} from "ngx-restangular";
 
 export const LOCATION_REST = new OpaqueToken('LocationResource');
 
