@@ -3,6 +3,7 @@
  */
 import {Component, Injectable, Input} from "@angular/core";
 import {Restangular} from "ngx-restangular";
+import {ModalController} from "ionic-angular";
 import Puzzle = clueRide.Puzzle;
 @Injectable()
 @Component({
@@ -16,6 +17,7 @@ export class PuzzleListComponent {
 
   constructor (
     public restangular: Restangular,
+    private modalController: ModalController,
   ) {
   }
 
@@ -31,7 +33,11 @@ export class PuzzleListComponent {
   }
 
   public itemTapped($event, item) {
-
+    let puzzleItem = {
+      item: item
+    }
+    const puzzleModal = this.modalController.create('PuzzleModalPage', puzzleItem);
+    puzzleModal.present();
   }
 
 }
