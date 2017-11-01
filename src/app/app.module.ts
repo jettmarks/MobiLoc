@@ -38,7 +38,7 @@ export const cloudSettings: CloudSettings = {
 };
 
 /* Assures credentials are loaded from storage before trying to show initial page. */
-function loadCreds(creds: Creds) {
+export function loadCreds(creds: Creds) {
   return () => creds.loadToken();
 }
 

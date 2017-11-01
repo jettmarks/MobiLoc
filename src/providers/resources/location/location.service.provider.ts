@@ -35,7 +35,7 @@ const UPDATE =
     path: 'update',
   };
 
-function RestFactory(
+export function RestFactory(
   restangular: Restangular,
   crResource: Resource,
 ) {

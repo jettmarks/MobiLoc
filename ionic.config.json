@@ -1,5 +1,8 @@
 {
   "name": "MobiLoc",
   "app_id": "d7271bbc",
-  "type": "ionic-angular"
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }
