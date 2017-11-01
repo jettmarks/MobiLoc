@@ -13,7 +13,7 @@ import LocationType = clueRide.LocationType;
 @Injectable()
 @Component({
   selector: 'markers',
-  templateUrl: 'markers.html'
+  templateUrl: 'markers.html',
 })
 export class MarkersComponent {
 
@@ -35,10 +35,12 @@ export class MarkersComponent {
   private unknownIcon: L.AwesomeMarkers.Icon;
 
   constructor(
+    // private deviceOrientation: DeviceOrientation
   )
   {
     /* This may be happening too early (LE-19). */
-    this.deviceHasCompass = !!navigator.compass;
+    // TODO: LE-57
+    // this.deviceHasCompass = !!this.navigator.compass;
     console.log('Hello MarkersComponent Component: has ' + (this.deviceHasCompass ? '' : ' no ') + 'compass');
 
     /**
@@ -150,17 +152,18 @@ export class MarkersComponent {
    * @param compassHeading CompassHeading object whose 'trueHeading' property provides a heading in degrees from
    * north: (N: 0, E: 90, S: 180, W:270).
    */
-  public updateHeadingMarkerHeading(compassHeading: CompassHeading) {
-    let newHeading = 0.0;
-    if(compassHeading.trueHeading) {
-      newHeading = compassHeading.trueHeading;
-    }
+  // TODO: LE-57
+  // public updateHeadingMarkerHeading(compassHeading: CompassHeading) {
+  //   let newHeading = 0.0;
+  //   if(compassHeading.trueHeading) {
+  //     newHeading = compassHeading.trueHeading;
+  //   }
     /* TODO: Race condition means this may not yet be defined */
-    if (this.headingMarker._icon) {
-      this.headingMarker._icon.style['transformOrigin'] = 'center center';
-      this.headingMarker._icon.style['transform'] += ' rotateZ(' + newHeading + 'deg)';
-    }
-  }
+    // if (this.headingMarker._icon) {
+    //   this.headingMarker._icon.style['transformOrigin'] = 'center center';
+    //   this.headingMarker._icon.style['transform'] += ' rotateZ(' + newHeading + 'deg)';
+    // }
+  // }
 
   /**
    * Given a set of coordinates, update the Marker.
@@ -177,14 +180,15 @@ export class MarkersComponent {
   }
 
   private pollForHeadingUpdate() {
-    navigator.compass.getCurrentHeading(
-      (heading: CompassHeading) => {    // success
-        this.updateHeadingMarkerHeading(heading);
-      },
-      (error) => {                      // failure
-        console.log("Problem reading heading: " + error);
-      }
-    );
+    // TODO: LE-57
+    // navigator.compass.getCurrentHeading(
+    //   (heading: CompassHeading) => {    // success
+    //     this.updateHeadingMarkerHeading(heading);
+    //   },
+    //   (error) => {                      // failure
+    //     console.log("Problem reading heading: " + error);
+    //   }
+    // );
   }
 
   public getLocationMarker(
