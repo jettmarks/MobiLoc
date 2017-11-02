@@ -1,4 +1,4 @@
-import {Creds} from "../creds/creds.service";
+import {SessionTokenService} from "../session-token/session-token.service";
 import {Injectable} from "@angular/core";
 /**
  * Created by jett on 9/24/17.
@@ -8,14 +8,14 @@ import {Injectable} from "@angular/core";
 export class Resource {
 
   constructor(
-    private creds: Creds
+    private sessionTokenService: SessionTokenService
   ) {
   }
 
   addTokenRequestInterceptor(configurer) {
     configurer.addFullRequestInterceptor(
       (element, operation, path, url, headers, params) => {
-        let bearerToken = this.creds.getBearerToken();
+        let bearerToken = this.sessionTokenService.getBearerToken();
 
         return {
           headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})

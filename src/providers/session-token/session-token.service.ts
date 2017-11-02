@@ -7,7 +7,7 @@ import {Storage} from "@ionic/storage";
  * If unset, will return "GuestToken".
  */
 @Injectable()
-export class Creds {
+export class SessionTokenService {
   TOKEN_KEY: string = "token.key";
   PRINCIPAL_KEY: string = "principal.key";
   private hasAuthToken: boolean = false;
@@ -19,24 +19,29 @@ export class Creds {
     private storage: Storage
   ) {
     this.jwtHelper = new JwtHelper();
-    this.loadToken();
   }
 
-  public loadToken() {
-    return this.storage.get(this.TOKEN_KEY).then(
+  /**
+   * When invoked, attempts to find a locally-stored session token and place it in local cache.
+   * @returns {Promise<string>}
+   */
+  public loadToken(): Promise<string> {
+    let tokenStoragePromise: Promise<string> = this.storage.get(this.TOKEN_KEY);
+
+    tokenStoragePromise.then(
       (token) => {
         this.updateToken(token);
       }
     );
+
+    return tokenStoragePromise;
   }
 
   private updateToken(token: string) {
     this.token = token;
     if(token) {
-      console.log("Token Retrieved and cached");
       return this.cacheToken(token);
     } else {
-      console.log("Token not found");
       this.hasAuthToken = false;
       this.payload = {
         badges: [],

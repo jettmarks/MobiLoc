@@ -8,7 +8,7 @@ let toTest: MarkersComponent;
 /**
  * Created by jett on 9/3/17.
  */
-describe("Creds Service", () => {
+describe("SessionTokenService Service", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [

@@ -18,7 +18,7 @@
 
 <ion-content padding>
 
-  <div id="login" class="login-box" *ngIf="!creds.isLoggedIn()">
+  <div id="login" class="login-box" *ngIf="!sessionTokenService.isLoggedIn()">
     <form (ngSubmit)="login()" #registerForm="ngForm">
       <ion-row>
         <ion-col>
@@ -47,7 +47,7 @@
     </form>
   </div>
 
-  <div id="logout" class="login-box" *ngIf="creds.isLoggedIn()">
+  <div id="logout" class="login-box" *ngIf="sessionTokenService.isLoggedIn()">
     <form (ngSubmit)="logout()" #registerForm="ngForm">
       <ion-row>
         <ion-col class="signup-col">
@@ -62,24 +62,24 @@
   <div id="user-info">
     <ion-row>
       <div id="principal">
-        Logged in as: {{creds.getPrincipalName()}}
+        Logged in as: {{sessionTokenService.getPrincipalName()}}
       </div>
     </ion-row>
     <ion-row>
       <div id="badges">
-        Badges: {{creds.getBadges()}}
+        Badges: {{sessionTokenService.getBadges()}}
       </div>
     </ion-row>
     <ion-row>
       <div id="guest">
-        Guest?: {{creds.isGuest()}}
+        Guest?: {{sessionTokenService.isGuest()}}
       </div>
     </ion-row>
     <ion-row>
-      <div *ngIf="creds.isLoggedIn()">
+      <div *ngIf="sessionTokenService.isLoggedIn()">
         Logged in?: Yes
       </div>
-      <div *ngIf="!creds.isLoggedIn()">
+      <div *ngIf="!sessionTokenService.isLoggedIn()">
         Logged in?: No
       </div>
     </ion-row>
