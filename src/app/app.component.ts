@@ -2,7 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {Nav, Platform} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
 
-import {Creds} from "../providers/creds/creds.service";
+import {SessionTokenService} from "../providers/session-token/session-token.service";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {LoginPage} from "../pages/login/login";
@@ -21,7 +21,7 @@ export class MyApp {
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
-    public credsService: Creds,
+    public sessionTokenService: SessionTokenService,
   ) {
     this.initializeApp();
 
@@ -53,11 +53,11 @@ export class MyApp {
   ngOnInit() {
     console.log("App is initialized");
     /* This is dependent on the loadToken having been run (promise resolved) as the initialization of the app. */
-    if (this.credsService.isGuest()) {
+    if (this.sessionTokenService.isGuest()) {
       console.log("1. Running as Guest");
       this.nav.setRoot(LoginPage);
     } else {
-      console.log("1. Running as " + this.credsService.getPrincipalName());
+      console.log("1. Running as " + this.sessionTokenService.getPrincipalName());
       this.nav.setRoot(HomePage);
     }
   }

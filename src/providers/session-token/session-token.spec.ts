@@ -1,27 +1,27 @@
-import {Creds} from "./creds.service";
+import {SessionTokenService} from "./session-token.service";
 import {TestBed} from "@angular/core/testing";
 import {Platform} from "ionic-angular";
 import {IonicStorageModule} from "@ionic/storage";
 import {MyApp} from "../../app/app.component";
 
-let toTest: Creds;
+let toTest: SessionTokenService;
 let validToken: string = "eyJhbGciOiJIUzI1NiIsImJhZGdlcyI6WyJMT0NBVElPTl9FRElUT1IiXSwiZW1haWwiOiJndWVzdC5kdW1teUBjbHVlcmlkZS5jb20iLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJjbHVlcmlkZS5jb20iLCJqdGkiOiJ2NGY1MDBvNWw0dHB1N2I4NXNtc2RlNjdlOCJ9.mknl-JguS5TbT-HJ0-2zotOWEVkXF_JstFiXPIZvPQ8";
 let guestToken: string = "eyJiYWRnZXMiOlsiTE9DQVRJT05fRURJVE9SIl0sImd1ZXN0Ijp0cnVlLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImVtYWlsIjoiZ3Vlc3QuZHVtbXlAY2x1ZXJpZGUuY29tIn0.eyJpc3MiOiJjbHVlcmlkZS5jb20iLCJqdGkiOiJsbXFoM2xlaWxkbGtzNWZjczRtdG83ZjY4YSJ9.hNVmfihrc5iEUzmM8mnnRa4SH27kAvJIzEADIXsEQlk";
 
-describe("Creds Service", () => {
+describe("Session Token Service", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         MyApp,
-        Creds,
+        SessionTokenService,
         Platform
       ],
       imports: [
-        IonicStorageModule.forRoot(MyApp),
+        IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
       ]
     }).compileComponents();
 
-    toTest = TestBed.get(Creds);
+    toTest = TestBed.get(SessionTokenService);
 
   });
 
@@ -66,6 +66,7 @@ describe("Creds Service", () => {
 
   });
   describe("Token Storage and Retrieval", () => {
+
     it("should report absence of token", () => {
       /* make call */
       let actual = toTest.hasToken();
@@ -238,6 +239,7 @@ describe("Creds Service", () => {
   });
 
   describe("Token Parsing", () => {
+
     it("should pickup Principal Name", (done) => {
       /* set up */
       let expected = "guest.dummy@clueride.com";

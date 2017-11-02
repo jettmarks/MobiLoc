@@ -13,7 +13,7 @@ import {RestangularModule} from "ngx-restangular/dist/esm/src";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
-import {Creds} from "../providers/creds/creds.service";
+import {SessionTokenService} from "../providers/session-token/session-token.service";
 import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
@@ -38,8 +38,8 @@ export const cloudSettings: CloudSettings = {
 };
 
 /* Assures credentials are loaded from storage before trying to show initial page. */
-export function loadCreds(creds: Creds) {
-  return () => creds.loadToken();
+export function loadSessionToken(sessionTokenService: SessionTokenService) {
+  return () => sessionTokenService.loadToken();
 }
 
 @NgModule({
@@ -70,15 +70,15 @@ export function loadCreds(creds: Creds) {
     LoginPage,
   ],
   providers: [
-    Creds,
     GeoLocComponent,
     MapComponent,
     MarkersComponent,
     Resource,
+    SessionTokenService,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    {provide: APP_INITIALIZER, useFactory: loadCreds, deps: [Creds], multi: true}
+    {provide: APP_INITIALIZER, useFactory: loadSessionToken, deps: [SessionTokenService], multi: true}
   ]
 })
 export class AppModule {}

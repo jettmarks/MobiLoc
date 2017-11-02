@@ -1,4 +1,4 @@
-import {Creds} from "../../creds/creds.service";
+import {SessionTokenService} from "../../session-token/session-token.service";
 import {OpaqueToken} from "@angular/core";
 import {Restangular} from "ngx-restangular/dist/esm/src";
 
@@ -6,7 +6,7 @@ export const BADGES_REST = new OpaqueToken('BadgeResource');
 
 function RestFactory(
   restangular: Restangular,
-  creds: Creds,
+  sessionTokenService: SessionTokenService,
 ) {
   /* Configure this particular resource to capture the Authorization header. */
   restangular.withConfig(
@@ -17,7 +17,7 @@ function RestFactory(
           /* Check if we should pick up this token to use in subsequent requests. */
           if (response.headers.get('Authorization')) {
             let token = response.headers.get('Authorization').split(" ")[1];
-            creds.setAuthToken(token);
+            sessionTokenService.setAuthToken(token);
           }
           /* Response Interceptors are required to return the data property */
           return data;
@@ -33,5 +33,5 @@ function RestFactory(
 export let badgeServiceProvider =
   { provide: BADGES_REST,
     useFactory: RestFactory,
-    deps: [Restangular,Creds]
+    deps: [Restangular,SessionTokenService]
   };
