@@ -8,7 +8,8 @@ let toTest: MarkersComponent;
 /**
  * Created by jett on 9/3/17.
  */
-describe("SessionTokenService Service", () => {
+describe("Markers", () => {
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -21,7 +22,6 @@ describe("SessionTokenService Service", () => {
     }).compileComponents();
 
     toTest = TestBed.get(MarkersComponent);
-
   });
 
   it("should be defined", () => {

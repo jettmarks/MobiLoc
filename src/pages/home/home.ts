@@ -1,6 +1,5 @@
 import {Component} from "@angular/core";
 import {MapComponent} from "../../components/map/map";
-import {NavController} from "ionic-angular";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
@@ -22,7 +21,6 @@ export class HomePage {
   locationMap = {};
 
   constructor(
-    public navCtrl: NavController,
     public mapComponent: MapComponent,
     public locationService: LocationService,
     public locationTypeService: LocationTypeService,
@@ -63,6 +61,23 @@ export class HomePage {
   }
 
   ngOnInit(): void {
+    this.awaitAppInitialization();
+  }
+
+  ngOnDestroy(): void {
+    this.mapComponent.closeMap();
+  }
+
+  /**
+   * Sequences a number of components and services needed prior to
+   * displaying the initial page.
+   */
+  awaitAppInitialization(): void {
+    this.initializeCaches();
+    this.initializePositionSource();
+  }
+
+  initializePositionSource(): void {
     /* Sort out how we obtain our positioning. */
     let positionObservable = this.geoLoc.getPositionWatch();
 
@@ -78,8 +93,8 @@ export class HomePage {
     );
   }
 
-  ngOnDestroy(): void {
-    this.mapComponent.closeMap();
+  initializeCaches(): void {
+    this.locationTypeService.initializeCache();
   }
 
 }

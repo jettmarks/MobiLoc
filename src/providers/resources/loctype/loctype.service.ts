@@ -8,31 +8,39 @@ import LocationType = clueRide.LocationType;
 @Injectable()
 export class LocationTypeService {
 
-  static locationTypes: LocationType[];
+  static locationTypeCache: LocationType[] = [];
 
   constructor(
     @Inject(LOCATION_TYPE_REST) private resource
   ) {
-    LocationTypeService.locationTypes = [];
-    this.fillCache().then(
-      (locationTypes) =>  {
-        locationTypes.forEach(locType => {
-          LocationTypeService.locationTypes[locType.id] = locType;
-        });
-      }
-    );
+    /* Although construction does offer opportunity to fill cache,
+     * waiting until explicitly invoked improves our control over
+     * when the initialization takes place (testing, life-cycle).
+     */
   }
 
-  public allLocationTypes(params: any) {
-    return this.resource.types(params);
+  /**
+   * Builds cached map of LocationTypeID -> LocationType from resource, but
+   * only if we haven't already populated the cache.
+   */
+  public initializeCache(): void {
+    if (LocationTypeService.locationTypeCache.length == 0) {
+      this.resource.types({}).subscribe(
+        (response) =>  {
+          response.forEach(locType => {
+            LocationTypeService.locationTypeCache[locType.id] = locType;
+          });
+        }
+      );
+    }
   }
 
-  private async fillCache(): Promise<any> {
-    return await this.allLocationTypes({}).first().toPromise();
+  public allLocationTypes(): Array<LocationType> {
+    return LocationTypeService.locationTypeCache;
   }
 
-  getById(id: number): LocationType {
-    return LocationTypeService.locationTypes[id];
+  public getById(id: number): LocationType {
+    return LocationTypeService.locationTypeCache[id];
   }
 
 }

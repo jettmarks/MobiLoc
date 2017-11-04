@@ -1,8 +1,8 @@
-import {OpaqueToken} from "@angular/core";
+import {InjectionToken} from "@angular/core";
 import {Resource} from "../resource";
 import {Restangular} from "ngx-restangular";
 
-export const LOCATION_REST = new OpaqueToken('LocationResource');
+export const LOCATION_REST = new InjectionToken<string>('LocationResource');
 
 /* Resource providing Nearest Location instances suitable for edit. */
 const NEAREST =

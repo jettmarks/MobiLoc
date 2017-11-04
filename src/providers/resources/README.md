@@ -61,3 +61,23 @@ collision).
 - Currently, more than one class is defined in the location.ts file; 
 want to break these out.
 
+
+# Testing
+Resources fall under the category of "Services". Along with Pipes, Services are generally
+tested in "isolation" instead of part of a TestBed.
+
+I mention Injectors below because I didn't have another place to put these right now.
+
+## Injectors
+
+    const injector = ReflectiveInjector.resolveAndCreate([
+      locationTypeServiceProvider
+    ]);
+    
+## Using the Injector
+
+      beforeEach(() => {
+        toTest = new LocationTypeService(
+          injector.get(LOCATION_TYPE_REST)
+        );
+      });
