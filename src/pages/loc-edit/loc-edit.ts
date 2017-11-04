@@ -42,16 +42,12 @@ export class LocEditPage {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
 
-    this.locationTypeService.allLocationTypes({}).subscribe(
-      (locationTypes) => {
-        locationTypes.forEach(
-          (locationType, key) => {
-            this.locTypes.push(
-              {
-                value: locationType.id,
-                text: locationType.name
-              }
-            );
+    this.locationTypeService.allLocationTypes().forEach(
+      (locationType) => {
+        this.locTypes.push(
+          {
+            value: locationType.id,
+            text: locationType.name
           }
         );
       }

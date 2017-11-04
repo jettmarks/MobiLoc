@@ -1,11 +1,11 @@
-import {OpaqueToken} from "@angular/core";
+import {InjectionToken} from "@angular/core";
 import {Resource} from "../resource";
 import {Restangular} from "ngx-restangular";
 /**
  * Created by jett on 10/24/17.
  */
 
-export const PUZZLE_REST = new OpaqueToken('PuzzleResource');
+export const PUZZLE_REST = new InjectionToken<string>('PuzzleResource');
 
 /* Resource providing list of Puzzles for a given Location (by ID). */
 const BY_LOCATION =

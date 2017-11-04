@@ -1,8 +1,8 @@
 import {SessionTokenService} from "../../session-token/session-token.service";
-import {OpaqueToken} from "@angular/core";
+import {InjectionToken} from "@angular/core";
 import {Restangular} from "ngx-restangular/dist/esm/src";
 
-export const BADGES_REST = new OpaqueToken('BadgeResource');
+export const BADGES_REST = new InjectionToken<string>('BadgeResource');
 
 function RestFactory(
   restangular: Restangular,

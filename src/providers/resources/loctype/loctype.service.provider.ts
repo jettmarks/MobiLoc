@@ -1,8 +1,8 @@
 import {Restangular} from "ngx-restangular";
-import {OpaqueToken} from "@angular/core";
+import {InjectionToken} from "@angular/core";
 import {Resource} from "../resource";
 
-export const LOCATION_TYPE_REST = new OpaqueToken('LocationTypeResource');
+export const LOCATION_TYPE_REST = new InjectionToken<string>('LocationTypeResource');
 
 const TYPES =
   {
