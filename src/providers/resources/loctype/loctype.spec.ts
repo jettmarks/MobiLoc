@@ -1,7 +1,6 @@
 import {LocationTypeService} from "./loctype.service";
 import {Subject} from "rxjs/Subject";
 import LocationType = clueRide.LocationType;
-import any = jasmine.any;
 /**
  * Created by jett on 10/29/17.
  */

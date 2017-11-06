@@ -32,7 +32,8 @@ export class Resource {
           methodConfig.name,
           methodConfig.httpMethod,
           methodConfig.path,
-          methodConfig.object
+          methodConfig.object,
+          methodConfig.headers
         );
         return resource;
       }
