@@ -11,6 +11,7 @@ let toTest: MarkersComponent;
 describe("Markers", () => {
 
   beforeEach(() => {
+
     TestBed.configureTestingModule({
       providers: [
         MyApp,

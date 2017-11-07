@@ -1,9 +1,10 @@
 import {Component} from "@angular/core";
-import {IonicPage, NavParams} from "ionic-angular";
+import {App, IonicPage, NavParams} from "ionic-angular";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
+import {ImageCapturePage} from "../image-capture/image-capture";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -35,6 +36,7 @@ export class LocEditPage {
   locTypes = [];
 
   constructor(
+    private appCtrl: App,
     public navParams: NavParams,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
@@ -63,4 +65,10 @@ export class LocEditPage {
     this.locationService.update(this.location);
   }
 
+  captureImage() {
+    console.log("Opening Camera");
+    this.appCtrl.getRootNav().push(ImageCapturePage, {
+      location: this.location
+    });
+  }
 }
