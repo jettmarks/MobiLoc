@@ -10,7 +10,6 @@ let toTest : GeoLocComponent;
 describe("Geo-Location", () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      // declarations: [GeoLocComponent],
       providers: [
         GeoLocComponent,
         Platform
