@@ -9,6 +9,8 @@ import {CRMarker} from "../markers/crMarker";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {App} from "ionic-angular";
 import {LatLonComponent} from "../lat-lon/lat-lon";
+import {HeadingComponent} from "../heading/heading";
+import {Observable} from "rxjs/Observable";
 
 /**
  * Generated class for the MapComponent component.
@@ -26,7 +28,6 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   zoomLevel: number;
   static map: any;
-  lastPosition: [number, number];
   private autoCenter: boolean = false;
   static locationMap = {};
   showLatLon: boolean = true;
@@ -36,34 +37,11 @@ export class MapComponent {
   constructor(
     public geoLoc: GeoLocComponent,
     private markers: MarkersComponent,
+    private heading: HeadingComponent,
     public splashScreen: SplashScreen,
     public appCtrl: App
   ) {
     this.zoomLevel = 14;
-    this.lastPosition = [33.77, -84.37];
-  }
-
-  public setWatch() {
-    console.log('Setting Watch for current position');
-
-    this.geoLoc.getPositionWatch().subscribe(
-      (position) => {
-
-        this.markers.updateCurrentLocationMarker(position.coords);
-
-        /* Save for later. */
-        this.lastPosition = [
-          position.coords.latitude,
-          position.coords.longitude
-        ];
-
-        /* Move map so current location is centered. */
-        if (this.autoCenter) {
-          MapComponent.map.panTo(this.lastPosition);
-        }
-      }
-    );
-
   }
 
   /**
@@ -98,16 +76,35 @@ export class MapComponent {
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(MapComponent.map);
 
-    /* Add a "here I am" marker. */
-    this.markers.getHereIAmMarker(leafletPosition).addTo(MapComponent.map);
-
     /* Set map to update when position changes. */
-    this.setWatch();
+    let positionObservable: Observable<Geoposition> = this.setWatch();
+
+    /* Add a "here I am" marker. */
+    this.heading.getHeadingMarker(positionObservable).addTo(MapComponent.map);
 
     /* Map is ready; turn off splash screen. */
     this.splashScreen.hide();
 
   }
+
+  public setWatch():Observable<Geoposition> {
+    let positionObservable =  this.geoLoc.getPositionWatch();
+    positionObservable.subscribe(
+      (position) => {
+        this.updatePosition(position);
+      }
+    );
+    return positionObservable;
+  }
+
+  updatePosition(position: Geoposition) {
+    this.heading.updateLocation(position.coords);
+
+    /* Move map so current location is centered. */
+    if (this.autoCenter) {
+      MapComponent.map.panTo(position.coords);
+    }
+  };
 
   public closeMap() {
     if (isDefined(MapComponent.map) && MapComponent.map !== null) {
@@ -115,6 +112,7 @@ export class MapComponent {
       MapComponent.map.remove();
     }
     MapComponent.map = null;
+    this.heading.releaseHeadingMarker();
   }
 
   /**

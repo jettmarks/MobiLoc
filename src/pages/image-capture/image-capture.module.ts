@@ -2,6 +2,7 @@ import {NgModule} from "@angular/core";
 import {IonicPageModule} from "ionic-angular";
 import {ImageCapturePage} from "./image-capture";
 import {Camera} from "@ionic-native/camera";
+import {Restangular} from "ngx-restangular";
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import {Camera} from "@ionic-native/camera";
     ImageCapturePage
   ],
   providers: [
-    Camera
+    Camera,
+    Restangular
   ]
 })
 export class ImageCapturePageModule {}

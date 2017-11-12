@@ -1,4 +1,7 @@
 import {BehaviorSubject} from "rxjs/Rx";
+import {Subject} from "rxjs/Subject";
+import {DeviceOrientationCompassHeading} from "@ionic-native/device-orientation";
+import {Observable} from "rxjs/Observable";
 
 /**
  * @class NavParamsMock
@@ -125,4 +128,20 @@ export class MenuMock {
       resolve();
     });
   }
+}
+
+export class DeviceOrientationMock {
+  public compassHeadingSubject = new Subject();
+  private compassHeadingObservable: Observable<DeviceOrientationCompassHeading> =
+    this.compassHeadingSubject.asObservable();
+  private compassHeading: Promise<DeviceOrientationCompassHeading> = Promise.resolve({});
+
+  public watchHeading(): Observable<DeviceOrientationCompassHeading> {
+    return this.compassHeadingObservable;
+  }
+
+  public getCurrentHeading(): Promise<DeviceOrientationCompassHeading> {
+    return this.compassHeading;
+  }
+
 }

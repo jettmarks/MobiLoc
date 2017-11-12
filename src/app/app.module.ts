@@ -18,10 +18,10 @@ import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
 import {LoginPage} from "../pages/login/login";
-import {MapComponent} from "../components/map/map";
 import {MarkersComponent} from "../components/markers/markers";
 import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
+import {MapComponentModule} from "../components/map/map.module";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -49,7 +49,6 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
     ListPage,
     LoginPage,
     GeoLocComponent,
-    MapComponent,
     MarkersComponent,
     LatLonComponent,
   ],
@@ -59,6 +58,7 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
     LocEditPageModule,
+    MapComponentModule,
     RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
@@ -71,7 +71,6 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
   ],
   providers: [
     GeoLocComponent,
-    MapComponent,
     MarkersComponent,
     Resource,
     SessionTokenService,

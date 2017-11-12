@@ -3,6 +3,7 @@ import {TestBed} from "@angular/core/testing";
 import {MyApp} from "../../app/app.component";
 import {NavParams, Platform} from "ionic-angular";
 import {Camera} from "@ionic-native/camera";
+import {RestangularModule} from "ngx-restangular";
 /**
  * Created by jett on 11/5/17.
  */
@@ -42,9 +43,10 @@ describe("Image Capture", () => {
         MyApp,
         {provide: NavParams, useClass: MockNavParams},
         ImageCapturePage,
-        Platform
+        Platform,
       ],
       imports: [
+        RestangularModule
       ]
     }).compileComponents();
 
