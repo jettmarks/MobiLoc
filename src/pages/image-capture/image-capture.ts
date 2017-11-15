@@ -1,8 +1,6 @@
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Component} from "@angular/core";
-import {IonicPage, NavParams} from "ionic-angular";
-// import clueRide from "../../providers/resources/image/image.ts";
-// import clueRide from "../../providers/resources/location/location.ts";
+import {App, IonicPage, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/resources/image/image.service";
 import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
 import {Restangular} from "ngx-restangular";
@@ -19,14 +17,16 @@ import {Restangular} from "ngx-restangular";
   templateUrl: 'image-capture.html',
   providers: [
     ImageService,
-    imageServiceProvider
+    imageServiceProvider,
   ],
 })
 export class ImageCapturePage {
 
   public base64Image: string;
   public images: Array<any> = [];
-  private options: CameraOptions = {
+  private location: clueRide.Location;
+
+  private cameraOptions: CameraOptions = {
     correctOrientation: true,
     destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
@@ -34,12 +34,12 @@ export class ImageCapturePage {
     targetWidth: 1000,
     targetHeight: 1000
   };
-  private location: clueRide.Location;
 
   constructor(
     private camera: Camera,
     public navParams: NavParams,
     private restangular: Restangular,
+    private appCtrl: App
   ) {
     this.location = navParams.get("location");
   }
@@ -47,7 +47,7 @@ export class ImageCapturePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad ImageCapturePage');
     this.camera.getPicture(
-      this.options
+      this.cameraOptions
     ).then((imageData) => {
       //   imageData is a base64 encoded string
       this.base64Image = "data:image/jpeg;base64," + imageData;
@@ -63,7 +63,7 @@ export class ImageCapturePage {
     return (this.images.length > 0);
   }
 
-  save() {
+  public save() {
     // What I'd prefer, but the clueRide.Image isn't found anywhere
     // let image = new clueRide.Image();
     // image.populateFromLocation(this.location);
@@ -82,16 +82,29 @@ export class ImageCapturePage {
     formData.append("lat", "" + image.lat);
     formData.append("lon", "" + image.lon);
     formData.append("file", blob, "cameraImage.jpg");
+    let uploadPostPromise = this.uploadImage(formData);
 
-    // this.imageService.uploadImage(image);
-    this.restangular.all("location/uploadImage")
-      .customPOST(
-        formData,
-        undefined,
-        undefined,
-        {'Content-Type': undefined}
-      );
+    uploadPostPromise.then(
+      (response) => {
+        console.log("Got result of uploadImage: " + response);
+        this.appCtrl.getRootNav().pop();
+      }
+    ).catch(
+      (err) => {
+        console.log("Problem uploading image: " + err);
+        this.appCtrl.getRootNav().pop();
+      }
+    );
 
+  }
+
+  uploadImage(formData): Promise<string> {
+    return this.restangular.all("location/uploadImage").customPOST(
+      formData,
+      undefined,
+      undefined,
+      {'Content-Type': undefined}
+    ).toPromise();
   }
 
   fakeImage() {
