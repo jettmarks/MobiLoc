@@ -1,7 +1,6 @@
 import {ImageCapturePage} from "./image-capture";
 import {TestBed} from "@angular/core/testing";
-import {MyApp} from "../../app/app.component";
-import {NavParams, Platform} from "ionic-angular";
+import {IonicModule, NavParams} from "ionic-angular";
 import {Camera} from "@ionic-native/camera";
 import {RestangularModule} from "ngx-restangular";
 /**
@@ -38,15 +37,17 @@ describe("Image Capture", () => {
   beforeEach(() => {
 
     TestBed.configureTestingModule({
-      providers: [
-        Camera,
-        MyApp,
-        {provide: NavParams, useClass: MockNavParams},
-        ImageCapturePage,
-        Platform,
+      declarations: [
+        ImageCapturePage
       ],
       imports: [
+        IonicModule.forRoot(ImageCapturePage),
         RestangularModule
+      ],
+      providers: [
+        Camera,
+        {provide: NavParams, useClass: MockNavParams},
+        ImageCapturePage,
       ]
     }).compileComponents();
 
@@ -73,7 +74,28 @@ describe("Image Capture", () => {
   describe("save", () => {
 
     it("should reply OK after a save", () => {
+      /* setup data */
+
+      /* train mocks */
+      toTest.fakeImage();
+
+      /* make call */
       toTest.save();
+
+      /* verify results */
+
+    });
+
+
+    it("should redirect to loc edit tab after save completes", () => {
+      /* setup data */
+
+      /* train mocks */
+
+      /* make call */
+
+      /* verify results */
+
     });
 
   })

@@ -18,6 +18,7 @@
     <label>
       Candidate Image:
     </label>
+
     <div *ngIf="haveImagesToShow()">
       <ion-slides>
         <ion-slide *ngFor="let image of images">
@@ -33,6 +34,7 @@
         </button>
       </ion-buttons>
     </div>
+
     <div *ngIf="!haveImagesToShow()">
       No images yet.
       <ion-buttons>

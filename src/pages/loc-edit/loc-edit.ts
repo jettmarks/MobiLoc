@@ -5,6 +5,7 @@ import {locationServiceProvider} from "../../providers/resources/location/locati
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 import {ImageCapturePage} from "../image-capture/image-capture";
+import {Restangular} from "ngx-restangular";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -37,9 +38,10 @@ export class LocEditPage {
 
   constructor(
     private appCtrl: App,
-    public navParams: NavParams,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
+    private navParams: NavParams,
+    private restangular: Restangular,
   ) {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
@@ -53,6 +55,13 @@ export class LocEditPage {
           }
         );
       }
+    );
+
+  }
+
+  ionViewDidEnter() {
+    this.restangular.one('location').get({'id': this.location.id}).subscribe(
+      (locData) => {this.location = locData}
     );
   }
 
