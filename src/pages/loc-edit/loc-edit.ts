@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {App, IonicPage, NavParams} from "ionic-angular";
+import {AlertController, App, IonicPage, NavParams} from "ionic-angular";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
@@ -37,6 +37,7 @@ export class LocEditPage {
   locTypes = [];
 
   constructor(
+    private alertCtrl: AlertController,
     private appCtrl: App,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
@@ -80,4 +81,32 @@ export class LocEditPage {
       location: this.location
     });
   }
+
+  showImageActions() {
+    console.log("Show Image Actions");
+    let alert = this.alertCtrl.create({
+      title: 'Unlink this Image?',
+      message: 'Do you want to unset the Featured Image? (Image can be re-featured later)',
+      buttons: [
+        {
+          text: 'Keep Featured Image',
+          handler: () => {
+            console.log('Keep');
+          }
+        },
+        {
+          text: 'Unset Featured Image',
+          handler: () => {
+            console.log('Removing Featured Image');
+            this.restangular.one("location", this.location.id).one("featured").remove().toPromise().then(
+              (location) => {this.location = location}
+            );
+          }
+        }
+      ]
+    });
+
+    alert.present();
+  }
+
 }

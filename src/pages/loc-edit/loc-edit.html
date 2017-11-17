@@ -85,7 +85,10 @@
         </ion-row>
         <ion-row>
           <ion-col col-12>
-            <img src="{{location.featuredImage}}"/>
+            <img *ngIf="location.featuredImage"
+                 src="{{location.featuredImage}}"
+                 (press)="showImageActions()"
+            />
           </ion-col>
         </ion-row>
       </ion-grid>
