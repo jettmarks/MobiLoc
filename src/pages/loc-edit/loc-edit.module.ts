@@ -18,6 +18,6 @@ import {ImageCapturePageModule} from "../image-capture/image-capture.module";
   providers: [
     locationServiceProvider,
     LocationService,
-  ]
+  ],
 })
 export class LocEditPageModule {}
