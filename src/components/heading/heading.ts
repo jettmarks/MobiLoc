@@ -204,9 +204,7 @@ export class HeadingComponent {
   }
 
   ngOnDestroy() {
-    if (this.subscription) {
-      this.releaseHeadingMarker();
-    }
+    this.releaseHeadingMarker();
   }
 
   /**
@@ -214,6 +212,8 @@ export class HeadingComponent {
    * its subscription to the compass.
    */
   public releaseHeadingMarker() {
-    this.subscription.unsubscribe();
+    if (this.deviceHasCompass && this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
 }
