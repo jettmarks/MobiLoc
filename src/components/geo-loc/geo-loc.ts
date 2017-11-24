@@ -60,6 +60,7 @@ export class GeoLocComponent {
 
   public clearWatch() {
     navigator.geolocation.clearWatch(this.watchId);
+    this.positionSubject = undefined;
   }
 
   getTetheredPosition(): Observable<Geoposition> {
