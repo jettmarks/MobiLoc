@@ -11,6 +11,7 @@ import {App} from "ionic-angular";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {HeadingComponent} from "../heading/heading";
 import {Observable} from "rxjs/Observable";
+import LatLon = clueRide.LatLon;
 
 /**
  * Generated class for the MapComponent component.
@@ -28,7 +29,7 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   zoomLevel: number;
   static map: any;
-  private autoCenter: boolean = false;
+  private autoCenter: boolean = true;
   static locationMap = {};
   showLatLon: boolean = true;
   showCrosshairs: boolean = false;
@@ -102,7 +103,14 @@ export class MapComponent {
 
     /* Move map so current location is centered. */
     if (this.autoCenter) {
-      MapComponent.map.panTo(position.coords);
+      // TODO: LE-70 Prepare a better pattern for converting between these two representations.
+      let latLon: LatLon = {
+        id: 0,
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+        lng: position.coords.longitude
+      };
+      MapComponent.map.panTo(latLon);
     }
   };
 

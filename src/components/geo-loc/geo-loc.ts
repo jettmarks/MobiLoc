@@ -2,6 +2,23 @@ import {Component} from "@angular/core";
 import {GeolocationOptions, Geoposition} from "@ionic-native/geolocation";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
+import {Restangular} from "ngx-restangular";
+import LatLon = clueRide.LatLon;
+
+function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
+  return {
+    coords: {
+      latitude: latLon.lat,
+      longitude: latLon.lon,
+      accuracy: 0.0,
+      altitude: null,
+      altitudeAccuracy: null,
+      heading: null,
+      speed: null
+    },
+    timestamp: null
+  };
+}
 
 /**
  * Generated class for the GeoLocComponent component.
@@ -45,9 +62,12 @@ export class GeoLocComponent {
   };
   /* Tracks which watch we're paying attention to. */
   private watchId: number;
+  private restangularService: Restangular;
 
   constructor(
+    private restangular: Restangular
   ) {
+    this.restangularService = restangular;
   }
 
   /**
@@ -67,7 +87,19 @@ export class GeoLocComponent {
     this.tetheredPosition = new Subject();
     this.tetheredPosition.next(this.defaultGeoposition);
     this.positionType = "Tethered";
+    this.startMonitoringTether();
     return this.tetheredPosition.asObservable();
+  }
+
+  startMonitoringTether(): void {
+    let monitorPromise = this.restangular.one("tether/dev").get().toPromise();
+    monitorPromise.then(
+      (latLon) => {
+        let geoPosition = buildGeoPositionFromLatLon(latLon);
+        this.tetheredPosition.next(geoPosition);
+        setTimeout(() => {this.startMonitoringTether()}, 1500);
+      }
+    );
   }
 
   /**
