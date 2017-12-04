@@ -1,6 +1,6 @@
 import Badge = clueRide.Badge;
 import {Component} from "@angular/core";
-import {IonicPage, NavController, NavParams} from "ionic-angular";
+import {IonicPage, NavParams} from "ionic-angular";
 import {GoogleAuth, User} from "@ionic/cloud-angular";
 import {badgeServiceProvider} from "../../providers/resources/badge/badge.service.provider";
 import {BadgeService} from "../../providers/resources/badge/badge.service";
@@ -27,7 +27,6 @@ export class LoginPage {
 
   constructor(
     private badgeService: BadgeService,
-    public navCtrl: NavController,
     public navParams: NavParams,
     public googleAuth: GoogleAuth,
     public user: User,
@@ -47,10 +46,6 @@ export class LoginPage {
       (authResult) => {
         console.log('User ' + this.user.social.google.data.full_name + ' has logged in');
         console.log('  Profile Picture: ' + this.user.social.google.data.profile_picture);
-        // this.badges = this.badgeResource.oAuth({
-        //   email: this.user.social.google.data.email,
-        //   profilePicture: this.user.social.google.data.profile_picture
-        // });
       }
     ).catch(
       (error) => {
@@ -61,16 +56,6 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('On the Login Page');
-    // this.authViaGoogle();
-    // this.authViaGuest();
-  }
-
-  private authViaGuest() {
-    // this.badges = this.badgeResource.clueRideLogin({
-    this.badges = this.badgeService.post({
-      name: "jett.marks@bellsouth.net",
-      password: "adfhg"
-    });
   }
 
   public logout() {

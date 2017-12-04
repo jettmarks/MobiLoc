@@ -5,6 +5,7 @@ import {LocationService} from "../../providers/resources/location/location.servi
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
+import {Geoposition} from "@ionic-native/geolocation";
 
 @Component({
   selector: 'page-home',
@@ -26,6 +27,32 @@ export class HomePage {
     public locationTypeService: LocationTypeService,
     private geoLoc: GeoLocComponent,
   ) {
+  }
+
+  ngOnInit(): void {
+    this.awaitAppInitialization();
+  }
+
+  /**
+   * Sequences a number of components and services needed prior to
+   * displaying the map page.
+   */
+  awaitAppInitialization(): void {
+    this.initializeCaches();
+    /* Setup the positioning and map once we find out we have GPS available. */
+    this.geoLoc.notifyWhenReady().subscribe(
+      (response) => {
+        console.log("4. Proceeding with Map initialization");
+        this.initializePositionSource(response);
+      }
+    );
+  }
+
+  private initializePositionSource(position: Geoposition): void {
+    this.mapComponent.openMap(
+      position
+    );
+    this.loadNearestLocations(position);
   }
 
   /**
@@ -60,37 +87,8 @@ export class HomePage {
     this.locationMap[location.id] = location;
   }
 
-  ngOnInit(): void {
-    this.awaitAppInitialization();
-  }
-
   ngOnDestroy(): void {
     this.mapComponent.closeMap();
-  }
-
-  /**
-   * Sequences a number of components and services needed prior to
-   * displaying the initial page.
-   */
-  awaitAppInitialization(): void {
-    this.initializeCaches();
-    this.initializePositionSource();
-  }
-
-  initializePositionSource(): void {
-    /* Sort out how we obtain our positioning. */
-    let positionObservable = this.geoLoc.getPositionWatch();
-
-    /* Bringing up the map centered on current location. */
-    let disposeMe = positionObservable.subscribe(
-      (position) => {
-        this.mapComponent.openMap(
-          position
-        );
-        disposeMe.unsubscribe();
-        this.loadNearestLocations(position);
-      }
-    );
   }
 
   initializeCaches(): void {

@@ -141,6 +141,7 @@ describe("Heading", () => {
       /* train mocks */
       spyOn(deviceOrientation, 'watchHeading').and.returnValue(compassHeadingObservable);
       spyOn(compassHeadingObservable, 'subscribe').and.returnValue(compassHeadingSubscription);
+      toTest.deviceHasCompass = true;
       toTest.getHeadingMarker(positionObservable);
       spyOn(deviceOrientation, 'getCurrentHeading').and.returnValue(
         Promise.resolve(headingResponse)
@@ -151,6 +152,7 @@ describe("Heading", () => {
       toTest.checkCompassAvailability();
       fixture.whenStable().then(() => {
         fixture.detectChanges();
+        expect(toTest.subscription).toBeDefined();
         compassSubscriptionSpy = spyOn(toTest.subscription, 'unsubscribe');
         toTest.releaseHeadingMarker();
       });
