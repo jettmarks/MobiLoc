@@ -29,11 +29,12 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   zoomLevel: number;
   static map: any;
-  private autoCenter: boolean = true;
+  private static autoCenter: boolean = true;
   static locationMap = {};
   showLatLon: boolean = true;
   showCrosshairs: boolean = false;
   static latLon: LatLonComponent;
+  private static tethered: boolean = false;
 
   constructor(
     public geoLoc: GeoLocComponent,
@@ -63,7 +64,7 @@ export class MapComponent {
       MapComponent.latLon.setContent(this.showLatLon);
     }
 
-    /* Assemble Leaflet position object. */
+    /* Assemble Leaflet position object. (LE-70) */
     let leafletPosition = [
       position.coords.latitude,
       position.coords.longitude
@@ -82,6 +83,11 @@ export class MapComponent {
 
     /* Add a "here I am" marker. */
     this.heading.getHeadingMarker(positionObservable).addTo(MapComponent.map);
+
+    /* Turn off auto-center if user drags the map. */
+    MapComponent.map.on('movestart', () => {
+      MapComponent.autoCenter = false;
+    });
 
     /* Map is ready; turn off splash screen. */
     this.splashScreen.hide();
@@ -102,7 +108,9 @@ export class MapComponent {
     this.heading.updateLocation(position.coords);
 
     /* Move map so current location is centered. */
-    if (this.autoCenter) {
+    if (MapComponent.autoCenter && MapComponent.map) {
+      /* Suspend move event generation */
+      MapComponent.map.off('movestart');
       // TODO: LE-70 Prepare a better pattern for converting between these two representations.
       let latLon: LatLon = {
         id: 0,
@@ -111,6 +119,12 @@ export class MapComponent {
         lng: position.coords.longitude
       };
       MapComponent.map.panTo(latLon);
+      MapComponent.map.on('movestart',
+        () => {
+          MapComponent.autoCenter = false;
+          console.log("Move Start event");
+        }
+      );
     }
   };
 
@@ -179,6 +193,14 @@ export class MapComponent {
     this.showLatLon = !this.showLatLon;
     MapComponent.latLon.setContent(this.showLatLon);
     console.log("Lat/Lon: " + this.showLatLon);
+  }
+
+  settingsToggleAutoCenter() {
+    MapComponent.autoCenter = !MapComponent.autoCenter;
+  }
+
+  settingsToggleTether() {
+    MapComponent.tethered = !MapComponent.tethered;
   }
 
   /**

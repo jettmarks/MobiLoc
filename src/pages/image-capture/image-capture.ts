@@ -87,12 +87,16 @@ export class ImageCapturePage {
     uploadPostPromise.then(
       (response) => {
         console.log("Got result of uploadImage: " + response);
-        this.appCtrl.getRootNav().pop();
+        if (this.appCtrl.getRootNav()) {
+          this.appCtrl.getRootNav().pop();
+        }
       }
     ).catch(
       (err) => {
         console.log("Problem uploading image: " + err);
-        this.appCtrl.getRootNav().pop();
+        if (this.appCtrl.getRootNav()) {
+          this.appCtrl.getRootNav().pop();
+        }
       }
     );
 

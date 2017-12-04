@@ -1,8 +1,10 @@
 import {Component} from "@angular/core";
-import {GeolocationOptions, Geoposition} from "@ionic-native/geolocation";
+import {Geoposition} from "@ionic-native/geolocation";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Restangular} from "ngx-restangular";
+import {DeviceGeoLocService} from "../../providers/device-geo-loc/device-geo-loc.service";
+import {isDefined} from "ionic-angular/util/util";
 import LatLon = clueRide.LatLon;
 
 function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
@@ -32,19 +34,13 @@ function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
 })
 export class GeoLocComponent {
 
-  /** The observable we use to update the client. */
-  private positionSubject: Subject<Geoposition>;
-
   /** A Subject for Tethered Position; only instantiated if needed. */
   private tetheredPosition: Subject<Geoposition>;
 
-  /** Type of Position Observable this component provides. */
-  private positionType: string = undefined;
-
   private defaultGeoposition: Geoposition = {
     coords: {
-      latitude: 33.77,
-      longitude: -84.37,
+      latitude: 33.76,
+      longitude: -84.38,
       accuracy: 0.0,
       altitude: null,
       altitudeAccuracy: null,
@@ -54,52 +50,66 @@ export class GeoLocComponent {
     timestamp: null
   };
 
-  /** May want to make this configurable.
-   */
-  private geoLocOptions: GeolocationOptions = {
-    timeout: 10000,
-    enableHighAccuracy: true
-  };
-  /* Tracks which watch we're paying attention to. */
-  private watchId: number;
   private restangularService: Restangular;
+  private forceTether: boolean;
+  private keepScheduling: boolean = false;
 
   constructor(
+    private deviceGeoLocService: DeviceGeoLocService,
     private restangular: Restangular
   ) {
     this.restangularService = restangular;
   }
 
   /**
-   * Sets up a callback function (passed as a parameter) to be called whenever the position changes.
-   * @param callbackFunction is called when the position is ready to be updated.
+   * This component needs some time after the platform is ready to
+   * check the availability of the GPS -- and possibly confirm with
+   * the user if the GPS may be used -- before allowing the use of
+   * the position sources. The observable returned by this function
+   * will provide an async response once the checks are completed and
+   * this service is ready for use.
+   * @returns {Observable<boolean>}
    */
-  public watchPosition(callbackFunction: (position) => any) {
-    this.watchId = navigator.geolocation.watchPosition(callbackFunction);
-  }
-
-  public clearWatch() {
-    navigator.geolocation.clearWatch(this.watchId);
-    this.positionSubject = undefined;
-  }
-
-  getTetheredPosition(): Observable<Geoposition> {
-    this.tetheredPosition = new Subject();
-    this.tetheredPosition.next(this.defaultGeoposition);
-    this.positionType = "Tethered";
-    this.startMonitoringTether();
-    return this.tetheredPosition.asObservable();
-  }
-
-  startMonitoringTether(): void {
-    let monitorPromise = this.restangular.one("tether/dev").get().toPromise();
-    monitorPromise.then(
-      (latLon) => {
-        let geoPosition = buildGeoPositionFromLatLon(latLon);
-        this.tetheredPosition.next(geoPosition);
-        setTimeout(() => {this.startMonitoringTether()}, 1500);
+  public notifyWhenReady(): Observable<Geoposition> {
+    let serviceReady: Subject<Geoposition> = new Subject;
+    this.deviceGeoLocService.checkGpsAvailability().subscribe(
+      (response) => {
+        if (response) {
+          serviceReady.next(response);
+        } else {
+          serviceReady.next(this.defaultGeoposition);
+        }
+      },
+      () => {
+        serviceReady.next(this.defaultGeoposition);
       }
     );
+    return serviceReady.asObservable();
+  }
+
+  /**
+   * Set this true if we want to always use the tether even if GPS
+   * is available.
+   */
+  public forceUsingTether() {
+    this.forceTether = true;
+  }
+
+  public useGpsWhenAvailable() {
+    this.forceTether = false;
+  }
+
+  public isTethered(): boolean {
+    return isDefined(this.tetheredPosition);
+  }
+  /* Turn off watching the position -- however we're picking it up. */
+
+  public clearWatch() {
+    if (this.isTethered()) {
+      this.stopMonitoringTether();
+    } else {
+      this.deviceGeoLocService.clearWatch();
+    }
   }
 
   /**
@@ -111,45 +121,49 @@ export class GeoLocComponent {
    * </ul>
    */
   getPositionWatch(): Observable<Geoposition> {
-    if (this.positionSubject) {
-      console.log("Reusing existing position watch: " + this.positionType);
+    if (this.forceTether) {
+      console.log("Forced Tether");
+      return this.getTetheredPosition();
+    } else {
+      if (this.deviceGeoLocService.hasGPS()) {
+        console.log("Able to use GPS");
+        let devicePositionSubject: Subject<Geoposition> = this.deviceGeoLocService.getWatch();
+        return devicePositionSubject.asObservable();
+      } else {
+        console.log("Unable to use GPS -- tethering");
+        return this.getTetheredPosition();
+      }
     }
-    else {
-      console.log("2. Determining position sources");
-      this.positionSubject = new Subject;
-      /* Steer the logic based on whether we obtain device location. */
-      navigator.geolocation.getCurrentPosition(
-
-        /* A good response means we can use GPS. */
-        (response) => {
-          console.log("3. Can retrieve position");
-          this.positionType = "Device";
-          /* Send this recent position ... */
-          this.positionSubject.next(response);
-          /* ... and setup watch to continue updating. */
-          this.watchId = navigator.geolocation.watchPosition(
-            (response) => {
-              this.positionSubject.next(response);
-            }
-          );
-        },
-
-        /* Error response means we try tethered. */
-        (error) => {
-          console.log(error);
-          console.log("3. Use Tether instead");
-          this.getTetheredPosition().subscribe(
-            (response) => {
-              this.positionSubject.next(response);
-            }
-          );
-          /* TODO: temp until this is service-backed. */
-          this.tetheredPosition.next(this.defaultGeoposition);
-        },
-
-        this.geoLocOptions
-      );
-    }
-    return this.positionSubject.asObservable();
   }
+
+  private getTetheredPosition(): Observable<Geoposition> {
+    if (!isDefined(this.tetheredPosition)) {
+      this.tetheredPosition = new Subject();
+      this.keepScheduling = true;
+      this.startMonitoringTether();
+    }
+    return this.tetheredPosition.asObservable();
+  }
+
+  private startMonitoringTether(): void {
+    let monitorPromise = this.restangular.one("tether/dev").get().toPromise();
+    monitorPromise.then(
+      (latLon) => {
+        let geoPosition = buildGeoPositionFromLatLon(latLon);
+        this.tetheredPosition.next(geoPosition);
+        if (this.keepScheduling) {
+          setTimeout(() => {this.startMonitoringTether()}, 1500);
+        }
+      }
+    ).catch(
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  private stopMonitoringTether() {
+    this.keepScheduling = false;
+  }
+
 }
