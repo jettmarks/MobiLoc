@@ -11,6 +11,8 @@ import {App} from "ionic-angular";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {HeadingComponent} from "../heading/heading";
 import {Observable} from "rxjs/Observable";
+import {MoveStartService} from "../../providers/move-start/move-start";
+import {Subject} from "rxjs/Subject";
 import LatLon = clueRide.LatLon;
 
 /**
@@ -29,16 +31,17 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   zoomLevel: number;
   static map: any;
-  private static autoCenter: boolean = true;
   static locationMap = {};
   showLatLon: boolean = true;
   showCrosshairs: boolean = false;
   static latLon: LatLonComponent;
   private static tethered: boolean = false;
+  private reportedPosition: Subject<Geoposition> = new Subject();
 
   constructor(
     public geoLoc: GeoLocComponent,
     private markers: MarkersComponent,
+    private moveStart: MoveStartService,
     private heading: HeadingComponent,
     public splashScreen: SplashScreen,
     public appCtrl: App
@@ -59,9 +62,9 @@ export class MapComponent {
       console.log('MapComponent Initializing');
       MapComponent.locationMap = {};
       MapComponent.map = L.map('map');
-      MapComponent.latLon = new LatLonComponent(this.geoLoc);
+      MapComponent.latLon = new LatLonComponent();
       MapComponent.latLon.addTo(MapComponent.map);
-      MapComponent.latLon.setContent(this.showLatLon);
+      MapComponent.latLon.setPositionSubject(this.reportedPosition);
     }
 
     /* Assemble Leaflet position object. (LE-70) */
@@ -86,8 +89,11 @@ export class MapComponent {
 
     /* Turn off auto-center if user drags the map. */
     MapComponent.map.on('movestart', () => {
-      MapComponent.autoCenter = false;
+      this.moveStart.setAutoCenter(false);
     });
+
+    /* Attach the reported position subject to the Move Start service. */
+    this.moveStart.useMap(MapComponent.map, this.reportedPosition);
 
     /* Map is ready; turn off splash screen. */
     this.splashScreen.hide();
@@ -108,7 +114,7 @@ export class MapComponent {
     this.heading.updateLocation(position.coords);
 
     /* Move map so current location is centered. */
-    if (MapComponent.autoCenter && MapComponent.map) {
+    if (this.moveStart.isAutoCenter() && MapComponent.map) {
       /* Suspend move event generation */
       MapComponent.map.off('movestart');
       // TODO: LE-70 Prepare a better pattern for converting between these two representations.
@@ -119,10 +125,10 @@ export class MapComponent {
         lng: position.coords.longitude
       };
       MapComponent.map.panTo(latLon);
+      this.reportedPosition.next(position);
       MapComponent.map.on('movestart',
         () => {
-          MapComponent.autoCenter = false;
-          console.log("Move Start event");
+          this.moveStart.setAutoCenter(false);
         }
       );
     }
@@ -191,12 +197,12 @@ export class MapComponent {
 
   settingsToggleLatLon() {
     this.showLatLon = !this.showLatLon;
-    MapComponent.latLon.setContent(this.showLatLon);
+    MapComponent.latLon.enableDisplay(this.showLatLon);
     console.log("Lat/Lon: " + this.showLatLon);
   }
 
   settingsToggleAutoCenter() {
-    MapComponent.autoCenter = !MapComponent.autoCenter;
+    this.moveStart.setAutoCenter(!this.moveStart.isAutoCenter());
   }
 
   settingsToggleTether() {

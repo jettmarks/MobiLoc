@@ -1,6 +1,10 @@
 import {Component} from "@angular/core";
-import {GeoLocComponent} from "../geo-loc/geo-loc";
 import * as L from "leaflet";
+import {Geoposition} from "@ionic-native/geolocation";
+import {Observable} from "rxjs/Observable";
+import {Subscription} from "rxjs/Subscription";
+import {Subject} from "rxjs/Subject";
+import {isDefined} from "ionic-angular/util/util";
 
 /**
  * Generated class for the LatLonComponent component.
@@ -13,38 +17,51 @@ import * as L from "leaflet";
   templateUrl: 'lat-lon.html'
 })
 export class LatLonComponent extends L.Control {
-  state: boolean = true;
-  public coords: any = {};
+  private displayEnabledFlag: boolean = true;
 
-  public onAdd (map) {
+  /* Fed by either the map center or GPS position */
+  positionObservable: Observable<Geoposition>;
+  positionSubscription: Subscription;
+
+  constructor(
+  ) {
+    super();
+    this.options.position = 'bottomleft';
+  }
+
+  public onAdd(map) {
     return L.DomUtil.create('div', 'lat-lon-component');
   }
 
-  public setContent(onOff) {
-    if (onOff) {
+  public enableDisplay(showLatLon: boolean) {
+    this.displayEnabledFlag = showLatLon;
+  }
+
+  public setPositionSubject(subject: Subject<Geoposition>): Subscription {
+    this.positionObservable = subject.asObservable();
+    return this.watchPosition();
+  }
+
+  private watchPosition(): Subscription {
+    this.positionSubscription = this.positionObservable.subscribe(
+      (position) => {
+        this.setContent(position);
+      }
+    );
+    return this.positionSubscription;
+  }
+
+  private setContent(position: Geoposition) {
+    let coords = position.coords;
+    if (this.displayEnabledFlag && coords && isDefined(coords.latitude)) {
       let point = [
-        this.coords.latitude,
-        this.coords.longitude
+        coords.latitude.toFixed(6),
+        coords.longitude.toFixed(6)
       ];
       this.getContainer().innerHTML = "LatLon: " + point;
     } else {
       this.getContainer().innerHTML = " ";
     }
-  }
-
-  constructor(
-    geoLoc: GeoLocComponent
-  ) {
-    super();
-    this.options.position = 'bottomleft';
-
-    geoLoc.getPositionWatch().subscribe(
-      (position) => {
-        this.coords = position.coords;
-        this.setContent(this.state);
-      }
-    );
-    console.log('Hello LatLonComponent Component');
   }
 
 }
