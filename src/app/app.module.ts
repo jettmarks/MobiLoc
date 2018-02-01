@@ -23,6 +23,7 @@ import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
 import {DeviceGeoLocService} from "../providers/device-geo-loc/device-geo-loc.service";
+import {MoveStartService} from "../providers/move-start/move-start";
 
 /* TODO: place this inside the Google-specific OAuth module. */
 export const cloudSettings: CloudSettings = {
@@ -74,6 +75,7 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
     DeviceGeoLocService,
     GeoLocComponent,
     MarkersComponent,
+    MoveStartService,
     Resource,
     SessionTokenService,
     StatusBar,
