@@ -37,7 +37,11 @@ export class GeoLocComponent {
   /** A Subject for Tethered Position; only instantiated if needed. */
   private tetheredPosition: Subject<Geoposition>;
 
-  private defaultGeoposition: Geoposition = {
+
+  private restangularService: Restangular;
+  private forceTether: boolean;
+  private keepScheduling: boolean = false;
+  static DEFAULT_GEOPOSITION: Geoposition = {
     coords: {
       latitude: 33.76,
       longitude: -84.38,
@@ -49,10 +53,6 @@ export class GeoLocComponent {
     },
     timestamp: null
   };
-
-  private restangularService: Restangular;
-  private forceTether: boolean;
-  private keepScheduling: boolean = false;
 
   constructor(
     private deviceGeoLocService: DeviceGeoLocService,
@@ -77,11 +77,11 @@ export class GeoLocComponent {
         if (response) {
           serviceReady.next(response);
         } else {
-          serviceReady.next(this.defaultGeoposition);
+          serviceReady.next(GeoLocComponent.DEFAULT_GEOPOSITION);
         }
       },
       () => {
-        serviceReady.next(this.defaultGeoposition);
+        serviceReady.next(GeoLocComponent.DEFAULT_GEOPOSITION);
       }
     );
     return serviceReady.asObservable();

@@ -13,19 +13,6 @@ let toTest : GeoLocComponent;
 let fixture: ComponentFixture<GeoLocComponent>;
 let deviceGeoLocService: DeviceGeoLocService;
 
-let defaultGeoposition: Geoposition = {
-  coords: {
-    latitude: 33.76,
-    longitude: -84.38,
-    accuracy: 0.0,
-    altitude: null,
-    altitudeAccuracy: null,
-    heading: null,
-    speed: null
-  },
-  timestamp: null
-};
-
 describe("Geo-Location", () => {
 
   beforeEach(() => {
@@ -65,7 +52,7 @@ describe("Geo-Location", () => {
       /* setup data */
       let actual: Geoposition = undefined;
       let serviceReadySubject: Subject<Geoposition> = new Subject;
-      let expected = defaultGeoposition;
+      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
 
       /* train mocks */
       spyOn(deviceGeoLocService, "checkGpsAvailability").and.returnValue(serviceReadySubject.asObservable());
@@ -222,7 +209,7 @@ describe("Geo-Location", () => {
     it("should return default position when GPS not available", () => {
       /* setup data */
       let actual: any = undefined;
-      let expected = defaultGeoposition;
+      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<any> = new Subject;
 
       /* train mocks */
@@ -247,7 +234,7 @@ describe("Geo-Location", () => {
     it("should return default position when device returns null", () => {
       /* setup data */
       let actual: any = undefined;
-      let expected = defaultGeoposition;
+      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<any> = new Subject;
 
       /* train mocks */
