@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.clueride" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
+<widget id="com.clueride.mobiloc" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
     <name>MobiLoc</name>
     <description>Clue Ride Location Editor for the Field</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
