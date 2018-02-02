@@ -2,6 +2,7 @@
     "name": "MobiLoc",
     "version": "0.0.1",
     "author": "Clue Ride",
+    "description": "MobiLoc - Clue Ride Location Editor",
     "homepage": "https://www.clueride.com/",
     "private": true,
     "scripts": {
@@ -14,7 +15,9 @@
     },
     "config": {
         "ionic_copy": "./config/copy.config.js",
-        "ionic_sass": "./config/sass.config.js"
+        "ionic_sass": "./config/sass.config.js",
+        "ionic_webpack": "config/webpack.config.js",
+        "ionic_watch": "config/watch.config.js"
     },
     "dependencies": {
         "@angular/common": "4.1.0",
@@ -26,6 +29,7 @@
         "@angular/platform-browser": "4.1.0",
         "@angular/platform-browser-dynamic": "4.1.0",
         "@angular/router": "^4.1.0",
+        "@auth0/cordova": "^0.3.0",
         "@ionic-native/camera": "^3.7.0",
         "@ionic-native/core": "^3.7.0",
         "@ionic-native/device-orientation": "^3.7.0",
@@ -59,7 +63,7 @@
         "ionicons": "3.0.0",
         "leaflet": "^1.2.0",
         "leaflet.awesome-markers": "^2.0.4",
-        "ngx-restangular": "^1.0.11",
+        "ngx-restangular": "^2.0.2",
         "rxjs": "5.1.1",
         "sw-toolbox": "3.6.0",
         "zone.js": "0.8.10"
@@ -67,7 +71,8 @@
     "devDependencies": {
         "@angular/cli": "^1.4.9",
         "@angular/core": "^4.1.0",
-        "@ionic/app-scripts": "1.3.7",
+        "awesome-typescript-loader": "file:node_modules/awesome-typescript-loader",
+        "@ionic/app-scripts": "3.1.0",
         "@types/jasmine": "^2.6.2",
         "@types/node": "^8.0.47",
         "codecov": "^2.3.1",
@@ -90,7 +95,6 @@
         "typescript": "2.3.4",
         "webpack": "^3.8.1"
     },
-    "description": "MobiLoc - Clue Ride Location Editor",
     "cordova": {
         "plugins": {
             "cordova-plugin-console": {},

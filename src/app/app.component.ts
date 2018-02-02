@@ -1,12 +1,11 @@
 import {Component, ViewChild} from "@angular/core";
 import {Nav, Platform} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
-
-import {SessionTokenService} from "../providers/session-token/session-token.service";
+import {AuthService, RegistrationPage} from "front-end-common";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
-import {LoginPage} from "../pages/login/login";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
+import {ProfileService} from "../../../front-end-common/src/providers/profile/profile.service";
 
 @Component({
   templateUrl: 'app.html'
@@ -21,7 +20,8 @@ export class MyApp {
   constructor(
     public platform: Platform,
     public statusBar: StatusBar,
-    public sessionTokenService: SessionTokenService,
+    public authService: AuthService,
+    public profileService: ProfileService
   ) {
     this.initializeApp();
 
@@ -30,7 +30,6 @@ export class MyApp {
       { title: 'Map', component: HomePage },
       { title: 'List', component: ListPage },
       { title: 'Edit', component: LocEditPage },
-      { title: 'Login', component: LoginPage },
     ];
 
   }
@@ -52,13 +51,12 @@ export class MyApp {
 
   ngOnInit() {
     console.log("App is initialized");
-    /* This is dependent on the loadToken having been run (promise resolved) as the initialization of the app. */
-    if (this.sessionTokenService.isGuest()) {
-      console.log("1. Running as Guest");
-      this.nav.setRoot(LoginPage);
+    this.nav.setRoot(HomePage);
+    if (this.authService.isAuthenticated()) {
+      console.log("1. App is registered under " + this.profileService.getPrincipal());
     } else {
-      console.log("1. Running as " + this.sessionTokenService.getPrincipalName());
-      this.nav.setRoot(HomePage);
+      console.log("1. App is unregistered");
+      this.nav.push(RegistrationPage);
     }
   }
 }

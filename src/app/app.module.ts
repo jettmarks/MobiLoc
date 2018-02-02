@@ -1,6 +1,6 @@
 import {BrowserModule} from "@angular/platform-browser";
 import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
-import {APP_INITIALIZER, ErrorHandler, NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {IonicStorageModule} from "@ionic/storage";
 
@@ -13,11 +13,10 @@ import {RestangularModule} from "ngx-restangular/dist/esm/src";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
-import {SessionTokenService} from "../providers/session-token/session-token.service";
+import {ComponentsModule} from "front-end-common";
 import {GeoLocComponent} from "../components/geo-loc/geo-loc";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
-import {LoginPage} from "../pages/login/login";
 import {MarkersComponent} from "../components/markers/markers";
 import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
@@ -39,17 +38,11 @@ export const cloudSettings: CloudSettings = {
   }
 };
 
-/* Assures credentials are loaded from storage before trying to show initial page. */
-export function loadSessionToken(sessionTokenService: SessionTokenService) {
-  return () => sessionTokenService.loadToken();
-}
-
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    LoginPage,
     GeoLocComponent,
     MarkersComponent,
     LatLonComponent,
@@ -57,6 +50,7 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
   imports: [
     BrowserModule,
     CloudModule.forRoot(cloudSettings),
+    ComponentsModule.forRoot(),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
     LocEditPageModule,
@@ -69,7 +63,6 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
     LocEditPage,
     HomePage,
     ListPage,
-    LoginPage,
   ],
   providers: [
     DeviceGeoLocService,
@@ -77,11 +70,9 @@ export function loadSessionToken(sessionTokenService: SessionTokenService) {
     MarkersComponent,
     MoveStartService,
     Resource,
-    SessionTokenService,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    {provide: APP_INITIALIZER, useFactory: loadSessionToken, deps: [SessionTokenService], multi: true}
   ]
 })
 export class AppModule {}
