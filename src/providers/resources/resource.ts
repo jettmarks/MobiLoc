@@ -1,4 +1,4 @@
-import {SessionTokenService} from "../session-token/session-token.service";
+import {TokenService} from "front-end-common";
 import {Injectable} from "@angular/core";
 /**
  * Created by jett on 9/24/17.
@@ -8,14 +8,14 @@ import {Injectable} from "@angular/core";
 export class Resource {
 
   constructor(
-    private sessionTokenService: SessionTokenService
+    private tokenService: TokenService
   ) {
   }
 
   addTokenRequestInterceptor(configurer) {
     configurer.addFullRequestInterceptor(
       (element, operation, path, url, headers, params) => {
-        let bearerToken = this.sessionTokenService.getBearerToken();
+        let bearerToken = this.tokenService.getBearerToken();
 
         return {
           headers: Object.assign({}, headers, {Authorization: `Bearer ${bearerToken}`})
