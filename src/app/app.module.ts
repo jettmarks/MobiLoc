@@ -1,5 +1,4 @@
 import {BrowserModule} from "@angular/platform-browser";
-import {CloudModule, CloudSettings} from "@ionic/cloud-angular";
 import {ErrorHandler, NgModule} from "@angular/core";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {IonicStorageModule} from "@ionic/storage";
@@ -24,20 +23,6 @@ import {MapComponentModule} from "../components/map/map.module";
 import {DeviceGeoLocService} from "../providers/device-geo-loc/device-geo-loc.service";
 import {MoveStartService} from "../providers/move-start/move-start";
 
-/* TODO: place this inside the Google-specific OAuth module. */
-export const cloudSettings: CloudSettings = {
-  'core': {
-    'app_id': 'd7271bbc'
-  },
-  'auth': {
-    'google': {
-      'webClientId': '989278627857-1bei5m1ek171qcb0ork8s1brnuacm84p.apps.googleusercontent.com',
-      // 'offline': true,
-      // 'scope': "email profile"
-    }
-  }
-};
-
 @NgModule({
   declarations: [
     MyApp,
@@ -49,7 +34,6 @@ export const cloudSettings: CloudSettings = {
   ],
   imports: [
     BrowserModule,
-    CloudModule.forRoot(cloudSettings),
     ComponentsModule.forRoot(),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
