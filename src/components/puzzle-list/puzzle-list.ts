@@ -2,6 +2,7 @@
  * Created by jett on 10/23/17.
  */
 import {Component, Injectable, Input} from "@angular/core";
+// tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 import {ModalController} from "ionic-angular";
 import Puzzle = clueRide.Puzzle;
