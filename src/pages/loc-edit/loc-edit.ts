@@ -5,6 +5,7 @@ import {locationServiceProvider} from "../../providers/resources/location/locati
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 import {ImageCapturePage} from "../image-capture/image-capture";
+// tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 
 /**
@@ -41,6 +42,7 @@ export class LocEditPage {
     private appCtrl: App,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
+    // tslint:disable-next-line
     private navParams: NavParams,
     private restangular: Restangular,
   ) {

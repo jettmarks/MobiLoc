@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {Geoposition} from "@ionic-native/geolocation";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
+// tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 import {DeviceGeoLocService} from "../../providers/device-geo-loc/device-geo-loc.service";
 import {isDefined} from "ionic-angular/util/util";

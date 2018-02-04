@@ -4,6 +4,7 @@
 import {MoveStartService} from "./move-start";
 import {Subject} from "rxjs/Subject";
 import {Geoposition} from "@ionic-native/geolocation";
+// tslint:disable-next-line
 import any = jasmine.any;
 
 let toTest: MoveStartService;
