@@ -1,3 +1,4 @@
+import Auth0Cordova from "@auth0/cordova";
 import {Component, ViewChild} from "@angular/core";
 import {Nav, Platform} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
@@ -40,6 +41,10 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
 
+      /* Handles the return to the app after logging in at external site. */
+      (<any>window).handleOpenURL = (url) => {
+        Auth0Cordova.onRedirectUri(url);
+      }
     });
   }
 
