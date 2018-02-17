@@ -6,7 +6,6 @@ import {AuthService, RegistrationPage} from "front-end-common";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
-import {ProfileService} from "../../../front-end-common/src/providers/profile/profile.service";
 
 @Component({
   templateUrl: 'app.html'
@@ -22,7 +21,6 @@ export class MyApp {
     public platform: Platform,
     public statusBar: StatusBar,
     public authService: AuthService,
-    public profileService: ProfileService
   ) {
     this.initializeApp();
 
@@ -56,12 +54,28 @@ export class MyApp {
 
   ngOnInit() {
     console.log("App is initialized");
+    this.checkDeviceRegistered();
     this.nav.setRoot(HomePage);
-    if (this.authService.isAuthenticated()) {
-      console.log("1. App is registered under " + this.profileService.getPrincipal());
-    } else {
-      console.log("1. App is unregistered");
-      this.nav.push(RegistrationPage);
-    }
+  }
+
+  /** Bring up Registration page if not yet registered; otherwise, wait for fresh token. */
+private checkDeviceRegistered() {
+    this.authService.checkRegistrationRequired().then(
+      (needsRegistration) => {
+        let pageReadyPromise: Promise<void>;
+
+        pageReadyPromise = this.nav.setRoot(HomePage);
+        if (needsRegistration) {
+          pageReadyPromise = this.nav.push(RegistrationPage);
+        }
+
+        pageReadyPromise.then(
+          () => {
+            // this.splashScreen.hide();
+          }
+        );
+      }
+
+    );
   }
 }
