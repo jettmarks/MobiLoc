@@ -41,6 +41,7 @@ export class MyApp {
 
       /* Handles the return to the app after logging in at external site. */
       (<any>window).handleOpenURL = (url) => {
+        console.log("Redirecting custom scheme: " + url);
         Auth0Cordova.onRedirectUri(url);
       }
     });
@@ -54,8 +55,8 @@ export class MyApp {
 
   ngOnInit() {
     console.log("App is initialized");
+    this.authService.setUrlScheme("com.clueride.mobiloc");
     this.checkDeviceRegistered();
-    this.nav.setRoot(HomePage);
   }
 
   /** Bring up Registration page if not yet registered; otherwise, wait for fresh token. */
