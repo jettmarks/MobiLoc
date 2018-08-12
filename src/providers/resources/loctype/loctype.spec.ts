@@ -1,6 +1,6 @@
 import {LocationTypeService} from "./loctype.service";
 import {Subject} from "rxjs/Subject";
-import LocationType = clueRide.LocationType;
+import {LocationType} from "./loctype";
 /**
  * Created by jett on 10/29/17.
  */

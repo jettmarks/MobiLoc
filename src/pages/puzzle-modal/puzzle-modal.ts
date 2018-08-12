@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {IonicPage, NavParams, ViewController} from "ionic-angular";
-import Puzzle = clueRide.Puzzle;
+import {Puzzle} from "../../providers/resources/puzzle/puzzle";
 
 /**
  * Generated class for the PuzzleModalPage page.

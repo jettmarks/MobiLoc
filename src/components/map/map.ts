@@ -6,14 +6,15 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
 import {CRMarker} from "../markers/crMarker";
+import {Location} from "../../providers/resources/location/location";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {App} from "ionic-angular";
+import {LatLon} from "../../providers/lat-lon/lat-lon";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {HeadingComponent} from "../heading/heading";
 import {Observable} from "rxjs/Observable";
 import {MoveStartService} from "../../providers/move-start/move-start";
 import {Subject} from "rxjs/Subject";
-import LatLon = clueRide.LatLon;
 
 /**
  * Generated class for the MapComponent component.
@@ -149,7 +150,7 @@ export class MapComponent {
    * @param iconName string name of the icon to represent the location (based on location type).
    */
   public addLocation(
-    location: clueRide.Location,
+    location: Location,
     iconName: string
   ) {
     MapComponent.locationMap[location.id] = location;
@@ -172,10 +173,10 @@ export class MapComponent {
 
   /**
    * Reads the Location's readiness level to determine which tab to show.
-   * @param {clueRide.Location} loc instance carrying a readinessLevel.
+   * @param {Location} loc instance carrying a readinessLevel.
    * @returns {number} representing an offset from Draft.
    */
-  private static getTabIdForLocation(loc: clueRide.Location) {
+  private static getTabIdForLocation(loc: Location) {
     switch(loc.readinessLevel) {
       case 'FEATURED':
         return 2;
