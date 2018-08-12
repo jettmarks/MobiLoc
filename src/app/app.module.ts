@@ -13,7 +13,7 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {ComponentsModule} from "front-end-common";
-import {GeoLocComponent} from "../components/geo-loc/geo-loc";
+import {GeoLocService} from "../providers/geo-loc/geo-loc";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
 import {MarkersComponent} from "../components/markers/markers";
@@ -29,7 +29,6 @@ import {LatLonProvider} from "../providers/lat-lon/lat-lon";
     MyApp,
     HomePage,
     ListPage,
-    GeoLocComponent,
     MarkersComponent,
     LatLonComponent,
   ],
@@ -51,7 +50,7 @@ import {LatLonProvider} from "../providers/lat-lon/lat-lon";
   ],
   providers: [
     DeviceGeoLocService,
-    GeoLocComponent,
+    GeoLocService,
     MarkersComponent,
     MoveStartService,
     Resource,

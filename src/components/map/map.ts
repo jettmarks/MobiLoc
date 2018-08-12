@@ -1,5 +1,5 @@
 import {Component, Injectable} from "@angular/core";
-import {GeoLocComponent} from "../geo-loc/geo-loc";
+import {GeoLocService} from "../../providers/geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
@@ -40,7 +40,7 @@ export class MapComponent {
   private reportedPosition: Subject<Geoposition> = new Subject();
 
   constructor(
-    public geoLoc: GeoLocComponent,
+    public geoLoc: GeoLocService,
     private markers: MarkersComponent,
     private moveStart: MoveStartService,
     private heading: HeadingComponent,

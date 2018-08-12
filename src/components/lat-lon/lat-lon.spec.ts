@@ -1,7 +1,7 @@
 import {LatLonComponent} from "./lat-lon";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {Platform} from "ionic-angular";
-import {GeoLocComponent} from "../geo-loc/geo-loc";
+import {GeoLocService} from "../../providers/geo-loc/geo-loc";
 import {DeviceGeoLocService} from "../../providers/device-geo-loc/device-geo-loc.service";
 import {RestangularModule} from "ngx-restangular";
 import {Subject} from "rxjs/Subject";
@@ -23,7 +23,7 @@ describe("Lat-Lon Component", () => {
       ],
       providers: [
         DeviceGeoLocService,
-        GeoLocComponent,
+        GeoLocService,
         Platform,
       ]
     });
@@ -39,7 +39,7 @@ describe("Lat-Lon Component", () => {
 
     it("should begin setting content once the subject provides positions", () => {
       /* setup data */
-      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
+      let expected = GeoLocService.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<Geoposition> = new Subject;
       let mockContainer = {
         innerHtml: {}
@@ -64,7 +64,7 @@ describe("Lat-Lon Component", () => {
 
     it("should set inner HTML to blank when disabled", () => {
       /* setup data */
-      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
+      let expected = GeoLocService.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<Geoposition> = new Subject;
       let mockContainer = {
         innerHtml: {}

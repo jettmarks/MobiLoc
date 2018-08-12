@@ -1,37 +1,31 @@
 /**
  * Created by jett on 6/25/17.
  */
-import {GeoLocComponent} from "./geo-loc";
-import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {Platform} from "ionic-angular";
-import {RestangularModule} from "ngx-restangular";
-import {DeviceGeoLocService} from "../../providers/device-geo-loc/device-geo-loc.service";
+import {GeoLocService} from "./geo-loc";
+import {DeviceGeoLocService} from "../device-geo-loc/device-geo-loc.service";
 import {Subject} from "rxjs/Subject";
 import {Geoposition} from "@ionic-native/geolocation";
 
-let toTest : GeoLocComponent;
-let fixture: ComponentFixture<GeoLocComponent>;
+let toTest : GeoLocService;
 let deviceGeoLocService: DeviceGeoLocService;
+let restangularService: any = {
+  one: function () {
+    return {
+      get: function () {}
+    }
+  }
+};
 
 describe("Geo-Location", () => {
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        GeoLocComponent
-      ],
-      imports: [
-        RestangularModule
-      ],
-      providers: [
-        DeviceGeoLocService,
-        GeoLocComponent,
-        Platform,
-      ]
-    });
-    fixture = TestBed.createComponent(GeoLocComponent);
-    toTest = fixture.componentInstance;
-    deviceGeoLocService = fixture.debugElement.injector.get(DeviceGeoLocService);
+    deviceGeoLocService = new DeviceGeoLocService();
+
+    toTest = new GeoLocService(
+      deviceGeoLocService,
+      restangularService
+    );
+
   });
 
   it("should be defined", () => {
@@ -52,7 +46,7 @@ describe("Geo-Location", () => {
       /* setup data */
       let actual: Geoposition = undefined;
       let serviceReadySubject: Subject<Geoposition> = new Subject;
-      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
+      let expected = GeoLocService.DEFAULT_GEOPOSITION;
 
       /* train mocks */
       spyOn(deviceGeoLocService, "checkGpsAvailability").and.returnValue(serviceReadySubject.asObservable());
@@ -70,11 +64,7 @@ describe("Geo-Location", () => {
       /* verify results */
       expect(actual).not.toBeDefined();
       serviceReadySubject.next(expected);
-      fixture.whenStable().then(
-        () => {
-          expect(actual).toBe(expected);
-        }
-      );
+      expect(actual).toBe(expected);
 
     });
 
@@ -96,7 +86,13 @@ describe("Geo-Location", () => {
 
     it("should read from Tethered when GPS unavailable", () => {
       /* train mocks */
+      let positionSubject: Subject<any> = new Subject;
       spyOn(deviceGeoLocService, "hasGPS").and.returnValue(false);
+      spyOn(restangularService, "one").and.returnValue({
+        get: function() {
+          return positionSubject;
+        }
+      });
 
       /* make call */
       toTest.getPositionWatch();
@@ -108,7 +104,13 @@ describe("Geo-Location", () => {
 
     it("should run tethered when overridden", () => {
       /* train mocks */
+      let positionSubject: Subject<any> = new Subject;
       spyOn(deviceGeoLocService, "hasGPS").and.returnValue(true);
+      spyOn(restangularService, "one").and.returnValue({
+        get: function() {
+          return positionSubject;
+        }
+      });
 
       /* make call */
       toTest.forceUsingTether();
@@ -129,6 +131,11 @@ describe("Geo-Location", () => {
       spyOn(deviceGeoLocService, "checkGpsAvailability").and.returnValue(
         positionSubject.asObservable()
       );
+      spyOn(restangularService, "one").and.returnValue({
+        get: function() {
+          return positionSubject;
+        }
+      });
 
       /* make call */
       toTest.notifyWhenReady().subscribe(
@@ -139,17 +146,26 @@ describe("Geo-Location", () => {
       positionSubject.next(expected);
 
       /* verify results */
-      fixture.whenStable().then(
-        () =>{
-          fixture.detectChanges();
-          expect(actual).toBe(expected);
-        }
-      );
+      expect(actual).toBe(expected);
 
     });
 
     it("should give us Observable in any case", () => {
+      /* train mocks */
+      let positionSubject: Subject<any> = new Subject;
+      spyOn(deviceGeoLocService, "checkGpsAvailability").and.returnValue(
+        positionSubject.asObservable()
+      );
+      spyOn(restangularService, "one").and.returnValue({
+        get: function() {
+          return positionSubject;
+        }
+      });
+
+      /* make call */
       let positionObservable = toTest.getPositionWatch();
+
+      /* verify results */
       expect(positionObservable).toBeDefined();
       expect(positionObservable.subscribe).toBeDefined();
       positionObservable.subscribe((actual) => {
@@ -209,7 +225,7 @@ describe("Geo-Location", () => {
     it("should return default position when GPS not available", () => {
       /* setup data */
       let actual: any = undefined;
-      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
+      let expected = GeoLocService.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<any> = new Subject;
 
       /* train mocks */
@@ -234,7 +250,7 @@ describe("Geo-Location", () => {
     it("should return default position when device returns null", () => {
       /* setup data */
       let actual: any = undefined;
-      let expected = GeoLocComponent.DEFAULT_GEOPOSITION;
+      let expected = GeoLocService.DEFAULT_GEOPOSITION;
       let positionSubject: Subject<any> = new Subject;
 
       /* train mocks */
