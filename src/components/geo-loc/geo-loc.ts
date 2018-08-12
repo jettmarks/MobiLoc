@@ -6,7 +6,7 @@ import {Subject} from "rxjs/Subject";
 import {Restangular} from "ngx-restangular";
 import {DeviceGeoLocService} from "../../providers/device-geo-loc/device-geo-loc.service";
 import {isDefined} from "ionic-angular/util/util";
-import LatLon = clueRide.LatLon;
+import {LatLon} from "../../providers/lat-lon/lat-lon";
 
 function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
   return {

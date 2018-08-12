@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {MapComponent} from "../../components/map/map";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
+import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
@@ -80,7 +81,7 @@ export class HomePage {
    * them all together.
    * @param location
    */
-  assembleAndAddLocation(location: clueRide.Location) {
+  assembleAndAddLocation(location: Location) {
     let locationType = this.locationTypeService.getById(location.locationTypeId);
     console.log(location.id + ": " + location.name);
     this.mapComponent.addLocation(location, locationType.icon);

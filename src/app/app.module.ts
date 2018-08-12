@@ -22,6 +22,7 @@ import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
 import {DeviceGeoLocService} from "../providers/device-geo-loc/device-geo-loc.service";
 import {MoveStartService} from "../providers/move-start/move-start";
+import {LatLonProvider} from "../providers/lat-lon/lat-lon";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {MoveStartService} from "../providers/move-start/move-start";
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LatLonProvider,
   ]
 })
 export class AppModule {}

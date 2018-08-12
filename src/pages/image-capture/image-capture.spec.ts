@@ -2,6 +2,7 @@ import {ImageCapturePage} from "./image-capture";
 import {TestBed} from "@angular/core/testing";
 import {IonicModule, NavParams} from "ionic-angular";
 import {Camera} from "@ionic-native/camera";
+import {Location} from "../../providers/resources/location/location";
 import {RestangularModule} from "ngx-restangular";
 /**
  * Created by jett on 11/5/17.
@@ -9,7 +10,7 @@ import {RestangularModule} from "ngx-restangular";
 
 let toTest: ImageCapturePage;
 
-const location: clueRide.Location = {
+const location: Location = {
   id: 13,
   nodeId: 13,
   latLon: {

@@ -2,6 +2,7 @@ import {Component, Injectable} from "@angular/core";
 import * as L from "leaflet";
 import "leaflet.awesome-markers/dist/leaflet.awesome-markers";
 import {CRMarker} from "./crMarker";
+import {Location} from "../../providers/resources/location/location";
 import MarkerOptions = L.MarkerOptions;
 
 /**
@@ -54,7 +55,7 @@ export class MarkersComponent {
   }
 
   public getLocationMarker(
-    location: clueRide.Location,
+    location: Location,
     iconName: string
   ): CRMarker {
     let markerOptions: MarkerOptions = {

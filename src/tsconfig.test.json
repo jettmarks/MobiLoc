@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "baseUrl": "",
+    "paths": {
+      "front-end-common": ["../../front-end-common/index"]
+    },
     "declaration": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

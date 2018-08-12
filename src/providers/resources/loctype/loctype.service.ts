@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import {LOCATION_TYPE_REST} from "./loctype.service.provider";
-import LocationType = clueRide.LocationType;
+import {LocationType} from "./loctype";
 /**
  * Created by jett on 7/22/17.
  */

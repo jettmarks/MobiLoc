@@ -3,6 +3,7 @@ import {Component} from "@angular/core";
 import {App, IonicPage, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/resources/image/image.service";
 import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
+import {Location} from "../../providers/resources/location/location";
 // tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 
@@ -25,7 +26,7 @@ export class ImageCapturePage {
 
   public base64Image: string;
   public images: Array<any> = [];
-  private location: clueRide.Location;
+  private location: Location;
 
   private cameraOptions: CameraOptions = {
     correctOrientation: true,
@@ -65,8 +66,8 @@ export class ImageCapturePage {
   }
 
   public save() {
-    // What I'd prefer, but the clueRide.Image isn't found anywhere
-    // let image = new clueRide.Image();
+    // What I'd prefer, but the Image isn't found anywhere
+    // let image = new Image();
     // image.populateFromLocation(this.location);
     // image.addImageData(this.images[0].src);
 

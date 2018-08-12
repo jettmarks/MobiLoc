@@ -1,4 +1,5 @@
 import {Marker, MarkerOptions} from "leaflet";
+import {Location} from "../../providers/resources/location/location";
 
 /**
  * Created by jett on 9/8/17.
@@ -9,7 +10,7 @@ export class CRMarker extends Marker {
   locationId: number;
 
   constructor(
-    location: clueRide.Location,
+    location: Location,
     options: MarkerOptions,
   ) {
     super(location.latLon, options);

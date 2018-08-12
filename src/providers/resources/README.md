@@ -56,8 +56,6 @@ _Modeled after examples in "Starter Guide" for http://ngx-restangular.com/ _
 
 - Created a separate service which is configured inside a 
 service.provider file.
-- Using a namespace to avoid name collisions (Location popped out as a 
-collision).
 - Currently, more than one class is defined in the location.ts file; 
 want to break these out.
 

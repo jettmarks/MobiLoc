@@ -1,5 +1,6 @@
 import {Component} from "@angular/core";
 import {AlertController, App, IonicPage, NavParams} from "ionic-angular";
+import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
@@ -28,7 +29,7 @@ import {Restangular} from "ngx-restangular";
 export class LocEditPage {
 
   editSegment: string;
-  location: clueRide.Location;
+  location: Location;
   private editSegments = [
     'draft',
     'attraction',
