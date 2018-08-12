@@ -3,7 +3,7 @@ import {MapComponent} from "../../components/map/map";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
-import {GeoLocComponent} from "../../components/geo-loc/geo-loc";
+import {GeoLocService} from "../../providers/geo-loc/geo-loc";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 import {Geoposition} from "@ionic-native/geolocation";
@@ -26,7 +26,7 @@ export class HomePage {
     public mapComponent: MapComponent,
     public locationService: LocationService,
     public locationTypeService: LocationTypeService,
-    private geoLoc: GeoLocComponent,
+    private geoLoc: GeoLocService,
   ) {
   }
 

@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {IonicPageModule} from "ionic-angular";
 import {LatLonComponent} from "./lat-lon";
-import {GeoLocComponentModule} from "../geo-loc/geo-loc.module";
+import {GeoLocComponentModule} from "../../providers/geo-loc-orig/geo-loc.module";
 
 @NgModule({
   declarations: [
