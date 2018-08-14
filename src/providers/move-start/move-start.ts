@@ -4,7 +4,7 @@
 import {Injectable} from "@angular/core";
 import {Subject} from "rxjs/Subject";
 import {Geoposition} from "@ionic-native/geolocation";
-import {LatLon} from "../lat-lon/lat-lon";
+import {LatLon} from "front-end-common";
 
 function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
   return {

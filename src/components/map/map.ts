@@ -1,18 +1,16 @@
 import {Component, Injectable} from "@angular/core";
-import {GeoLocService} from "../../providers/geo-loc/geo-loc";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
+import {GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
 import {CRMarker} from "../markers/crMarker";
 import {Location} from "../../providers/resources/location/location";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {App} from "ionic-angular";
-import {LatLon} from "../../providers/lat-lon/lat-lon";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {HeadingComponent} from "../heading/heading";
-import {Observable} from "rxjs/Observable";
 import {MoveStartService} from "../../providers/move-start/move-start";
 import {Subject} from "rxjs/Subject";
 
@@ -82,11 +80,8 @@ export class MapComponent {
       '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(MapComponent.map);
 
-    /* Set map to update when position changes. */
-    let positionObservable: Observable<Geoposition> = this.setWatch();
-
     /* Add a "here I am" marker. */
-    this.heading.getHeadingMarker(positionObservable).addTo(MapComponent.map);
+    this.heading.getHeadingMarker().addTo(MapComponent.map);
 
     /* Turn off auto-center if user drags the map. */
     MapComponent.map.on('movestart', () => {
@@ -101,8 +96,8 @@ export class MapComponent {
 
   }
 
-  public setWatch():Observable<Geoposition> {
-    let positionObservable =  this.geoLoc.getPositionWatch();
+  public setWatch(): ObservableGeoposition {
+    let positionObservable = this.geoLoc.getPositionWatch();
     positionObservable.subscribe(
       (position) => {
         this.updatePosition(position);

@@ -1,12 +1,12 @@
 import {Component} from "@angular/core";
-import {MapComponent} from "../../components/map/map";
+import {GeoLocService} from "front-end-common";
+import {Geoposition} from "@ionic-native/geolocation";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
 import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
-import {GeoLocService} from "../../providers/geo-loc/geo-loc";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
-import {Geoposition} from "@ionic-native/geolocation";
+import {MapComponent} from "../../components/map/map";
 
 @Component({
   selector: 'page-home',

@@ -6,8 +6,6 @@ import {
   DeviceOrientationCompassHeading,
   DeviceOrientationCompassOptions
 } from "@ionic-native/device-orientation";
-import {Observable} from "rxjs/Observable";
-import {Geoposition} from "@ionic-native/geolocation";
 import {Subscription} from "rxjs/Subscription";
 
 /**
@@ -108,10 +106,10 @@ export class HeadingComponent {
     });
   }
 
-  public getHeadingMarker(positionObservable: Observable<Geoposition>): L.Marker {
+  public getHeadingMarker(): L.Marker {
     let position = [0.0, 0.0];
     if (!this.headingMarker) {
-      this.setupHeadingMarker(position, positionObservable);
+      this.setupHeadingMarker(position);
     }
     this.addHeadingSubscription();
     return this.headingMarker;
@@ -119,7 +117,6 @@ export class HeadingComponent {
 
   private setupHeadingMarker(
     position,
-    positionObservable: Observable<Geoposition>
   ) {
     this.reportCompass();
     if (this.deviceHasCompass) {

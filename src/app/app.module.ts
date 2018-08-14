@@ -13,16 +13,13 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {ComponentsModule} from "front-end-common";
-import {GeoLocService} from "../providers/geo-loc/geo-loc";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
 import {MarkersComponent} from "../components/markers/markers";
 import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
-import {DeviceGeoLocService} from "../providers/device-geo-loc/device-geo-loc.service";
 import {MoveStartService} from "../providers/move-start/move-start";
-import {LatLonProvider} from "../providers/lat-lon/lat-lon";
 
 @NgModule({
   declarations: [
@@ -49,15 +46,12 @@ import {LatLonProvider} from "../providers/lat-lon/lat-lon";
     ListPage,
   ],
   providers: [
-    DeviceGeoLocService,
-    GeoLocService,
     MarkersComponent,
     MoveStartService,
     Resource,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    LatLonProvider,
   ]
 })
 export class AppModule {}
