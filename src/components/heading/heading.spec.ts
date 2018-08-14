@@ -3,7 +3,6 @@ import {async, ComponentFixture, TestBed} from "@angular/core/testing";
 import {IonicModule} from "ionic-angular";
 import {DeviceOrientation, DeviceOrientationCompassHeading} from "@ionic-native/device-orientation";
 import {DeviceOrientationMock} from "../../mocks";
-import {Geoposition} from "@ionic-native/geolocation";
 import {Observable} from "rxjs/Observable";
 import {Subject} from "rxjs/Subject";
 import {Subscription} from "rxjs/Subscription";
@@ -101,7 +100,6 @@ describe("Heading", () => {
 
     it("should begin watching for compass heading changes when activated", () => {
       /* setup data */
-      let positionObservable: Observable<Geoposition> = new Subject();
       let compassHeadingObservable: Observable<DeviceOrientationCompassHeading> = new Subject().asObservable();
       let deviceOrientation = fixture.debugElement.injector.get(DeviceOrientation);
 
@@ -118,7 +116,7 @@ describe("Heading", () => {
       toTest.checkCompassAvailability();
       fixture.whenStable().then(() => {
         fixture.detectChanges();
-        toTest.getHeadingMarker(positionObservable);
+        toTest.getHeadingMarker();
       });
 
       /* verify results */
@@ -133,7 +131,6 @@ describe("Heading", () => {
     it("should stop watching for compass heading changes when de-activated", () => {
       /* setup data */
       let compassSubscriptionSpy;
-      let positionObservable: Observable<Geoposition> = new Subject();
       let compassHeadingObservable: Observable<DeviceOrientationCompassHeading> = new Subject().asObservable();
       let deviceOrientation = fixture.debugElement.injector.get(DeviceOrientation);
       let compassHeadingSubscription: Subscription = new Subscription();
@@ -142,7 +139,7 @@ describe("Heading", () => {
       spyOn(deviceOrientation, 'watchHeading').and.returnValue(compassHeadingObservable);
       spyOn(compassHeadingObservable, 'subscribe').and.returnValue(compassHeadingSubscription);
       toTest.deviceHasCompass = true;
-      toTest.getHeadingMarker(positionObservable);
+      toTest.getHeadingMarker();
       spyOn(deviceOrientation, 'getCurrentHeading').and.returnValue(
         Promise.resolve(headingResponse)
       );

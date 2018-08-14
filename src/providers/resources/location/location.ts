@@ -1,5 +1,5 @@
-import {LatLon} from "../../lat-lon/lat-lon";
 import {Injectable} from "@angular/core";
+import {LatLon} from "front-end-common";
 
 /**
  * Created by jett on 7/10/17.
