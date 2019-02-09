@@ -19,3 +19,22 @@ map {
 }
 
 .map-content { height: 100%; }
+
+.crosshairs:before, .crosshairs:after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  bottom: 40%;
+  left: 40%;
+  right: 40%;
+  z-index: 999;
+  pointer-events: none;
+}
+.crosshairs:before {
+  bottom: 50%;
+  border-bottom: 1px #000 solid;
+}
+.crosshairs:after {
+  right: 50%;
+  border-right: 1px #000 solid;
+}
