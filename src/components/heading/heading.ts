@@ -7,6 +7,7 @@ import {
   DeviceOrientationCompassOptions
 } from "@ionic-native/device-orientation";
 import {Subscription} from "rxjs/Subscription";
+import {AuthService} from "front-end-common";
 
 /**
  * Generated class for the HeadingComponent component.
@@ -42,14 +43,8 @@ export class HeadingComponent {
   constructor(
     private deviceOrientation: DeviceOrientation,
     private platform: Platform,
+    private authService: AuthService,
   ) {
-
-    this.platform.ready().then(
-      () => {
-        console.log("HeadingComponent: Platform Ready");
-        this.checkCompassAvailability();
-      }
-    );
 
     /**
      * This particular icon is used to show direction the device is facing.
@@ -75,7 +70,13 @@ export class HeadingComponent {
 
   ngOnInit() {
     console.log("HeadingComponent: ngOnInit()");
-    this.checkCompassAvailability();
+    this.platform.ready().then(
+      () => {
+        console.log("HeadingComponent: Platform Ready");
+        this.checkCompassAvailability();
+      }
+    );
+
   }
 
   /**
@@ -86,16 +87,20 @@ export class HeadingComponent {
    */
   public checkCompassAvailability(): void {
     this.deviceHasCompass = false;
-    this.deviceOrientation.getCurrentHeading().then(
-      (data: DeviceOrientationCompassHeading) => {
-        this.deviceHasCompass = true;
-        this.lastHeading = data.trueHeading;
-      }
-    ).catch(
-      (error) => {
-        console.log("Ionic Native not available: " + error);
-      }
-    );
+    if (!this.authService.runningLocal()) {
+      this.deviceOrientation.getCurrentHeading().then(
+        (data: DeviceOrientationCompassHeading) => {
+          this.deviceHasCompass = true;
+          this.lastHeading = data.trueHeading;
+        }
+      ).catch(
+        (error) => {
+          console.log("Ionic Native not available: " + error);
+        }
+      );
+    } else {
+      console.log("Heading Component: Ionic Native not available in Local");
+    }
   }
 
   private iconFromImage(iconUrl: string): L.Icon {
@@ -174,6 +179,7 @@ export class HeadingComponent {
    * @param coordinates
    */
   public updateLocation(coordinates: string | L.Point | Coordinates) {
+    console.log("Heading.updateLocation() invoked");
     /* While updating the location of the marker ... */
     this.updateHeadingMarkerLocation(coordinates);
     if (this.deviceHasCompass) {

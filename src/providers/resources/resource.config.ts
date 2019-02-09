@@ -3,10 +3,10 @@
  * @param RestangularProvider
  */
 export function RestangularConfigFactory(RestangularProvider) {
-  RestangularProvider.setBaseUrl('https://player-test.clueride.com/rest');
+  RestangularProvider.setBaseUrl('https://player.clueride.com/rest');
 
   RestangularProvider.setDefaultHeaders({
-    'Authorization': 'Bearer GuestToken'
+    'Authorization': 'Bearer invitedUser'
   });
 
 }

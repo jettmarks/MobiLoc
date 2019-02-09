@@ -2,7 +2,7 @@ import {Component, Injectable} from "@angular/core";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
 import {SplashScreen} from "@ionic-native/splash-screen";
-import {GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
+import {AuthService, GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
 import {Geoposition} from "@ionic-native/geolocation";
 import * as L from "leaflet";
 import {CRMarker} from "../markers/crMarker";
@@ -38,12 +38,13 @@ export class MapComponent {
   private reportedPosition: Subject<Geoposition> = new Subject();
 
   constructor(
+    public appCtrl: App,
+    private authService: AuthService,
     public geoLoc: GeoLocService,
+    private heading: HeadingComponent,
     private markers: MarkersComponent,
     private moveStart: MoveStartService,
-    private heading: HeadingComponent,
     public splashScreen: SplashScreen,
-    public appCtrl: App
   ) {
     this.zoomLevel = 14;
   }
@@ -91,8 +92,13 @@ export class MapComponent {
     /* Attach the reported position subject to the Move Start service. */
     this.moveStart.useMap(MapComponent.map, this.reportedPosition);
 
-    /* Map is ready; turn off splash screen. */
-    this.splashScreen.hide();
+    /* Begin paying attention to position changes. */
+    this.setWatch();
+
+    if (!this.authService.runningLocal()) {
+      /* Map is ready; turn off splash screen. */
+      this.splashScreen.hide();
+    }
 
   }
 
@@ -121,6 +127,7 @@ export class MapComponent {
         lng: position.coords.longitude
       };
       MapComponent.map.panTo(latLon);
+      console.log("Map.updatePosition: next Reported Position");
       this.reportedPosition.next(position);
       MapComponent.map.on('movestart',
         () => {
