@@ -7,6 +7,7 @@ import {LocationService} from "../../providers/resources/location/location.servi
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 import {MapComponent} from "../../components/map/map";
+import {Platform} from "ionic-angular";
 
 @Component({
   selector: 'page-home',
@@ -27,11 +28,18 @@ export class HomePage {
     public locationService: LocationService,
     public locationTypeService: LocationTypeService,
     private geoLoc: GeoLocService,
+    private platform: Platform,
   ) {
   }
 
   ngOnInit(): void {
-    this.awaitAppInitialization();
+    this.platform.ready().then(
+      () => {
+        console.log("Home Page: Platform Ready");
+        this.awaitAppInitialization();
+      }
+    );
+
   }
 
   /**

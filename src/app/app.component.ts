@@ -35,9 +35,13 @@ export class MyApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      console.log("Platform Ready - can begin to look for Device Features");
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      this.statusBar.styleDefault();
+      if (!this.authService.runningLocal()) {
+        /* Since this is a cordova native statusbar, only set style if not within a browser (local). */
+        this.statusBar.styleDefault();
+      }
 
       /* Handles the return to the app after logging in at external site. */
       (<any>window).handleOpenURL = (url) => {

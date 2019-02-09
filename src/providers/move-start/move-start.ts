@@ -36,6 +36,7 @@ export class MoveStartService {
   }
 
   setAutoCenter(autoCenter: boolean) {
+    console.log("AutoCenter set to " + autoCenter);
     this.autoCenterFlag = autoCenter;
   }
 
@@ -49,6 +50,7 @@ export class MoveStartService {
     });
     map.on("moveend", () => {
       if (!this.isAutoCenter()) {
+        // TODO: Refactoring of this function:
         centerSubject.next(
           buildGeoPositionFromLatLon(
             map.getCenter()
