@@ -2,9 +2,9 @@
  * Created by jett on 12/5/17.
  */
 import {Injectable} from "@angular/core";
-import {Subject} from "rxjs/Subject";
 import {Geoposition} from "@ionic-native/geolocation";
 import {LatLon} from "front-end-common";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
   return {
@@ -22,10 +22,11 @@ function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
 }
 
 @Injectable()
-export class MoveStartService {
+export class MapMoveService {
 
   private autoCenterFlag: boolean = true;
   private mapInstance: any;
+  private centerSubject: BehaviorSubject<Geoposition>;
 
   constructor (
   ) {
@@ -42,25 +43,27 @@ export class MoveStartService {
 
   useMap(
     map: any,
-    centerSubject: Subject<Geoposition>
+    centerSubject: BehaviorSubject<Geoposition>
   ) {
     this.mapInstance = map;
+    this.centerSubject = centerSubject;
+
     map.on("movestart", () => {
       this.setAutoCenter(false);
     });
+
     map.on("moveend", () => {
       if (!this.isAutoCenter()) {
-        // TODO: Refactoring of this function:
-        centerSubject.next(
-          buildGeoPositionFromLatLon(
-            map.getCenter()
-          )
-        );
+        this.updateCenterSubject(map.getCenter());
       }
     });
-    centerSubject.next(
+
+  }
+
+  updateCenterSubject(latLon: LatLon) {
+    this.centerSubject.next(
       buildGeoPositionFromLatLon(
-        map.getCenter()
+        latLon
       )
     );
   }
