@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {AlertController, App, IonicPage, NavParams} from "ionic-angular";
+import {AlertController, App, IonicPage, NavController, NavParams} from "ionic-angular";
 import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
@@ -43,9 +43,9 @@ export class LocEditPage {
     private appCtrl: App,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
-    // tslint:disable-next-line
     private navParams: NavParams,
     private restangular: Restangular,
+    private navCtrl: NavController,
   ) {
     this.editSegment = this.editSegments[navParams.get("tabId")];
     this.location = navParams.get("location");
@@ -63,12 +63,6 @@ export class LocEditPage {
 
   }
 
-  ionViewDidEnter() {
-    this.restangular.one('location').get({'id': this.location.id}).subscribe(
-      (locData) => {this.location = locData}
-    );
-  }
-
   //noinspection JSMethodCanBeStatic
   /**
    * Invoked when the user is ready to persist changes.
@@ -80,7 +74,7 @@ export class LocEditPage {
 
   captureImage() {
     console.log("Opening Camera");
-    this.appCtrl.getRootNav().push(ImageCapturePage, {
+    this.navCtrl.push(ImageCapturePage, {
       location: this.location
     });
   }

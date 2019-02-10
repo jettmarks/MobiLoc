@@ -1,6 +1,7 @@
 import {InjectionToken} from "@angular/core";
 import {Restangular} from "ngx-restangular";
 import {Resource} from "../resource";
+
 /**
  * Created by jett on 11/5/17.
  */
@@ -8,15 +9,15 @@ export const IMAGE_REST = new InjectionToken<string>('ImageResource');
 
 const UPLOAD_IMAGE =
   {
-    resourceName: 'location',
-    name: 'uploadImage',
+    resourceName: 'image',
+    name: 'upload',
     httpMethod: 'post',
-    path: 'uploadImage',
+    path: 'upload',
     object: {
-      locId: 0,
+      locationId: 0,
       lat: 33.77,
       lon: -84.37,
-      file: ""
+      fileData: ""
     },
     headers: {
       'Content-Type': undefined
