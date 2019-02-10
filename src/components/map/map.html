@@ -24,9 +24,6 @@
     </ion-fab-list>
   </ion-fab>
 
-  <ion-fab right bottom>
-    <button ion-fab mini (tap)="addFabAction()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
+  <add-loc-button [mapCenter]="publiclyReportedPosition"></add-loc-button>
+
 </div>

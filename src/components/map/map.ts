@@ -11,8 +11,8 @@ import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {App} from "ionic-angular";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {HeadingComponent} from "../heading/heading";
-import {MoveStartService} from "../../providers/move-start/move-start";
-import {Subject} from "rxjs/Subject";
+import {MapMoveService} from "../../providers/map-move/map-move";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 /**
  * Generated class for the MapComponent component.
@@ -29,13 +29,25 @@ export class MapComponent {
 
   /** Holds the current zoom for the map. */
   zoomLevel: number;
-  static map: any;
+  public static map: any;
   static locationMap = {};
   showLatLon: boolean = true;
   showCrosshairs: boolean = false;
-  static latLon: LatLonComponent;
+  static latLon: LatLonComponent = <any>{};
   private static tethered: boolean = false;
-  private reportedPosition: Subject<Geoposition> = new Subject();
+  private static reportedPosition: BehaviorSubject<Geoposition> = new BehaviorSubject({
+    coords: {
+      latitude: 33.75,
+      longitude: -84.75,
+      accuracy: 0.0,
+      altitude: null,
+      altitudeAccuracy: null,
+      heading: null,
+      speed: null
+    },
+    timestamp: null
+  });
+  public publiclyReportedPosition: BehaviorSubject<Geoposition> = MapComponent.reportedPosition;
 
   constructor(
     public appCtrl: App,
@@ -43,7 +55,7 @@ export class MapComponent {
     public geoLoc: GeoLocService,
     private heading: HeadingComponent,
     private markers: MarkersComponent,
-    private moveStart: MoveStartService,
+    private moveStart: MapMoveService,
     public splashScreen: SplashScreen,
   ) {
     this.zoomLevel = 14;
@@ -57,23 +69,26 @@ export class MapComponent {
   public openMap(
     position: Geoposition,
   ) {
-    /* If map is already initialized, no need to re-initialize. */
-    if (!MapComponent.map) {
-      console.log('MapComponent Initializing');
-      MapComponent.locationMap = {};
-      MapComponent.map = L.map('map');
-      MapComponent.latLon = new LatLonComponent();
-      MapComponent.latLon.addTo(MapComponent.map);
-      MapComponent.latLon.setPositionSubject(this.reportedPosition);
-    }
-
     /* Assemble Leaflet position object. (LE-70) */
     let leafletPosition = [
       position.coords.latitude,
       position.coords.longitude
     ];
 
-    MapComponent.map.setView(leafletPosition, this.zoomLevel);
+    /* If map is already initialized, no need to re-initialize. */
+    if (!MapComponent.map) {
+      console.log('MapComponent Initializing');
+      MapComponent.locationMap = {};
+      MapComponent.map = L.map('map');
+      MapComponent.map.setView(leafletPosition, this.zoomLevel);
+      MapComponent.latLon = new LatLonComponent();
+      MapComponent.latLon.addTo(MapComponent.map);
+      MapComponent.latLon.setPositionSubject(MapComponent.reportedPosition);
+
+      /* Attach the reported position subject to the Move Start service. */
+      this.moveStart.useMap(MapComponent.map, MapComponent.reportedPosition);
+    }
+
 
     /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -88,9 +103,6 @@ export class MapComponent {
     MapComponent.map.on('movestart', () => {
       this.moveStart.setAutoCenter(false);
     });
-
-    /* Attach the reported position subject to the Move Start service. */
-    this.moveStart.useMap(MapComponent.map, this.reportedPosition);
 
     /* Begin paying attention to position changes. */
     this.setWatch();
@@ -128,7 +140,7 @@ export class MapComponent {
       };
       MapComponent.map.panTo(latLon);
       console.log("Map.updatePosition: next Reported Position");
-      this.reportedPosition.next(position);
+      MapComponent.reportedPosition.next(position);
       MapComponent.map.on('movestart',
         () => {
           this.moveStart.setAutoCenter(false);
@@ -158,7 +170,7 @@ export class MapComponent {
     MapComponent.locationMap[location.id] = location;
     let locationMarker = this.markers.getLocationMarker(location, iconName)
       .on('click', (mouseEvent) => {
-        console.log(mouseEvent);
+        console.log("Mouse Event: " + mouseEvent);
         let crMarker: CRMarker = <any> mouseEvent.target;
         let locId = crMarker.locationId;
         let loc = MapComponent.locationMap[locId];
@@ -210,13 +222,6 @@ export class MapComponent {
 
   settingsToggleTether() {
     MapComponent.tethered = !MapComponent.tethered;
-  }
-
-  /**
-   * Responds to FAB button to add a new location.
-   */
-  addFabAction() {
-    console.log(MapComponent.map.getCenter());
   }
 
 }
