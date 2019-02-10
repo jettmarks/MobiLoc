@@ -1,6 +1,6 @@
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Component} from "@angular/core";
-import {App, IonicPage, NavParams} from "ionic-angular";
+import {App, IonicPage, LoadingController, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/resources/image/image.service";
 import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
 import {Location} from "../../providers/resources/location/location";
@@ -41,7 +41,8 @@ export class ImageCapturePage {
     private camera: Camera,
     public navParams: NavParams,
     private restangular: Restangular,
-    private appCtrl: App
+    private appCtrl: App,
+    private loadingCtrl: LoadingController,
   ) {
     this.location = navParams.get("location");
   }
@@ -66,6 +67,12 @@ export class ImageCapturePage {
   }
 
   public save() {
+    const loading = this.loadingCtrl.create(
+      {
+        content: "Finding a good spot for that fine picture ..."
+      }
+    );
+    loading.present();
     // What I'd prefer, but the Image isn't found anywhere
     // let image = new Image();
     // image.populateFromLocation(this.location);
@@ -73,17 +80,17 @@ export class ImageCapturePage {
 
     let formData = new FormData();
     let image = {
-      locId: this.location.id,
+      locationId: this.location.id,
       lat: this.location.latLon.lat,
       lon: this.location.latLon.lon,
-      file: new FormData()
+      fileData: new FormData()
     };
 
     let blob = new Blob([this.images[0].src], {type: "image/jpeg"});
-    formData.append("locId", "" + image.locId);
+    formData.append("locationId", "" + image.locationId);
     formData.append("lat", "" + image.lat);
     formData.append("lon", "" + image.lon);
-    formData.append("file", blob, "cameraImage.jpg");
+    formData.append("fileData", blob, "cameraImage.jpg");
     let uploadPostPromise = this.uploadImage(formData);
 
     uploadPostPromise.then(
@@ -92,6 +99,7 @@ export class ImageCapturePage {
         if (this.appCtrl.getRootNav()) {
           this.appCtrl.getRootNav().pop();
         }
+        loading.dismissAll();
       }
     ).catch(
       (err) => {
@@ -99,13 +107,18 @@ export class ImageCapturePage {
         if (this.appCtrl.getRootNav()) {
           this.appCtrl.getRootNav().pop();
         }
+        loading.dismissAll();
       }
     );
 
   }
 
+  /**
+   * Uses Restangular directly to post the Form Data.
+   * @param formData built up from lat/lon, location ID, and Blob of the image stream.
+   */
   uploadImage(formData): Promise<string> {
-    return this.restangular.all("location/uploadImage").customPOST(
+    return this.restangular.all("image/upload").customPOST(
       formData,
       undefined,
       undefined,

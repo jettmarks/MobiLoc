@@ -14,6 +14,10 @@ import {HeadingComponent} from "../heading/heading";
 import {MapMoveService} from "../../providers/map-move/map-move";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
+interface LocationMap {
+  [index: number]: Location;
+}
+
 /**
  * Generated class for the MapComponent component.
  *
@@ -30,7 +34,7 @@ export class MapComponent {
   /** Holds the current zoom for the map. */
   zoomLevel: number;
   public static map: any;
-  static locationMap = {};
+  static locationMap: LocationMap = {};
   showLatLon: boolean = true;
   showCrosshairs: boolean = false;
   static latLon: LatLonComponent = <any>{};

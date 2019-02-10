@@ -7,18 +7,18 @@ import {Location} from "../location/location";
   export class Image {
     lat: number;
     lon: number;
-    locId: number;
-    file: FormData;
+    locationId: number;
+    fileData: FormData;
 
     public populateFromLocation(location: Location) {
-      this.locId = location.id;
+      this.locationId = location.id;
       this.lat = location.latLon.lat;
       this.lon = location.latLon.lon;
     }
 
     public addImageData(imageData: string) {
-      this.file = new FormData();
-      this.file.append("file", imageData, "cameraImage.jpg");
+      this.fileData = new FormData();
+      this.fileData.append("file", imageData, "cameraImage.jpg");
     }
 
   }
