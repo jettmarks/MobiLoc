@@ -5,7 +5,8 @@ import {Component, Injectable, Input} from "@angular/core";
 // tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 import {ModalController} from "ionic-angular";
-import {Puzzle} from "../../providers/resources/puzzle/puzzle";
+import {Location, Puzzle, PuzzleService} from "front-end-common";
+
 @Injectable()
 @Component({
   selector: 'puzzle-list',
@@ -13,19 +14,20 @@ import {Puzzle} from "../../providers/resources/puzzle/puzzle";
 })
 export class PuzzleListComponent {
 
-  @Input() locationId;
+  @Input() location: Location;
   public puzzles: Array<Puzzle>;
 
   constructor (
     public restangular: Restangular,
     private modalController: ModalController,
+    private puzzleService: PuzzleService,
   ) {
   }
 
   ngOnInit(): void {
 
     // this.puzzleService.byLocation({}).all(this.locationId)
-    this.restangular.one("puzzle/location", this.locationId).getList()
+    this.restangular.one("puzzle/location", this.location.id).getList()
       .subscribe(
         (puzzles) => {
           this.puzzles = puzzles;
@@ -34,11 +36,29 @@ export class PuzzleListComponent {
   }
 
   public itemTapped($event, item) {
-    let puzzleItem = {
-      item: item
-    }
+    this.openModalForPuzzleItem(item);
+  }
+
+  openModalForPuzzleItem(item) {
+    const puzzleItem = {
+      puzzle: item,
+      location: this.location
+    };
     const puzzleModal = this.modalController.create('PuzzleModalPage', puzzleItem);
     puzzleModal.present();
+  }
+
+  /**
+   *
+   */
+  addNewPuzzle() {
+    console.log("Adding new Puzzle");
+    this.puzzleService.getBlankPuzzleForLocation(this.location).subscribe(
+      (puzzle) => {
+        this.puzzles.push(puzzle);
+        this.openModalForPuzzleItem(puzzle);
+      }
+    );
   }
 
 }

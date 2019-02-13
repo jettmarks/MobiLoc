@@ -1,12 +1,9 @@
 import {Component} from "@angular/core";
 import {IonicPage, NavParams, ViewController} from "ionic-angular";
-import {Puzzle} from "../../providers/resources/puzzle/puzzle";
+import {Location, Puzzle, PuzzleService} from "front-end-common";
 
 /**
- * Generated class for the PuzzleModalPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
+ * Presents the modal for editing a Puzzle instance.
  */
 @IonicPage()
 @Component({
@@ -16,12 +13,21 @@ import {Puzzle} from "../../providers/resources/puzzle/puzzle";
 export class PuzzleModalPage {
 
   public puzzle: Puzzle;
+  public location: Location;
 
-  constructor(private navParams: NavParams, private view: ViewController) {
+  constructor(
+    private navParams: NavParams,
+    private view: ViewController,
+    private puzzleService: PuzzleService,
+  ) {
   }
 
   saveAndCloseModal() {
-    this.view.dismiss();
+    this.puzzleService.savePuzzle(this.puzzle).subscribe(
+      (puzzle) => {
+        this.view.dismiss();
+      }
+    );
   }
 
   cancelAndCloseModal() {
@@ -33,7 +39,8 @@ export class PuzzleModalPage {
   }
 
   ionViewWillLoad() {
-    this.puzzle = this.navParams.get('item');
+    this.puzzle = this.navParams.get('puzzle');
+    this.location = this.navParams.get('location');
 
     console.log('ionViewWillLoad PuzzleModalPage: ' + this.puzzle.name);
   }

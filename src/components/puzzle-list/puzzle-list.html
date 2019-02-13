@@ -2,4 +2,11 @@
   <button ion-item *ngFor="let item of puzzles" (click)="itemTapped($event, item)">
     {{item.name}}
   </button>
+
+  <ion-buttons>
+    <button ion-button round (click)="addNewPuzzle()">
+      Add New Puzzle
+    </button>
+  </ion-buttons>
+
 </ion-list>

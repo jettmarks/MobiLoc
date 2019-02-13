@@ -17,6 +17,7 @@
 
 <ion-content>
   <div [ngSwitch]="editSegment">
+
     <div *ngSwitchCase="'draft'">
       <ion-grid>
         <!-- Name -->
@@ -93,11 +94,14 @@
         </ion-row>
       </ion-grid>
     </div>
+
     <div *ngSwitchCase="'attraction'">
-      <puzzle-list [locationId]="location.id">
+      <puzzle-list [location]="location">
       </puzzle-list>
     </div>
+
     <div *ngSwitchCase="'featured'">Featured</div>
+
   </div>
   <ion-grid class="form-buttons-row">
     <ion-row>
