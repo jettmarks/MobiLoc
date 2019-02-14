@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {AlertController, App, IonicPage, NavController, NavParams} from "ionic-angular";
+import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
 import {Location} from "../../providers/resources/location/location";
 import {LocationService} from "../../providers/resources/location/location.service";
 import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
@@ -40,15 +40,14 @@ export class LocEditPage {
 
   constructor(
     private alertCtrl: AlertController,
-    private appCtrl: App,
     private locationService: LocationService,
     private locationTypeService: LocationTypeService,
     private navParams: NavParams,
     private restangular: Restangular,
     private navCtrl: NavController,
   ) {
-    this.editSegment = this.editSegments[navParams.get("tabId")];
-    this.location = navParams.get("location");
+    this.editSegment = this.editSegments[this.navParams.get("tabId")];
+    this.location = this.navParams.get("location");
 
     this.locationTypeService.allLocationTypes().forEach(
       (locationType) => {
