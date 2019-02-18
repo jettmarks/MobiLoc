@@ -24,9 +24,10 @@ export class AddLocButtonComponent {
     console.log('Hello AddLocButtonComponent Component');
   }
 
-  addLocationAction() {
+  addLocationAction(event) {
+    event.srcEvent.stopPropagation();
     const newGeoposition: Geoposition = this.mapCenter.getValue();
-    console.log(newGeoposition.coords);
+    alert(JSON.stringify(newGeoposition.coords));
     let newLatLon = new LatLon();
     newLatLon.lat = newGeoposition.coords.latitude;
     newLatLon.lon = newGeoposition.coords.longitude;

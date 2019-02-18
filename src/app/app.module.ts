@@ -19,7 +19,7 @@ import {MarkersComponent} from "../components/markers/markers";
 import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
-import {MapMoveService} from "../providers/map-move/map-move";
+import {MapDragService} from "../providers/map-drag/map-drag";
 
 @NgModule({
   declarations: [
@@ -47,7 +47,7 @@ import {MapMoveService} from "../providers/map-move/map-move";
   ],
   providers: [
     MarkersComponent,
-    MapMoveService,
+    MapDragService,
     Resource,
     StatusBar,
     SplashScreen,

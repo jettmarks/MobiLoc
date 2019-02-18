@@ -2,21 +2,21 @@
 <div class="map-content crosshairs" id="map">
 
   <ion-fab right top>
-    <button ion-fab mini (tap)="settingsFabAction()">
+    <button ion-fab mini (tap)="settingsFabAction($event)">
       <ion-icon name="settings"></ion-icon>
     </button>
     <ion-fab-list>
 
       <div class="labeledFab">
         <ion-label>Toggle Lat/Lon</ion-label>
-        <button ion-fab (click)="settingsToggleLatLon()">
+        <button ion-fab (tap)="settingsToggleLatLon($event)">
           <ion-icon name="checkmark"></ion-icon>
         </button>
       </div>
 
       <div class="labeledFab">
         <ion-label>Toggle Auto-center</ion-label>
-        <button ion-fab (click)="settingsToggleAutoCenter()">
+        <button ion-fab (tap)="settingsToggleAutoCenter($event)">
           <ion-icon name="locate"></ion-icon>
         </button>
       </div>
