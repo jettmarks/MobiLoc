@@ -22,13 +22,16 @@ function buildGeoPositionFromLatLon(latLon: LatLon): Geoposition {
 }
 
 @Injectable()
-export class MapMoveService {
+export class MapDragService {
 
+  /** Set to true if the center of the map should follow either Device or Tether instead of Drag. */
   private autoCenterFlag: boolean = true;
   private mapInstance: any;
   private centerSubject: BehaviorSubject<Geoposition>;
+  private dragInProgress: boolean = false;
 
   constructor (
+    /* Currently no dependencies. */
   ) {
   }
 
@@ -49,18 +52,23 @@ export class MapMoveService {
     this.centerSubject = centerSubject;
 
     map.on("movestart", () => {
+      this.dragInProgress = true;
       this.setAutoCenter(false);
     });
 
     map.on("moveend", () => {
-      if (!this.isAutoCenter()) {
-        this.updateCenterSubject(map.getCenter());
-      }
+      this.sendDragEndLocation(map.getCenter());
+      this.dragInProgress = false;
     });
 
   }
 
-  updateCenterSubject(latLon: LatLon) {
+  isDragInProgress(): boolean {
+    return this.dragInProgress;
+  }
+
+  sendDragEndLocation(latLon: LatLon) {
+    console.log("Setting new map center from Map Drag");
     this.centerSubject.next(
       buildGeoPositionFromLatLon(
         latLon

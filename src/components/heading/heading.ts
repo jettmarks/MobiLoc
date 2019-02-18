@@ -178,6 +178,7 @@ export class HeadingComponent {
    * reflect the orientation of the marker as well.
    * @param coordinates
    */
+  // TODO: Not clear we need each of these type definitions. We do need to accept something with marker heading or not.
   public updateLocation(coordinates: string | L.Point | Coordinates) {
     console.log("Heading.updateLocation() invoked");
     /* While updating the location of the marker ... */

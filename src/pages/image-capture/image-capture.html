@@ -28,7 +28,7 @@
         </ion-slide>
       </ion-slides>
       <ion-buttons>
-        <button class="button-inner"
+        <button ion-button round
                 (click)="save()">
           Save as new Image
         </button>
@@ -38,7 +38,7 @@
     <div *ngIf="!haveImagesToShow()">
       No images yet.
       <ion-buttons>
-        <button class="button-inner"
+        <button ion-button round
                 (click)="fakeImage()">
           Save fake Image
         </button>
