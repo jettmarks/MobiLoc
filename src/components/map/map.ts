@@ -1,10 +1,10 @@
 import {App} from "ionic-angular";
-import {AuthService, GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Component, Injectable} from "@angular/core";
 import {CRMarker} from "../markers/crMarker";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
+import {GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
 import {Geoposition} from "@ionic-native/geolocation";
 import {HeadingComponent} from "../heading/heading";
 import * as L from "leaflet";
@@ -12,7 +12,6 @@ import {Location} from "../../providers/resources/location/location";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {MapDragService} from "src/providers/map-drag/map-drag";
-import {SplashScreen} from "@ionic-native/splash-screen";
 
 interface LocationMap {
   [index: number]: Location;
@@ -57,12 +56,10 @@ export class MapComponent {
 
   constructor(
     public appCtrl: App,
-    private authService: AuthService,
     public geoLoc: GeoLocService,
     private heading: HeadingComponent,
     private markers: MarkersComponent,
     private mapDragService: MapDragService,
-    public splashScreen: SplashScreen,
   ) {
     this.zoomLevel = 14;
   }
@@ -114,11 +111,6 @@ export class MapComponent {
 
     /* Begin paying attention to position changes. */
     this.setWatch();
-
-    if (!this.authService.runningLocal()) {
-      /* Map is ready; turn off splash screen. */
-      this.splashScreen.hide();
-    }
 
   }
 
