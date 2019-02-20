@@ -6,8 +6,8 @@ import {
   DeviceOrientationCompassHeading,
   DeviceOrientationCompassOptions
 } from "@ionic-native/device-orientation";
+import {PlatformStateService} from "front-end-common";
 import {Subscription} from "rxjs/Subscription";
-import {AuthService} from "front-end-common";
 
 /**
  * Generated class for the HeadingComponent component.
@@ -43,7 +43,7 @@ export class HeadingComponent {
   constructor(
     private deviceOrientation: DeviceOrientation,
     private platform: Platform,
-    private authService: AuthService,
+    private platformStateService: PlatformStateService,
   ) {
 
     /**
@@ -70,6 +70,7 @@ export class HeadingComponent {
 
   ngOnInit() {
     console.log("HeadingComponent: ngOnInit()");
+    /* One of three Platform Ready calls. */
     this.platform.ready().then(
       () => {
         console.log("HeadingComponent: Platform Ready");
@@ -87,7 +88,7 @@ export class HeadingComponent {
    */
   public checkCompassAvailability(): void {
     this.deviceHasCompass = false;
-    if (!this.authService.runningLocal()) {
+    if (!this.platformStateService.runningLocal()) {
       this.deviceOrientation.getCurrentHeading().then(
         (data: DeviceOrientationCompassHeading) => {
           this.deviceHasCompass = true;
