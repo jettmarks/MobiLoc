@@ -2,7 +2,7 @@ import Auth0Cordova from "@auth0/cordova";
 import {Component, ViewChild} from "@angular/core";
 import {Nav, Platform} from "ionic-angular";
 import {StatusBar} from "@ionic-native/status-bar";
-import {AuthService, PlatformStateService, RegistrationPage} from "front-end-common";
+import {AuthService, PlatformStateService} from "front-end-common";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
@@ -46,9 +46,6 @@ export class MyApp {
     /* One of three Platform Ready calls. */
     this.appStateService.onPlatformReady(this.initializeApp);
     this.authService.setUrlScheme("com.clueride.mobiloc");
-
-    /* TODO: Move into App State. */
-    this.checkDeviceRegistered();
   }
 
   private initializeApp = () => {
@@ -76,24 +73,4 @@ export class MyApp {
     this.nav.setRoot(page.component);
   }
 
-  /** Bring up Registration page if not yet registered; otherwise, wait for fresh token. */
-  private checkDeviceRegistered() {
-    this.authService.checkRegistrationRequired().then(
-      (needsRegistration) => {
-        let pageReadyPromise: Promise<void>;
-
-        pageReadyPromise = this.nav.setRoot(HomePage);
-        if (needsRegistration) {
-          pageReadyPromise = this.nav.push(RegistrationPage);
-        }
-
-        pageReadyPromise.then(
-          () => {
-            // this.splashScreen.hide();
-          }
-        );
-      }
-
-    );
-  }
 }

@@ -12,6 +12,8 @@ import {Location} from "../../providers/resources/location/location";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {MapDragService} from "src/providers/map-drag/map-drag";
+import {MapDataService} from "../../providers/map-data/map-data";
+import {Subject} from "../../../../front-end-common/node_modules/rxjs";
 
 interface LocationMap {
   [index: number]: Location;
@@ -60,8 +62,12 @@ export class MapComponent {
     private heading: HeadingComponent,
     private markers: MarkersComponent,
     private mapDragService: MapDragService,
+    private mapDataService: MapDataService,
   ) {
     this.zoomLevel = 14;
+
+    console.log("Registering for New Locations");
+    this.mapDataService.sendMeNewLocations(this.addLocation);
   }
 
   /**
@@ -70,8 +76,17 @@ export class MapComponent {
    * Source of position info should be settled prior to calling this function.
    */
   public openMap(
-    position: Geoposition,
+    positionSubject: Subject<Geoposition>,
   ) {
+    console.log("Open Map");
+    positionSubject.asObservable().subscribe(
+      (position) => {
+        this.openMapAtPosition(position);
+      }
+    );
+  }
+
+  public openMapAtPosition(position: Geoposition) {
     /* Assemble Leaflet position object. (LE-70) */
     let leafletPosition = [
       position.coords.latitude,
@@ -98,7 +113,7 @@ export class MapComponent {
     /* Specify the tile layer for the map and add the attribution. */
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
     }).addTo(MapComponent.map);
 
     /* Add a "here I am" marker. */
@@ -156,6 +171,7 @@ export class MapComponent {
   };
 
   public closeMap() {
+    console.log("Close Map");
     if (isDefined(MapComponent.map) && MapComponent.map !== null) {
       this.geoLoc.clearWatch();
       MapComponent.map.remove();
@@ -169,10 +185,10 @@ export class MapComponent {
    * @param location to be added.
    * @param iconName string name of the icon to represent the location (based on location type).
    */
-  public addLocation(
-    location: Location,
-    iconName: string
-  ) {
+  private addLocation = (
+    location: Location
+  ): void => {
+    let iconName = location.locationTypeIconName;
     MapComponent.locationMap[location.id] = location;
     let locationMarker = this.markers.getLocationMarker(location, iconName)
       .on('click', (mouseEvent) => {
@@ -230,21 +246,18 @@ export class MapComponent {
     this.mapDragService.setAutoCenter(!this.mapDragService.isAutoCenter());
   }
 
+  /* Respond to request to repaint the locations. */
+  refreshMap(event) {
+    event.srcEvent.stopPropagation();
+    this.openMapAtPosition(this.mapDataService.getCurrentPosition());
+    /* Clear existing list of locations. */
+    /* Trigger sending us another set of locations. */
+    this.mapDataService.resendAllLocations();
+  }
+
   /* Won't be appropriate for Loc Edit. */
   settingsToggleTether() {
     MapComponent.tethered = !MapComponent.tethered;
-  }
-
-  /* Life-cycle of watch */
-  ionViewWillLeave() {
-    this.geoLoc.clearWatch();
-  }
-
-  /* Life-cycle of watch */
-  ionViewWillEnter() {
-    if (MapComponent.map) {
-      this.setWatch();
-    }
   }
 
 }
