@@ -3,7 +3,7 @@ import {Geoposition} from "@ionic-native/geolocation";
 import {Location} from "../resources/location/location";
 import {LocationService} from "../resources/location/location.service";
 import {LocationTypeService} from "../resources/loctype/loctype.service";
-import {MapComponent} from "../../components/map/map";
+import {Observable, Subject} from "../../../../front-end-common/node_modules/rxjs";
 
 /**
  * Maintains the life-cycle for all Map data -- leaflet and the
@@ -12,25 +12,40 @@ import {MapComponent} from "../../components/map/map";
 @Injectable()
 export class MapDataService {
 
-  locationMap = {};
+  locationMap = [];
+  locationToAdd$: Subject<Location> = new Subject<Location>();
+  private currentPosition: Geoposition;
+  private currentPositionSubject: Subject<Geoposition> = new Subject<Geoposition>();
 
   constructor(
     public locationService: LocationService,
     public locationTypeService: LocationTypeService,
-    private mapComponent: MapComponent,
 ) {
     console.log('Hello MapDataService Provider');
   }
 
   public postInitialPosition(position: Geoposition): void {
-    this.loadNearestLocations(position);
     console.log("4. Proceeding with Map initialization");
-    this.mapComponent.openMap(position);
+    this.currentPosition = position;
+    this.currentPositionSubject.next(position);
+    this.loadNearestLocations(position);
+  }
+
+  public getCurrentPosition(): Geoposition {
+    return this.currentPosition;
+  }
+
+  public getCurrentPositionSubject(): Subject<Geoposition> {
+    return this.currentPositionSubject;
   }
 
   initializeCaches(): void {
     this.locationTypeService.initializeCache();
     /* Other caches here? */
+  }
+
+  public sendMeNewLocations(addLocationFunction) {
+    this.locationToAdd$.subscribe(addLocationFunction);
   }
 
   /**
@@ -43,7 +58,7 @@ export class MapDataService {
       lon: position.coords.longitude
     }).subscribe(
       (locations) => {
-        this.locationMap = {};
+        this.locationMap = [];
         locations.forEach(
           (location) => {
             this.assembleAndAddLocation(location);
@@ -61,8 +76,21 @@ export class MapDataService {
   assembleAndAddLocation(location: Location) {
     let locationType = this.locationTypeService.getById(location.locationTypeId);
     console.log(location.id + ": " + location.name);
-    this.mapComponent.addLocation(location, locationType.icon);
+    location.locationTypeIconName = locationType.icon;
     this.locationMap[location.id] = location;
+    /* Push to location stream. */
+    this.locationToAdd$.next(location);
+  }
+
+  /**
+   * Request that all currently cached locations be sent to the subscribers.
+   */
+  resendAllLocations() {
+    Observable.from(this.locationMap)
+      .filter((item) => !!item)
+      .subscribe(
+        (loc) => {this.locationToAdd$.next(loc);}
+      );
   }
 
 }

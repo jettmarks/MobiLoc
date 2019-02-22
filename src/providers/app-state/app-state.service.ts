@@ -1,10 +1,12 @@
 import {AppState} from "./app-state";
-import {GeoLocService, PlatformStateService} from "front-end-common";
+import {AuthService, GeoLocService, PlatformStateService, RegistrationPage} from "front-end-common";
 import {Injectable} from '@angular/core';
-import {Platform} from "ionic-angular";
+import {App, NavController, Platform} from "ionic-angular";
 import {MapDataService} from "../map-data/map-data";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {Observable} from "../../../../front-end-common/node_modules/rxjs";
+import {HomePage} from "../../pages/home/home";
+import {StatusPage} from "../../pages/status/status";
 
 /**
  * Tracks the progression of tests and checks that are performed as the app
@@ -14,10 +16,13 @@ import {Observable} from "../../../../front-end-common/node_modules/rxjs";
 export class AppStateService {
 
   private appState: AppState = new AppState();
+  private nav: NavController;
   private platformReady$: Observable<any>;
 
   constructor(
+    private app: App,
     private platform: Platform,
+    private authService: AuthService,
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
     public platformStateService: PlatformStateService,
@@ -71,19 +76,46 @@ export class AppStateService {
    * displaying the map page.
    */
   private awaitAppInitialization = (): void => {
-    console.log("About to initialize caches");
-    this.mapDataService.initializeCaches();
-    /* Setup the positioning and map once we find out we have GPS available. */
-    this.geoLoc.notifyWhenReady().subscribe(
-      (response) => {
-        this.mapDataService.postInitialPosition(response);
+    this.nav = <NavController>this.app.getRootNavById('n4');
+
+    this.checkDeviceRegistered().subscribe(
+      () => {
+        console.log("About to initialize caches");
+        this.mapDataService.initializeCaches();
+
+        /* Setup the positioning and map once we find out we have GPS available. */
+        this.geoLoc.notifyWhenReady().subscribe(
+          (response) => {
+            let initialPosition = response;
+            this.nav.setRoot(HomePage).then(
+              () => {
+                return this.mapDataService.postInitialPosition(initialPosition);
+              }
+          );
+          }
+        );
       }
     );
+
   };
 
   /** Exposes a summary of the Application State to clients of this service. */
   public getAppState(): AppState {
     return this.appState;
   }
+
+  private checkDeviceRegistered = (): Observable<any> => {
+    let pageReadyPromise: Promise<void> =
+      this.authService.checkRegistrationRequired().then(
+        (needsRegistration) => {
+          this.nav.setRoot(StatusPage);
+          if (needsRegistration) {
+            this.nav.push(RegistrationPage);
+          }
+        }
+      );
+
+    return Observable.from(pageReadyPromise);
+  };
 
 }

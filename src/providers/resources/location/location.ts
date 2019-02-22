@@ -14,6 +14,7 @@ export class Location {
   description?: string;
   locationGroupId?: number;
   locationTypeName?: string;
+  locationTypeIconName?: string;
   locationTypeId: number;
   featuredImageUrl?: string;
   establishmentId?: number;
