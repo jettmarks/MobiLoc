@@ -1,4 +1,4 @@
-import {App} from "ionic-angular";
+import {App, NavController} from "ionic-angular";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Component, Injectable} from "@angular/core";
 import {CRMarker} from "../markers/crMarker";
@@ -171,19 +171,16 @@ export class MapComponent {
   };
 
   public closeMap() {
-    console.log("Close Map");
+    console.log("Close Map -- turn off watches");
     if (isDefined(MapComponent.map) && MapComponent.map !== null) {
       this.geoLoc.clearWatch();
-      MapComponent.map.remove();
     }
-    MapComponent.map = null;
     this.heading.releaseHeadingMarker();
   }
 
   /**
    * Given a Location, place it on the map.
    * @param location to be added.
-   * @param iconName string name of the icon to represent the location (based on location type).
    */
   private addLocation = (
     location: Location
@@ -192,20 +189,31 @@ export class MapComponent {
     MapComponent.locationMap[location.id] = location;
     let locationMarker = this.markers.getLocationMarker(location, iconName)
       .on('click', (mouseEvent) => {
-        console.log("Mouse Event: " + mouseEvent);
-        let crMarker: CRMarker = <any> mouseEvent.target;
-        let locId = crMarker.locationId;
-        let loc = MapComponent.locationMap[locId];
-        let tabId = MapComponent.getTabIdForLocation(loc);
-
-        this.appCtrl.getRootNav().push(LocEditPage, {
-          location: loc,
-          tabId: tabId
-        });
-        return null;
+        this.openLocEditPageForMarkerClick(mouseEvent);
       });
     locationMarker.addTo(MapComponent.map);
-  }
+  };
+
+  /**
+   * Given the click event for a location's marker, which contains the location ID,
+   * open the Location Edit page with that Location.
+   * @param mouseEvent
+   */
+  private openLocEditPageForMarkerClick = (
+    mouseEvent
+  ): void => {
+    console.log("Marker Click for Loc ID: " + mouseEvent.target.locationId);
+    let crMarker: CRMarker = mouseEvent.target;
+    let nav = <NavController>this.appCtrl.getRootNavById("n4");
+    let loc = MapComponent.locationMap[crMarker.locationId];
+    nav.push(
+      LocEditPage,
+      {
+        location: loc,
+        tabId: MapComponent.getTabIdForLocation(loc)
+      }
+    );
+  };
 
   /**
    * Reads the Location's readiness level to determine which tab to show.

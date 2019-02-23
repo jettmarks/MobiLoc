@@ -75,7 +75,7 @@ export class MapDataService {
    */
   assembleAndAddLocation(location: Location) {
     let locationType = this.locationTypeService.getById(location.locationTypeId);
-    console.log(location.id + ": " + location.name);
+    // console.log(location.id + ": " + location.name);
     location.locationTypeIconName = locationType.icon;
     this.locationMap[location.id] = location;
     /* Push to location stream. */
