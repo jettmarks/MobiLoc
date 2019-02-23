@@ -1,6 +1,6 @@
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Component} from "@angular/core";
-import {App, IonicPage, LoadingController, NavParams} from "ionic-angular";
+import {App, IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/resources/image/image.service";
 import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
 import {Location} from "../../providers/resources/location/location";
@@ -27,6 +27,7 @@ export class ImageCapturePage {
   public base64Image: string;
   public images: Array<any> = [];
   private location: Location;
+  private nav: NavController;
 
   private cameraOptions: CameraOptions = {
     correctOrientation: true,
@@ -62,6 +63,10 @@ export class ImageCapturePage {
     });
   }
 
+  ionViewWillEnter() {
+    this.nav = <NavController>this.appCtrl.getRootNavById("n4");
+  }
+
   public haveImagesToShow(): boolean {
     return (this.images.length > 0);
   }
@@ -73,6 +78,7 @@ export class ImageCapturePage {
       }
     );
     loading.present();
+
     // What I'd prefer, but the Image isn't found anywhere
     // let image = new Image();
     // image.populateFromLocation(this.location);
@@ -96,17 +102,13 @@ export class ImageCapturePage {
     uploadPostPromise.then(
       (response) => {
         console.log("Got result of uploadImage: " + response);
-        if (this.appCtrl.getRootNav()) {
-          this.appCtrl.getRootNav().pop();
-        }
+        this.nav.pop();
         loading.dismissAll();
       }
     ).catch(
       (err) => {
         console.log("Problem uploading image: " + err);
-        if (this.appCtrl.getRootNav()) {
-          this.appCtrl.getRootNav().pop();
-        }
+        this.nav.pop();
         loading.dismissAll();
       }
     );
