@@ -1,8 +1,7 @@
 import {Component} from "@angular/core";
 import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
 import {Location, LocationService} from "front-end-common";
-import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
-import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
+import {LocTypeService} from "../../providers/loc-type/loc-type.service";
 import {ImageCapturePage} from "../image-capture/image-capture";
 // tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
@@ -17,8 +16,7 @@ import {Restangular} from "ngx-restangular";
   selector: 'page-loc-edit',
   templateUrl: 'loc-edit.html',
   providers: [
-    LocationTypeService,
-    locationTypeServiceProvider,
+    LocTypeService,
   ]
 })
 @IonicPage()
@@ -37,7 +35,7 @@ export class LocEditPage {
   constructor(
     private alertCtrl: AlertController,
     private locationService: LocationService,
-    private locationTypeService: LocationTypeService,
+    private locationTypeService: LocTypeService,
     private navParams: NavParams,
     private restangular: Restangular,
     private navCtrl: NavController,
@@ -45,6 +43,15 @@ export class LocEditPage {
     this.editSegment = this.editSegments[this.navParams.get("tabId")];
     this.location = this.navParams.get("location");
 
+  }
+
+  ionViewWillEnter() {
+    this.reloadLocTypes();
+  }
+
+  /** Make sure we've got a currently ordered list of Loc Types. */
+  reloadLocTypes() {
+    this.locTypes = [];
     this.locationTypeService.allLocationTypes().forEach(
       (locationType) => {
         this.locTypes.push(
@@ -55,7 +62,6 @@ export class LocEditPage {
         );
       }
     );
-
   }
 
   //noinspection JSMethodCanBeStatic
@@ -64,7 +70,12 @@ export class LocEditPage {
    */
   save() {
     console.log("Saving");
-    this.locationService.update(this.location);
+    this.locationTypeService.recentToTop(this.location.locationTypeId);
+    this.locationService.update(this.location).subscribe(
+      (updatedLocation: Location) => {
+        // TODO: put this updated value on the map
+      }
+    );
     this.navCtrl.pop();
   }
 

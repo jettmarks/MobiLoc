@@ -12,7 +12,7 @@ import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {MapDragService} from "src/providers/map-drag/map-drag";
 import {MapDataService} from "../../providers/map-data/map-data";
-import {Subject} from "../../../../front-end-common/node_modules/rxjs";
+import {Subject} from "rxjs/Subject";
 
 interface LocationMap {
   [index: number]: Location;
@@ -125,10 +125,10 @@ export class MapComponent {
 
     /* Begin paying attention to position changes. */
     this.setWatch();
-
   }
 
   public setWatch(): ObservableGeoposition {
+    // TODO: Move this watch into the Data Service; we just turn on/off the watch
     let positionObservable = this.geoLoc.getPositionWatch();
     positionObservable.subscribe(
       (position) => {

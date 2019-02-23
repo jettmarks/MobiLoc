@@ -1,11 +1,11 @@
+import {Injectable} from '@angular/core';
 import {AppState} from "./app-state";
 import {AuthService, GeoLocService, PlatformStateService, RegistrationPage} from "front-end-common";
-import {Injectable} from '@angular/core';
 import {App, NavController, Platform} from "ionic-angular";
-import {MapDataService} from "../map-data/map-data";
-import {SplashScreen} from "@ionic-native/splash-screen";
-import {Observable} from "../../../../front-end-common/node_modules/rxjs";
 import {HomePage} from "../../pages/home/home";
+import {MapDataService} from "../map-data/map-data";
+import {Observable} from "../../../../front-end-common/node_modules/rxjs";
+import {SplashScreen} from "@ionic-native/splash-screen";
 import {StatusPage} from "../../pages/status/status";
 
 /**
@@ -81,18 +81,27 @@ export class AppStateService {
     this.waitUntilDeviceRegistered().subscribe(
       (needsRegistration) => {
         if (needsRegistration) {
+          // TODO: Anything happen here?
         } else {
 
           console.log("About to initialize caches");
-          this.mapDataService.initializeCaches();
+          this.appState.cacheState = "empty";
+          const cacheInit$ = this.mapDataService.initializeCaches();
 
-          /* Setup the positioning and map once we find out we have GPS available. */
+          cacheInit$.subscribe(
+            () => {
+              this.appState.cacheState = "filled";
+            }
+          );
+
           this.geoLoc.notifyWhenReady().subscribe(
-            (response) => {
-              let initialPosition = response;
+            (initialPosition) => {
+              console.log("We do get something out");
               this.nav.setRoot(HomePage).then(
                 () => {
-                  return this.mapDataService.postInitialPosition(initialPosition);
+                  return this.mapDataService.postInitialPosition(
+                    initialPosition
+                  );
                 }
               );
             }
