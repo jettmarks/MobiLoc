@@ -94,4 +94,12 @@ export class MapDataService {
       );
   }
 
+  /**
+   * Propagate this newly updated Location to listeners.
+   * @param location with updated properties.
+   */
+  updateLocation(location: Location) {
+    this.assembleAndAddLocation(location);
+  }
+
 }

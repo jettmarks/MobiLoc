@@ -3,8 +3,9 @@ import {AlertController, IonicPage, NavController, NavParams} from "ionic-angula
 import {Location, LocationService} from "front-end-common";
 import {LocTypeService} from "../../providers/loc-type/loc-type.service";
 import {ImageCapturePage} from "../image-capture/image-capture";
+import {MapDataService} from "../../providers/map-data/map-data";
+
 // tslint:disable-next-line
-import {Restangular} from "ngx-restangular";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -37,8 +38,8 @@ export class LocEditPage {
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
     private navParams: NavParams,
-    private restangular: Restangular,
     private navCtrl: NavController,
+    private mapDataService: MapDataService,
   ) {
     this.editSegment = this.editSegments[this.navParams.get("tabId")];
     this.location = this.navParams.get("location");
@@ -47,21 +48,6 @@ export class LocEditPage {
 
   ionViewWillEnter() {
     this.reloadLocTypes();
-  }
-
-  /** Make sure we've got a currently ordered list of Loc Types. */
-  reloadLocTypes() {
-    this.locTypes = [];
-    this.locationTypeService.allLocationTypes().forEach(
-      (locationType) => {
-        this.locTypes.push(
-          {
-            value: locationType.id,
-            text: locationType.name
-          }
-        );
-      }
-    );
   }
 
   //noinspection JSMethodCanBeStatic
@@ -73,7 +59,7 @@ export class LocEditPage {
     this.locationTypeService.recentToTop(this.location.locationTypeId);
     this.locationService.update(this.location).subscribe(
       (updatedLocation: Location) => {
-        // TODO: put this updated value on the map
+        this.mapDataService.updateLocation(updatedLocation);
       }
     );
     this.navCtrl.pop();
@@ -102,8 +88,11 @@ export class LocEditPage {
           text: 'Unset Featured Image',
           handler: () => {
             console.log('Removing Featured Image');
-            this.restangular.one("location", this.location.id).one("featured").remove().toPromise().then(
-              (location) => {this.location = location}
+            this.locationService.removeFeaturedImage(this.location.id).subscribe(
+              (location) => {
+                // TODO: Just noticed that this will overwrite any other changes
+                this.location = location;
+              }
             );
           }
         }
@@ -111,6 +100,21 @@ export class LocEditPage {
     });
 
     alert.present();
+  }
+
+  /** Make sure we've got a currently ordered list of Loc Types. */
+  reloadLocTypes() {
+    this.locTypes = [];
+    this.locationTypeService.allLocationTypes().forEach(
+      (locationType) => {
+        this.locTypes.push(
+          {
+            value: locationType.id,
+            text: locationType.name
+          }
+        );
+      }
+    );
   }
 
 }
