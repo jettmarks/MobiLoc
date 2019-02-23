@@ -78,22 +78,26 @@ export class AppStateService {
   private awaitAppInitialization = (): void => {
     this.nav = <NavController>this.app.getRootNavById('n4');
 
-    this.checkDeviceRegistered().subscribe(
-      () => {
-        console.log("About to initialize caches");
-        this.mapDataService.initializeCaches();
+    this.waitUntilDeviceRegistered().subscribe(
+      (needsRegistration) => {
+        if (needsRegistration) {
+        } else {
 
-        /* Setup the positioning and map once we find out we have GPS available. */
-        this.geoLoc.notifyWhenReady().subscribe(
-          (response) => {
-            let initialPosition = response;
-            this.nav.setRoot(HomePage).then(
-              () => {
-                return this.mapDataService.postInitialPosition(initialPosition);
-              }
+          console.log("About to initialize caches");
+          this.mapDataService.initializeCaches();
+
+          /* Setup the positioning and map once we find out we have GPS available. */
+          this.geoLoc.notifyWhenReady().subscribe(
+            (response) => {
+              let initialPosition = response;
+              this.nav.setRoot(HomePage).then(
+                () => {
+                  return this.mapDataService.postInitialPosition(initialPosition);
+                }
+              );
+            }
           );
-          }
-        );
+        }
       }
     );
 
@@ -104,18 +108,37 @@ export class AppStateService {
     return this.appState;
   }
 
-  private checkDeviceRegistered = (): Observable<any> => {
-    let pageReadyPromise: Promise<void> =
-      this.authService.checkRegistrationRequired().then(
-        (needsRegistration) => {
-          this.nav.setRoot(StatusPage);
-          if (needsRegistration) {
-            this.nav.push(RegistrationPage);
-          }
-        }
-      );
+  private waitUntilDeviceRegistered = (): Observable<any> => {
+    console.log("1. Awaiting Device Registration");
+    this.appState.registeredAs = 'Checking ...';
 
-    return Observable.from(pageReadyPromise);
+    return Observable.fromPromise(
+      this.authService.checkRegistrationRequired()
+    ).do(
+      this.choosePage
+    ).do(
+      this.recordRegistrationState
+    );
+
   };
+
+  private choosePage = (needsRegistration: boolean): void => {
+    this.nav.setRoot(StatusPage);
+    if (needsRegistration) {
+      this.nav.push(RegistrationPage);
+    }
+  };
+
+  private recordRegistrationState = (needsRegistration: boolean): void => {
+    if (needsRegistration) {
+      console.log("Need to Register");
+      this.appState.registeredAs = 'UNREGISTERED';
+    } else {
+      console.log("Registered and ready for action");
+      this.appState.registeredAs = 'REGISTERED';
+      // TODO: Put the profile lookup here so we can report who has registered this device.
+    }
+
+  }
 
 }
