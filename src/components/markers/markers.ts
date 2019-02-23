@@ -2,7 +2,7 @@ import {Component, Injectable} from "@angular/core";
 import * as L from "leaflet";
 import "leaflet.awesome-markers/dist/leaflet.awesome-markers";
 import {CRMarker} from "./crMarker";
-import {Location} from "../../providers/resources/location/location";
+import {Location} from "front-end-common";
 import MarkerOptions = L.MarkerOptions;
 
 /**

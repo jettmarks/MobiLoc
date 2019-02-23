@@ -3,7 +3,7 @@ import {Component} from "@angular/core";
 import {App, IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/resources/image/image.service";
 import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
-import {Location} from "../../providers/resources/location/location";
+import {Location} from "front-end-common";
 // tslint:disable-next-line
 import {Restangular} from "ngx-restangular";
 

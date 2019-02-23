@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from "@ionic-native/geolocation";
-import {Location} from "../resources/location/location";
-import {LocationService} from "../resources/location/location.service";
+import {Location, LocationService} from "front-end-common";
 import {LocationTypeService} from "../resources/loctype/loctype.service";
 import {Observable, Subject} from "../../../../front-end-common/node_modules/rxjs";
 
@@ -54,8 +53,10 @@ export class MapDataService {
    */
   loadNearestLocations(position) {
     this.locationService.nearest({
+      id: null,
       lat: position.coords.latitude,
-      lon: position.coords.longitude
+      lon: position.coords.longitude,
+      lng: position.coords.longitude,
     }).subscribe(
       (locations) => {
         this.locationMap = [];

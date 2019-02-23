@@ -1,8 +1,6 @@
 import {Component} from "@angular/core";
 import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
-import {Location} from "../../providers/resources/location/location";
-import {LocationService} from "../../providers/resources/location/location.service";
-import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
+import {Location, LocationService} from "front-end-common";
 import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
 import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
 import {ImageCapturePage} from "../image-capture/image-capture";
@@ -19,8 +17,6 @@ import {Restangular} from "ngx-restangular";
   selector: 'page-loc-edit',
   templateUrl: 'loc-edit.html',
   providers: [
-    LocationService,
-    locationServiceProvider,
     LocationTypeService,
     locationTypeServiceProvider,
   ]
@@ -69,6 +65,7 @@ export class LocEditPage {
   save() {
     console.log("Saving");
     this.locationService.update(this.location);
+    this.navCtrl.pop();
   }
 
   captureImage() {

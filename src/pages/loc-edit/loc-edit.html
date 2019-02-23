@@ -1,6 +1,12 @@
 <ion-header>
   <ion-navbar>
     <ion-title>Editing: {{location.name}}</ion-title>
+
+    <ion-buttons end>
+      <button ion-button
+            (click)="save()">Save</button>
+    </ion-buttons>
+
     <ion-segment [(ngModel)]="editSegment" color="secondary">
       <ion-segment-button value="draft">
         Location
@@ -12,6 +18,7 @@
         Features
       </ion-segment-button>
     </ion-segment>
+
   </ion-navbar>
 </ion-header>
 
@@ -64,13 +71,22 @@
 
       <!-- Featured Image -->
       <ion-grid class="image-edit">
+
         <ion-row>
-          <ion-col col-6>
+          <ion-col col-12>
             <ion-label>Featured Image</ion-label>
           </ion-col>
-          <ion-col col-6>
+        </ion-row>
+
+        <ion-row>
+          <ion-col col-12>
+            <img *ngIf="location.featuredImage && location.featuredImage.url"
+                 src="{{location.featuredImage.url}}"
+                 (press)="showImageActions()"
+            />
           </ion-col>
         </ion-row>
+
         <ion-row>
           <ion-col col-6>
             <ion-buttons>
@@ -88,14 +104,7 @@
             </ion-buttons>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col col-12>
-            <img *ngIf="location.featuredImage && location.featuredImage.url"
-                 src="{{location.featuredImage.url}}"
-                 (press)="showImageActions()"
-            />
-          </ion-col>
-        </ion-row>
+
       </ion-grid>
     </div>
 
@@ -107,24 +116,6 @@
     <div *ngSwitchCase="'featured'">Featured</div>
 
   </div>
-  <ion-grid class="form-buttons-row">
-    <ion-row>
-      <ion-col col-6>
-        <ion-buttons>
-          <button ion-button round>
-            Cancel
-          </button>
-        </ion-buttons>
-      </ion-col>
-      <ion-col col-6>
-        <ion-buttons>
-          <button ion-button round
-                  (click)="save()">
-            Save
-          </button>
-        </ion-buttons>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+
 </ion-content>
 

@@ -1,4 +1,4 @@
-import {Location} from "../location/location";
+import {Location} from "front-end-common";
 
 /**
  * Created by jett on 11/5/17.
