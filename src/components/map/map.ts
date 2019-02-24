@@ -4,16 +4,15 @@ import {Component, Injectable} from "@angular/core";
 import {CRMarker} from "../markers/crMarker";
 import {isDefined} from "ionic-angular/util/util";
 import {MarkersComponent} from "../markers/markers";
-import {GeoLocService, LatLon, ObservableGeoposition} from "front-end-common";
+import {GeoLocService, LatLon, Location, ObservableGeoposition} from "front-end-common";
 import {Geoposition} from "@ionic-native/geolocation";
 import {HeadingComponent} from "../heading/heading";
 import * as L from "leaflet";
-import {Location} from "../../providers/resources/location/location";
 import {LocEditPage} from "../../pages/loc-edit/loc-edit";
 import {LatLonComponent} from "../lat-lon/lat-lon";
 import {MapDragService} from "src/providers/map-drag/map-drag";
 import {MapDataService} from "../../providers/map-data/map-data";
-import {Subject} from "../../../../front-end-common/node_modules/rxjs";
+import {Subject} from "rxjs/Subject";
 
 interface LocationMap {
   [index: number]: Location;
@@ -126,10 +125,10 @@ export class MapComponent {
 
     /* Begin paying attention to position changes. */
     this.setWatch();
-
   }
 
   public setWatch(): ObservableGeoposition {
+    // TODO: Move this watch into the Data Service; we just turn on/off the watch
     let positionObservable = this.geoLoc.getPositionWatch();
     positionObservable.subscribe(
       (position) => {

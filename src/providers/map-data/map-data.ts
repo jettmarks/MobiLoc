@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from "@ionic-native/geolocation";
-import {Location} from "../resources/location/location";
-import {LocationService} from "../resources/location/location.service";
-import {LocationTypeService} from "../resources/loctype/loctype.service";
+import {Location, LocationService} from "front-end-common";
+import {LocTypeService} from "../loc-type/loc-type.service";
 import {Observable, Subject} from "../../../../front-end-common/node_modules/rxjs";
 
 /**
@@ -19,7 +18,7 @@ export class MapDataService {
 
   constructor(
     public locationService: LocationService,
-    public locationTypeService: LocationTypeService,
+    public locationTypeService: LocTypeService,
 ) {
     console.log('Hello MapDataService Provider');
   }
@@ -39,8 +38,8 @@ export class MapDataService {
     return this.currentPositionSubject;
   }
 
-  initializeCaches(): void {
-    this.locationTypeService.initializeCache();
+  initializeCaches(): Observable<boolean> {
+    return this.locationTypeService.initializeCache();
     /* Other caches here? */
   }
 
@@ -54,8 +53,10 @@ export class MapDataService {
    */
   loadNearestLocations(position) {
     this.locationService.nearest({
+      id: null,
       lat: position.coords.latitude,
-      lon: position.coords.longitude
+      lon: position.coords.longitude,
+      lng: position.coords.longitude,
     }).subscribe(
       (locations) => {
         this.locationMap = [];
@@ -73,14 +74,14 @@ export class MapDataService {
    * them all together.
    * @param location
    */
-  assembleAndAddLocation(location: Location) {
+  assembleAndAddLocation = (location: Location) => {
     let locationType = this.locationTypeService.getById(location.locationTypeId);
     // console.log(location.id + ": " + location.name);
     location.locationTypeIconName = locationType.icon;
     this.locationMap[location.id] = location;
     /* Push to location stream. */
     this.locationToAdd$.next(location);
-  }
+  };
 
   /**
    * Request that all currently cached locations be sent to the subscribers.
@@ -91,6 +92,14 @@ export class MapDataService {
       .subscribe(
         (loc) => {this.locationToAdd$.next(loc);}
       );
+  }
+
+  /**
+   * Propagate this newly updated Location to listeners.
+   * @param location with updated properties.
+   */
+  updateLocation(location: Location) {
+    this.assembleAndAddLocation(location);
   }
 
 }

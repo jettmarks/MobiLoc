@@ -1,13 +1,11 @@
 import {Component} from "@angular/core";
 import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
-import {Location} from "../../providers/resources/location/location";
-import {LocationService} from "../../providers/resources/location/location.service";
-import {locationServiceProvider} from "../../providers/resources/location/location.service.provider";
-import {LocationTypeService} from "../../providers/resources/loctype/loctype.service";
-import {locationTypeServiceProvider} from "../../providers/resources/loctype/loctype.service.provider";
+import {Location, LocationService} from "front-end-common";
+import {LocTypeService} from "../../providers/loc-type/loc-type.service";
 import {ImageCapturePage} from "../image-capture/image-capture";
+import {MapDataService} from "../../providers/map-data/map-data";
+
 // tslint:disable-next-line
-import {Restangular} from "ngx-restangular";
 
 /**
  * Generated class for the LocEditPage tabs.
@@ -19,10 +17,7 @@ import {Restangular} from "ngx-restangular";
   selector: 'page-loc-edit',
   templateUrl: 'loc-edit.html',
   providers: [
-    LocationService,
-    locationServiceProvider,
-    LocationTypeService,
-    locationTypeServiceProvider,
+    LocTypeService,
   ]
 })
 @IonicPage()
@@ -41,25 +36,18 @@ export class LocEditPage {
   constructor(
     private alertCtrl: AlertController,
     private locationService: LocationService,
-    private locationTypeService: LocationTypeService,
+    private locationTypeService: LocTypeService,
     private navParams: NavParams,
-    private restangular: Restangular,
     private navCtrl: NavController,
+    private mapDataService: MapDataService,
   ) {
     this.editSegment = this.editSegments[this.navParams.get("tabId")];
     this.location = this.navParams.get("location");
 
-    this.locationTypeService.allLocationTypes().forEach(
-      (locationType) => {
-        this.locTypes.push(
-          {
-            value: locationType.id,
-            text: locationType.name
-          }
-        );
-      }
-    );
+  }
 
+  ionViewWillEnter() {
+    this.reloadLocTypes();
   }
 
   //noinspection JSMethodCanBeStatic
@@ -68,7 +56,13 @@ export class LocEditPage {
    */
   save() {
     console.log("Saving");
-    this.locationService.update(this.location);
+    this.locationTypeService.recentToTop(this.location.locationTypeId);
+    this.locationService.update(this.location).subscribe(
+      (updatedLocation: Location) => {
+        this.mapDataService.updateLocation(updatedLocation);
+      }
+    );
+    this.navCtrl.pop();
   }
 
   captureImage() {
@@ -94,8 +88,11 @@ export class LocEditPage {
           text: 'Unset Featured Image',
           handler: () => {
             console.log('Removing Featured Image');
-            this.restangular.one("location", this.location.id).one("featured").remove().toPromise().then(
-              (location) => {this.location = location}
+            this.locationService.removeFeaturedImage(this.location.id).subscribe(
+              (location) => {
+                // TODO: Just noticed that this will overwrite any other changes
+                this.location = location;
+              }
             );
           }
         }
@@ -103,6 +100,21 @@ export class LocEditPage {
     });
 
     alert.present();
+  }
+
+  /** Make sure we've got a currently ordered list of Loc Types. */
+  reloadLocTypes() {
+    this.locTypes = [];
+    this.locationTypeService.allLocationTypes().forEach(
+      (locationType) => {
+        this.locTypes.push(
+          {
+            value: locationType.id,
+            text: locationType.name
+          }
+        );
+      }
+    );
   }
 
 }

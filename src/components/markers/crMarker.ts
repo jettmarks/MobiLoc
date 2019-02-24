@@ -1,5 +1,5 @@
 import {Marker, MarkerOptions} from "leaflet";
-import {Location} from "../../providers/resources/location/location";
+import {Location} from "front-end-common";
 
 /**
  * Created by jett on 9/8/17.

@@ -2,8 +2,6 @@
  * Created by jett on 10/23/17.
  */
 import {Component, Injectable, Input} from "@angular/core";
-// tslint:disable-next-line
-import {Restangular} from "ngx-restangular";
 import {ModalController} from "ionic-angular";
 import {Location, Puzzle, PuzzleService} from "front-end-common";
 
@@ -18,7 +16,6 @@ export class PuzzleListComponent {
   public puzzles: Array<Puzzle>;
 
   constructor (
-    public restangular: Restangular,
     private modalController: ModalController,
     private puzzleService: PuzzleService,
   ) {
@@ -26,8 +23,7 @@ export class PuzzleListComponent {
 
   ngOnInit(): void {
 
-    // this.puzzleService.byLocation({}).all(this.locationId)
-    this.restangular.one("puzzle/location", this.location.id).getList()
+    this.puzzleService.getPuzzles(this.location.id)
       .subscribe(
         (puzzles) => {
           this.puzzles = puzzles;

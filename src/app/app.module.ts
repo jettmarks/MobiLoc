@@ -7,24 +7,21 @@ import {MyApp} from "./app.component";
 import {HomePage} from "../pages/home/home";
 import {ListPage} from "../pages/list/list";
 
-import {RestangularConfigFactory} from "../providers/resources/resource.config";
-import {RestangularModule} from "ngx-restangular/dist/esm/src";
 import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {AppStateService} from '../providers/app-state/app-state.service';
 import {ComponentsModule} from "front-end-common";
+import {ImageService} from "../providers/image/image.service";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
+import {LocTypeService} from "../providers/loc-type/loc-type.service";
 import {MarkersComponent} from "../components/markers/markers";
-import {Resource} from "../providers/resources/resource";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
 import {MapDataService} from "../providers/map-data/map-data";
 import {MapDragService} from "../providers/map-drag/map-drag";
 import {StatusPage} from "../pages/status/status";
-import {locationTypeServiceProvider} from "../providers/resources/loctype/loctype.service.provider";
-import {LocationTypeService} from "../providers/resources/loctype/loctype.service";
 
 @NgModule({
   declarations: [
@@ -42,7 +39,6 @@ import {LocationTypeService} from "../providers/resources/loctype/loctype.servic
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
     LocEditPageModule,
     MapComponentModule,
-    RestangularModule.forRoot(RestangularConfigFactory),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -54,15 +50,14 @@ import {LocationTypeService} from "../providers/resources/loctype/loctype.servic
   ],
   providers: [
     AppStateService,
-    LocationTypeService,
+    ImageService,
+    LocTypeService,
     MarkersComponent,
     MapDataService,
     MapDragService,
-    Resource,
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    locationTypeServiceProvider,
   ]
 })
 export class AppModule {}
