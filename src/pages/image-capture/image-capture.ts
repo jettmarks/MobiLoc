@@ -1,11 +1,9 @@
 import {Camera, CameraOptions} from "@ionic-native/camera";
 import {Component} from "@angular/core";
 import {App, IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
-import {ImageService} from "../../providers/resources/image/image.service";
-import {imageServiceProvider} from "../../providers/resources/image/image.service.provider";
+import {ImageService} from "../../providers/image/image.service";
 import {Location} from "front-end-common";
-// tslint:disable-next-line
-import {Restangular} from "ngx-restangular";
+import {Observable} from "../../../../front-end-common/node_modules/rxjs";
 
 /**
  * Generated class for the ImageCapturePage page.
@@ -17,10 +15,6 @@ import {Restangular} from "ngx-restangular";
 @Component({
   selector: 'page-image-capture',
   templateUrl: 'image-capture.html',
-  providers: [
-    ImageService,
-    imageServiceProvider,
-  ],
 })
 export class ImageCapturePage {
 
@@ -41,9 +35,9 @@ export class ImageCapturePage {
   constructor(
     private camera: Camera,
     public navParams: NavParams,
-    private restangular: Restangular,
     private appCtrl: App,
     private loadingCtrl: LoadingController,
+    private imageService: ImageService,
   ) {
     this.location = navParams.get("location");
   }
@@ -97,35 +91,16 @@ export class ImageCapturePage {
     formData.append("lat", "" + image.lat);
     formData.append("lon", "" + image.lon);
     formData.append("fileData", blob, "cameraImage.jpg");
-    let uploadPostPromise = this.uploadImage(formData);
-
-    uploadPostPromise.then(
-      (response) => {
-        console.log("Got result of uploadImage: " + response);
-        this.nav.pop();
+    this.imageService.uploadImage(formData).subscribe(
+      (image) => {
+        console.log("New Image ID: " + image.id);
         loading.dismissAll();
-      }
-    ).catch(
-      (err) => {
-        console.log("Problem uploading image: " + err);
-        this.nav.pop();
-        loading.dismissAll();
+        Observable.fromPromise(this.nav.pop()).subscribe(
+          () => {console.log("Have returned from Pop");}
+        );
       }
     );
 
-  }
-
-  /**
-   * Uses Restangular directly to post the Form Data.
-   * @param formData built up from lat/lon, location ID, and Blob of the image stream.
-   */
-  uploadImage(formData): Promise<string> {
-    return this.restangular.all("image/upload").customPOST(
-      formData,
-      undefined,
-      undefined,
-      {'Content-Type': undefined}
-    ).toPromise();
   }
 
   fakeImage() {
