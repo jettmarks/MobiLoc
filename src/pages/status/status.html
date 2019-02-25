@@ -18,6 +18,9 @@
 
 <ion-content padding>
   <div>
+    Network Status: <heartbeat></heartbeat>
+  </div>
+  <div>
     Registered as: {{appState.registeredAs}}
   </div>
   <div *ngIf="appState.isRunningBrowser">
