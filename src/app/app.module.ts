@@ -11,7 +11,7 @@ import {StatusBar} from "@ionic-native/status-bar";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {AppStateService} from '../providers/app-state/app-state.service';
-import {ComponentsModule} from "front-end-common";
+import {ComponentsModule, HeartbeatComponentModule} from "front-end-common";
 import {ImageService} from "../providers/image/image.service";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
@@ -37,6 +37,7 @@ import {StatusPage} from "../pages/status/status";
     ComponentsModule.forRoot(),
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
+    HeartbeatComponentModule,
     LocEditPageModule,
     MapComponentModule,
   ],
