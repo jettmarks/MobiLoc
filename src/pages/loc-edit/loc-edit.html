@@ -3,8 +3,10 @@
     <ion-title>Editing: {{location.name}}</ion-title>
 
     <ion-buttons end>
-      <button ion-button
-            (click)="save()">Save</button>
+      <button ion-button (click)="save()">
+        Save
+      </button>
+      <heartbeat></heartbeat>
     </ion-buttons>
 
     <ion-segment [(ngModel)]="editSegment" color="secondary">
