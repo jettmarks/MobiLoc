@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {BASE_URL, HttpService} from "front-end-common";
 import {LocationType} from "./loc-type";
+// tslint:disable-next-line
 import {Observable, Subject} from "../../../../front-end-common/node_modules/rxjs";
 
 @Injectable()

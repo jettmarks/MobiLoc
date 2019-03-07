@@ -1,4 +1,4 @@
-import {HeartbeatComponentModule} from "front-end-common";
+import {ConnectionStateComponentModule} from "front-end-common";
 import {ImageCapturePageModule} from "../image-capture/image-capture.module";
 import {IonicPageModule} from "ionic-angular";
 import {LocEditPage} from "./loc-edit";
@@ -10,7 +10,7 @@ import {PuzzleListComponentModule} from "../../components/puzzle-list/puzzle-lis
     LocEditPage,
   ],
   imports: [
-    HeartbeatComponentModule,
+    ConnectionStateComponentModule,
     ImageCapturePageModule,
     IonicPageModule.forChild(LocEditPage),
     PuzzleListComponentModule,

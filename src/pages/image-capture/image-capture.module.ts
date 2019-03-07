@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {HeartbeatComponentModule} from "front-end-common";
+import {ConnectionStateComponentModule} from "front-end-common";
 import {IonicPageModule} from "ionic-angular";
 import {ImageCapturePage} from "./image-capture";
 import {Camera} from "@ionic-native/camera";
@@ -9,7 +9,7 @@ import {Camera} from "@ionic-native/camera";
     ImageCapturePage,
   ],
   imports: [
-    HeartbeatComponentModule,
+    ConnectionStateComponentModule,
     IonicPageModule.forChild(ImageCapturePage),
   ],
   exports: [
