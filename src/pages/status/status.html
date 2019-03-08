@@ -21,6 +21,9 @@
     Network Status: <connection-state></connection-state>
   </div>
   <div>
+    Registration Status: {{appState.registrationState}}
+  </div>
+  <div>
     Registered as: {{appState.registeredAs}}
   </div>
   <div *ngIf="appState.isRunningBrowser">

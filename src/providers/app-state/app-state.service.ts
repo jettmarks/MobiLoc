@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {AppState} from "./app-state";
-import {AuthService, GeoLocService, PlatformStateService, RegistrationPage} from "front-end-common";
+import {AuthService, AuthState, GeoLocService, PlatformStateService, RegistrationPage} from "front-end-common";
 import {App, NavController, Platform} from "ionic-angular";
 import {HomePage} from "../../pages/home/home";
 import {MapDataService} from "../map-data/map-data";
-import {Observable} from "../../../../front-end-common/node_modules/rxjs";
+import {Observable} from "rxjs/Observable";
 import {SplashScreen} from "@ionic-native/splash-screen";
 import {StatusPage} from "../../pages/status/status";
 
@@ -79,10 +79,8 @@ export class AppStateService {
     this.nav = <NavController>this.app.getRootNavById('n4');
 
     this.waitUntilDeviceRegistered().subscribe(
-      (needsRegistration) => {
-        if (needsRegistration) {
-          // TODO: Anything happen here?
-        } else {
+      (registrationState) => {
+        if (registrationState === AuthState.REGISTERED) {
 
           console.log("About to initialize caches");
           this.appState.cacheState = "empty";
@@ -119,30 +117,23 @@ export class AppStateService {
 
   private waitUntilDeviceRegistered = (): Observable<any> => {
     console.log("1. Awaiting Device Registration");
-    this.appState.registeredAs = 'Checking ...';
+    this.appState.registrationState = 'Checking ...';
 
-    return Observable.fromPromise(
-      this.authService.checkRegistrationRequired()
-    ).do(
-      this.choosePage
-    ).do(
-      this.recordRegistrationState
-    );
-
+    return this.authService.getRegistrationState()
+      .do(this.choosePage)
+      .do(this.recordRegistrationState);
   };
 
-  private choosePage = (needsRegistration: boolean): void => {
+  private choosePage = (authState: AuthState): void => {
     this.nav.setRoot(StatusPage);
-    if (needsRegistration) {
-      this.nav.push(RegistrationPage);
+    if (authState === AuthState.UNREGISTERED) {
+        this.nav.push(RegistrationPage);
     }
   };
 
-  private recordRegistrationState = (needsRegistration: boolean): void => {
-    if (needsRegistration) {
-      console.log("Need to Register");
-      this.appState.registeredAs = 'UNREGISTERED';
-    } else {
+  private recordRegistrationState = (authState: AuthState): void => {
+    this.appState.registrationState = AuthState[authState];
+    if (authState === AuthState.REGISTERED) {
       console.log("Registered and ready for action");
       this.appState.registeredAs = 'REGISTERED';
       // TODO: Put the profile lookup here so we can report who has registered this device.
