@@ -1,15 +1,12 @@
+import {AppState} from "../../providers/app-state/app-state";
+import {AppStateService} from "../../providers/app-state/app-state.service";
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
-import {AppStateService} from "../../providers/app-state/app-state.service";
-import {AppState} from "../../providers/app-state/app-state";
+import {ProfileService} from "front-end-common";
 
 /**
- * Generated class for the StatusPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * Presentation of the properties carried by the App State service.
  */
-
 @IonicPage()
 @Component({
   selector: 'page-status',
@@ -23,6 +20,7 @@ export class StatusPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private appStateService: AppStateService,
+    public profile: ProfileService,
   ) {
     this.appState = this.appStateService.getAppState();
   }
