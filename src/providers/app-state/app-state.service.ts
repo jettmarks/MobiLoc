@@ -1,6 +1,14 @@
 import {Injectable} from '@angular/core';
 import {AppState} from "./app-state";
-import {AuthService, AuthState, GeoLocService, PlatformStateService, RegistrationPage} from "front-end-common";
+import {
+  AuthService,
+  AuthState,
+  GeoLocService,
+  PlatformStateService,
+  ProfileConfirmationService,
+  ProfileService,
+  RegistrationPage
+} from "front-end-common";
 import {App, NavController, Platform} from "ionic-angular";
 import {HomePage} from "../../pages/home/home";
 import {MapDataService} from "../map-data/map-data";
@@ -26,6 +34,8 @@ export class AppStateService {
     private geoLoc: GeoLocService,
     private mapDataService: MapDataService,
     public platformStateService: PlatformStateService,
+    public profileService: ProfileService,
+    private profileConfirmationService: ProfileConfirmationService,
     public splashScreen: SplashScreen,
   ) {
     console.log('Hello AppStateService Provider');
@@ -127,7 +137,26 @@ export class AppStateService {
   private choosePage = (authState: AuthState): void => {
     this.nav.setRoot(StatusPage);
     if (authState === AuthState.UNREGISTERED) {
-        this.nav.push(RegistrationPage);
+      this.nav.push(RegistrationPage);
+      /* Hook into notification that selected email has been confirmed. */
+      this.profileConfirmationService.confirmationState$.subscribe(
+        (confirmationState) => {
+
+          if (confirmationState.confirmed) {
+            console.log("Accepting the given email");
+            this.recordRegistrationState(AuthState.REGISTERED);
+            this.nav.pop()
+              .then(
+                () => this.nav.pop()
+              )
+              .catch(
+                () => console.log("Problem Popping out of Confirmation Page")
+              );
+          } else {
+            console.log("Choosing a different email");
+          }
+        }
+      );
     }
   };
 
@@ -136,9 +165,9 @@ export class AppStateService {
     if (authState === AuthState.REGISTERED) {
       console.log("Registered and ready for action");
       this.appState.registeredAs = 'REGISTERED';
-      // TODO: Put the profile lookup here so we can report who has registered this device.
+      this.profileService.loadMemberProfile();
     }
 
-  }
+  };
 
 }

@@ -24,7 +24,7 @@
     Registration Status: {{appState.registrationState}}
   </div>
   <div>
-    Registered as: {{appState.registeredAs}}
+    Registered as: {{profile.getPrincipal()}}
   </div>
   <div *ngIf="appState.isRunningBrowser">
     Running against Browser (non-native)
