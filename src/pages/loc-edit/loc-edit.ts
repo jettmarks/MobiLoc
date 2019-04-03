@@ -1,9 +1,11 @@
 import {Component} from "@angular/core";
-import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
 import {Location, LocationService} from "front-end-common";
+import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
+import {ImageService} from "../../providers/image/image.service";
 import {LocTypeService} from "../../providers/loc-type/loc-type.service";
-import {ImageCapturePage} from "../image-capture/image-capture";
 import {MapDataService} from "../../providers/map-data/map-data";
+import {ImageCapturePage} from "../image-capture/image-capture";
+import {ImagesPage} from "../images/images";
 
 // tslint:disable-next-line
 
@@ -25,6 +27,7 @@ export class LocEditPage {
 
   editSegment: string;
   location: Location;
+  hasMultipleImages: boolean = false;
   private editSegments = [
     'draft',
     'attraction',
@@ -35,6 +38,7 @@ export class LocEditPage {
 
   constructor(
     private alertCtrl: AlertController,
+    private imageService: ImageService,
     private locationService: LocationService,
     private locationTypeService: LocTypeService,
     private navParams: NavParams,
@@ -43,11 +47,14 @@ export class LocEditPage {
   ) {
     this.editSegment = this.editSegments[this.navParams.get("tabId")];
     this.location = this.navParams.get("location");
-
   }
 
   ionViewWillEnter() {
     this.reloadLocTypes();
+    this.imageService.hasMultipleImages(this.location.id)
+      .subscribe(
+        (hasMultipleImages) => {this.hasMultipleImages = hasMultipleImages;}
+      );
   }
 
   //noinspection JSMethodCanBeStatic
@@ -100,6 +107,13 @@ export class LocEditPage {
     });
 
     alert.present();
+  }
+
+  showOtherImages() {
+    this.navCtrl.push(
+      ImagesPage,
+      {locationId: this.location.id}
+    );
   }
 
   /** Make sure we've got a currently ordered list of Loc Types. */
