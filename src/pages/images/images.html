@@ -1,0 +1,28 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Images</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-slides pager="true">
+    <ion-slide *ngFor="let image of images">
+
+      <img src="{{image.url}}"
+           class="image-slide"
+           [class.featured]="isFeaturedImage(image.id)"
+           alt="loading"
+      />
+
+      <div *ngIf="isFeaturedImage(image.id)">
+        Featured Image
+      </div>
+
+    </ion-slide>
+  </ion-slides>
+
+</ion-content>

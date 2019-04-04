@@ -1,28 +1,30 @@
-import {BrowserModule} from "@angular/platform-browser";
 import {ErrorHandler, NgModule} from "@angular/core";
-import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
-import {IonicStorageModule} from "@ionic/storage";
-
-import {MyApp} from "./app.component";
-import {HomePage} from "../pages/home/home";
-import {ListPage} from "../pages/list/list";
-
-import {StatusBar} from "@ionic-native/status-bar";
+import {BrowserModule} from "@angular/platform-browser";
 import {SplashScreen} from "@ionic-native/splash-screen";
 
-import {AppStateService} from '../providers/app-state/app-state.service';
+import {StatusBar} from "@ionic-native/status-bar";
+import {IonicStorageModule} from "@ionic/storage";
 import {ComponentsModule, ConnectionStateComponentModule} from "front-end-common";
-import {ImageCapturePageModule} from "../pages/image-capture/image-capture.module";
-import {ImageService} from "../providers/image/image.service";
+import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
-import {LocEditPage} from "../pages/loc-edit/loc-edit";
-import {LocTypeService} from "../providers/loc-type/loc-type.service";
-import {MarkersComponent} from "../components/markers/markers";
-import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
 import {MapComponentModule} from "../components/map/map.module";
+import {MarkersComponent} from "../components/markers/markers";
+import {HomePage} from "../pages/home/home";
+import {ImageCapturePageModule} from "../pages/image-capture/image-capture.module";
+import {ImagesPage} from "../pages/images/images";
+import {ImagesPageModule} from "../pages/images/images.module";
+import {ListPage} from "../pages/list/list";
+import {LocEditPage} from "../pages/loc-edit/loc-edit";
+import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
+import {StatusPage} from "../pages/status/status";
+
+import {AppStateService} from '../providers/app-state/app-state.service';
+import {ImageService} from "../providers/image/image.service";
+import {LocTypeService} from "../providers/loc-type/loc-type.service";
 import {MapDataService} from "../providers/map-data/map-data";
 import {MapDragService} from "../providers/map-drag/map-drag";
-import {StatusPage} from "../pages/status/status";
+
+import {MyApp} from "./app.component";
 
 @NgModule({
   declarations: [
@@ -40,6 +42,7 @@ import {StatusPage} from "../pages/status/status";
     IonicStorageModule.forRoot({driverOrder:  ['localstorage', 'sqlite', 'indexeddb', 'websql']}),
     ConnectionStateComponentModule,
     ImageCapturePageModule,
+    ImagesPageModule,
     LocEditPageModule,
     MapComponentModule,
   ],
@@ -48,6 +51,7 @@ import {StatusPage} from "../pages/status/status";
     MyApp,
     LocEditPage,
     HomePage,
+    ImagesPage,
     ListPage,
     StatusPage,
   ],
