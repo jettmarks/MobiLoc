@@ -112,7 +112,7 @@ export class LocEditPage {
   showOtherImages() {
     this.navCtrl.push(
       ImagesPage,
-      {locationId: this.location.id}
+      {location: this.location}
     );
   }
 

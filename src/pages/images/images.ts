@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Image} from "front-end-common";
+import {Image, Location} from "front-end-common";
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {ImageService} from "../../providers/image/image.service";
 
@@ -17,7 +17,8 @@ import {ImageService} from "../../providers/image/image.service";
 })
 export class ImagesPage {
 
-  locationId: number;
+  location: Location;
+  featuredImageId: number;
   images: Image[] = [];
 
   constructor(
@@ -25,8 +26,9 @@ export class ImagesPage {
     public navParams: NavParams,
     private imageService: ImageService,
   ) {
-    this.locationId = navParams.get("locationId");
-    this.imageService.getAllImagesForLocation(this.locationId)
+    this.location = navParams.get("location");
+    this.featuredImageId = this.location.featuredImage.id;
+    this.imageService.getAllImagesForLocation(this.location.id)
       .subscribe(
         (images) => {
           this.images = images;
@@ -36,6 +38,10 @@ export class ImagesPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ImagesPage');
+  }
+
+  isFeaturedImage(imageId: number) {
+    return imageId === this.featuredImageId;
   }
 
 }
