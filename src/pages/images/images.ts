@@ -18,7 +18,6 @@ import {ImageService} from "../../providers/image/image.service";
 export class ImagesPage {
 
   location: Location;
-  featuredImageId: number;
   images: Image[] = [];
 
   constructor(
@@ -27,7 +26,6 @@ export class ImagesPage {
     private imageService: ImageService,
   ) {
     this.location = navParams.get("location");
-    this.featuredImageId = this.location.featuredImage.id;
     this.imageService.getAllImagesForLocation(this.location.id)
       .subscribe(
         (images) => {
@@ -41,7 +39,16 @@ export class ImagesPage {
   }
 
   isFeaturedImage(imageId: number) {
-    return imageId === this.featuredImageId;
+    return imageId === this.location.featuredImage.id;
+  }
+
+  setFeaturedImage(imageId: number) {
+    this.imageService.setFeaturedImage(this.location.id, imageId)
+      .subscribe(
+        (location) => {
+          this.location.featuredImage = location.featuredImage;
+        }
+      );
   }
 
 }
