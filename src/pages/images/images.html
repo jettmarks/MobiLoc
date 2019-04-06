@@ -22,7 +22,25 @@
         Featured Image
       </div>
 
+      <div [hidden]="isFeaturedImage(image.id)">
+        <ion-buttons>
+          <button ion-button round
+                  (click)="setFeaturedImage(image.id)"
+                  [class.button-enabled]="!isFeaturedImage(image.id)"
+          >
+            Make Featured Image
+          </button>
+        </ion-buttons>
+        <ion-buttons>
+          <button ion-button round
+                  (click)="removeImage(image.id)"
+          >
+            Remove Image
+          </button>
+        </ion-buttons>
+      </div>
     </ion-slide>
+
   </ion-slides>
 
 </ion-content>
