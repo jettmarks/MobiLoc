@@ -13,7 +13,7 @@ var ionicWebpackFactory = require(process.env.IONIC_WEBPACK_FACTORY);
 
 var ModuleConcatPlugin = require('webpack/lib/optimize/ModuleConcatenationPlugin');
 var PurifyPlugin = require('@angular-devkit/build-optimizer').PurifyPlugin;
-const TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
+var TsConfigPathsPlugin = require('awesome-typescript-loader').TsConfigPathsPlugin;
 
 var optimizedProdLoaders = [
   {
