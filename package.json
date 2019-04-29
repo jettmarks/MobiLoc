@@ -64,7 +64,6 @@
         "ng-event-source": "^1.0.14",
         "ngx-restangular": "^2.0.2",
         "sw-toolbox": "3.6.0",
-        "ws": "^3.3.2",
         "zone.js": "0.8.10"
     },
     "devDependencies": {
@@ -90,7 +89,8 @@
         "tslint": "^5.8.0",
         "tslint-eslint-rules": "^4.1.1",
         "typescript": "2.4.2",
-        "webpack": "^3.8.1"
+        "webpack": "^3.8.1",
+        "ws": "3.3.2"
     },
     "cordova": {
         "plugins": {
