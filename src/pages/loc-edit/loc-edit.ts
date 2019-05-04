@@ -1,8 +1,7 @@
 import {Component} from "@angular/core";
-import {Location, LocationService} from "front-end-common";
+import {Location, LocationService, LocTypeService} from "front-end-common";
 import {AlertController, IonicPage, NavController, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/image/image.service";
-import {LocTypeService} from "../../providers/loc-type/loc-type.service";
 import {MapDataService} from "../../providers/map-data/map-data";
 import {ImageCapturePage} from "../image-capture/image-capture";
 import {ImagesPage} from "../images/images";
