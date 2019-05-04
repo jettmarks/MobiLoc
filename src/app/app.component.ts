@@ -1,13 +1,13 @@
 import Auth0Cordova from "@auth0/cordova";
+import {AppStateService} from "../providers/app-state/app-state.service";
+import {AuthService, PlatformStateService} from "front-end-common";
 import {Component, ViewChild} from "@angular/core";
 import {Nav, Platform} from "ionic-angular";
-import {StatusBar} from "@ionic-native/status-bar";
-import {AuthService, PlatformStateService} from "front-end-common";
 import {HomePage} from "../pages/home/home";
-import {ListPage} from "../pages/list/list";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
+import {LocTypeListPage} from "../pages/loc-type-list/loc-type-list";
+import {StatusBar} from "@ionic-native/status-bar";
 import {StatusPage} from "../pages/status/status";
-import {AppStateService} from "../providers/app-state/app-state.service";
 
 @Component({
   templateUrl: 'app.html'
@@ -32,7 +32,7 @@ export class MyApp {
     /** Populates the Menu. */
     this.pages = [
       { title: 'Map', component: HomePage },
-      { title: 'List', component: ListPage },
+      { title: 'Loc Types', component: LocTypeListPage },
       { title: 'Edit', component: LocEditPage },
       { title: 'Status', component: StatusPage },
     ];
