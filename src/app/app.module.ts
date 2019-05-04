@@ -20,7 +20,6 @@ import {StatusPage} from "../pages/status/status";
 
 import {AppStateService} from '../providers/app-state/app-state.service';
 import {ImageService} from "../providers/image/image.service";
-import {LocTypeService} from "../providers/loc-type/loc-type.service";
 import {MapDataService} from "../providers/map-data/map-data";
 import {MapDragService} from "../providers/map-drag/map-drag";
 
@@ -58,7 +57,6 @@ import {MyApp} from "./app.component";
   providers: [
     AppStateService,
     ImageService,
-    LocTypeService,
     MarkersComponent,
     MapDataService,
     MapDragService,

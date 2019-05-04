@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Geoposition} from "@ionic-native/geolocation";
-import {Location, LocationService} from "front-end-common";
-import {LocTypeService} from "../loc-type/loc-type.service";
+import {Location, LocationService, LocTypeService} from "front-end-common";
 import {Observable, Subject} from "../../../../front-end-common/node_modules/rxjs";
 
 /**
