@@ -4,7 +4,7 @@ import {SplashScreen} from "@ionic-native/splash-screen";
 
 import {StatusBar} from "@ionic-native/status-bar";
 import {IonicStorageModule} from "@ionic/storage";
-import {ComponentsModule, ConnectionStateComponentModule} from "front-end-common";
+import {ComponentsModule, ConnectionStateComponentModule, LocTypeChipModule} from "front-end-common";
 import {IonicApp, IonicErrorHandler, IonicModule} from "ionic-angular";
 import {LatLonComponent} from "../components/lat-lon/lat-lon";
 import {MapComponentModule} from "../components/map/map.module";
@@ -13,23 +13,23 @@ import {HomePage} from "../pages/home/home";
 import {ImageCapturePageModule} from "../pages/image-capture/image-capture.module";
 import {ImagesPage} from "../pages/images/images";
 import {ImagesPageModule} from "../pages/images/images.module";
-import {ListPage} from "../pages/list/list";
 import {LocEditPage} from "../pages/loc-edit/loc-edit";
 import {LocEditPageModule} from "../pages/loc-edit/loc-edit.module";
-import {StatusPage} from "../pages/status/status";
+import {LocTypeListPage} from "../pages/loc-type-list/loc-type-list";
 
+import {StatusPage} from "../pages/status/status";
 import {AppStateService} from '../providers/app-state/app-state.service';
 import {ImageService} from "../providers/image/image.service";
 import {MapDataService} from "../providers/map-data/map-data";
-import {MapDragService} from "../providers/map-drag/map-drag";
 
+import {MapDragService} from "../providers/map-drag/map-drag";
 import {MyApp} from "./app.component";
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
-    ListPage,
+    LocTypeListPage,
     StatusPage,
     MarkersComponent,
     LatLonComponent,
@@ -43,6 +43,7 @@ import {MyApp} from "./app.component";
     ImageCapturePageModule,
     ImagesPageModule,
     LocEditPageModule,
+    LocTypeChipModule,
     MapComponentModule,
   ],
   bootstrap: [IonicApp],
@@ -51,7 +52,7 @@ import {MyApp} from "./app.component";
     LocEditPage,
     HomePage,
     ImagesPage,
-    ListPage,
+    LocTypeListPage,
     StatusPage,
   ],
   providers: [

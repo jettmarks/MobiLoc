@@ -1,0 +1,28 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Location Types</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-card>
+
+    <ion-card-content>
+
+      <ion-list *ngFor="let locType of locTypes">
+
+        <ion-item>
+          <loc-type-chip [locType]="locType">
+          </loc-type-chip>
+          <span style="float: right">{{locType.description}}</span>
+        </ion-item>
+
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>
