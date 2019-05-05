@@ -16,8 +16,24 @@
       <ion-list *ngFor="let locType of locTypes">
 
         <ion-item>
+
+          <ng-container *ngIf="locType.category && locType.category.icon; then hasCategoryIcon else noCategoryIcon">
+          </ng-container>
+
+          <ng-template #hasCategoryIcon>
+          <i class="fa fa-{{locType.category.icon}} category-icon {{locType.category.iconColor}}"
+             style="float: left"
+             aria-hidden="true">
+          </i>
+          </ng-template>
+
+          <ng-template #noCategoryIcon>
+            <span class="no-category-icon"></span>
+          </ng-template>
+
           <loc-type-chip [locType]="locType">
           </loc-type-chip>
+
           <span style="float: right">{{locType.description}}</span>
         </ion-item>
 
