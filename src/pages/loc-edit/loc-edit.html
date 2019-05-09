@@ -9,15 +9,16 @@
       <connection-state></connection-state>
     </ion-buttons>
 
+    <!-- Segments are Tabs -->
     <ion-segment [(ngModel)]="editSegment" color="secondary">
       <ion-segment-button value="draft">
         Location
       </ion-segment-button>
+      <ion-segment-button value="images">
+        Images
+      </ion-segment-button>
       <ion-segment-button value="attraction">
         Puzzles
-      </ion-segment-button>
-      <ion-segment-button value="featured">
-        Features
       </ion-segment-button>
     </ion-segment>
 
@@ -27,21 +28,24 @@
 <ion-content>
   <div [ngSwitch]="editSegment">
 
+    <!-- TODO: Move to a separate component -->
     <div *ngSwitchCase="'draft'">
+
       <ion-grid>
+
         <!-- Name -->
         <ion-row>
           <ion-col col-3>
             <ion-label>Name</ion-label>
           </ion-col>
           <ion-col col-9>
-            <ion-item>
               <ion-input class="value-field"
                          [(ngModel)]="location.name">
               </ion-input>
-            </ion-item>
           </ion-col>
         </ion-row>
+
+        <!-- TODO: SVR-36 Add Category -->
 
         <!-- Type -->
         <ion-row>
@@ -49,12 +53,23 @@
             <ion-label>Type</ion-label>
           </ion-col>
           <ion-col col-9>
-            <ion-select class="value-field"
-                        [(ngModel)]="location.locationTypeId">
-              <ion-option *ngFor="let locType of locTypes" [value]="locType.value">
-                {{locType.text}}
-              </ion-option>
-            </ion-select>
+              <ion-select class="value-field"
+                          interface="popover"
+                          [(ngModel)]="location.locationTypeId">
+                <ion-option *ngFor="let locType of locTypes" [value]="locType.value">
+                  {{locType.text}}
+                </ion-option>
+              </ion-select>
+          </ion-col>
+        </ion-row>
+
+        <!-- Main Link Location -->
+        <ion-row>
+          <ion-col col-3>
+            <ion-label>Main Link</ion-label>
+          </ion-col>
+          <ion-col col-9>
+            <ion-textarea class="value-field" [(ngModel)]="location.mainLink.link"></ion-textarea>
           </ion-col>
         </ion-row>
 
@@ -64,56 +79,73 @@
             <ion-label>Description</ion-label>
           </ion-col>
           <ion-col col-9>
-            <ion-item>
               <ion-textarea class="value-field" [(ngModel)]="location.description"></ion-textarea>
-            </ion-item>
           </ion-col>
         </ion-row>
+
       </ion-grid>
+
+    </div>
+
+    <!-- Image Edit Segment/Tab -->
+    <div *ngSwitchCase="'images'">
+
+      <ion-card>
+
+        <ion-card-title>
+          Featured Image
+        </ion-card-title>
 
       <!-- Featured Image -->
-      <ion-grid class="image-edit">
+        <ion-card-content>
 
-        <ion-row>
-          <ion-col col-6>
-            <ion-label *ngIf="location.featuredImage">Featured Image</ion-label>
-          </ion-col>
-          <ion-col col-6>
-            <ion-label *ngIf="hasMultipleImages"
-                       (click)="showOtherImages()">
-              See other images
-            </ion-label>
-          </ion-col>
-        </ion-row>
+          <ion-grid>
 
-        <ion-row>
-          <ion-col col-12>
-            <img *ngIf="location.featuredImage && location.featuredImage.url"
-                 src="{{location.featuredImage.url}}"
-                 (press)="showImageActions()"
-            />
-          </ion-col>
-        </ion-row>
+            <ion-row>
+              <ion-col col-12>
+                <img *ngIf="location.featuredImage && location.featuredImage.url"
+                     src="{{location.featuredImage.url}}"
+                     (press)="showImageActions()"
+                />
+              </ion-col>
+            </ion-row>
 
-        <ion-row>
-          <ion-col col-6>
-            <ion-buttons>
-              <button ion-button round
-                      (click)="captureImage()">
-                New Image
-              </button>
-            </ion-buttons>
-          </ion-col>
-          <ion-col col-6>
-            <ion-buttons>
-              <button ion-button round>
-                From Gallery
-              </button>
-            </ion-buttons>
-          </ion-col>
-        </ion-row>
+            <ion-row>
+              <ion-col col-6>
+                <ion-buttons>
+                  <button ion-button round
+                          (click)="captureImage()">
+                    New Image
+                  </button>
+                </ion-buttons>
+              </ion-col>
+              <ion-col col-6>
+                <ion-buttons>
+                  <button ion-button
+                          round
+                          [disabled]="true">
+                    From Gallery
+                  </button>
+                </ion-buttons>
+              </ion-col>
+            </ion-row>
 
-      </ion-grid>
+            <ion-row>
+              <ion-col col-12>
+                <button ion-button
+                        round
+                        *ngIf="hasMultipleImages"
+                        (click)="showOtherImages()">
+                  See other images
+                </button>
+              </ion-col>
+            </ion-row>
+
+          </ion-grid>
+        </ion-card-content>
+
+      </ion-card>
+
     </div>
 
     <div *ngSwitchCase="'attraction'">
@@ -121,7 +153,6 @@
       </puzzle-list>
     </div>
 
-    <div *ngSwitchCase="'featured'">Featured</div>
 
   </div>
 

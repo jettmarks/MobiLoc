@@ -46,6 +46,9 @@ export class LocEditPage {
   ) {
     this.editSegment = this.editSegments[this.navParams.get("tabId")];
     this.location = this.navParams.get("location");
+    if (!this.location.mainLink) {
+      this.location.mainLink = {link: '', id: null};
+    }
   }
 
   ionViewWillEnter() {
@@ -62,7 +65,6 @@ export class LocEditPage {
    */
   save() {
     console.log("Saving");
-    this.locationTypeService.recentToTop(this.location.locationTypeId);
     this.locationService.update(this.location).subscribe(
       (updatedLocation: Location) => {
         this.mapDataService.updateLocation(updatedLocation);
