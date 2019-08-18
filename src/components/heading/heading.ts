@@ -33,8 +33,8 @@ export class HeadingComponent {
   subscription: Subscription;
   deviceHasCompass: boolean;
 
-  private hereIAmIcon: L.Icon;
-  private hereIAmHeadingIcon: L.Icon;
+  readonly hereIAmIcon: L.Icon;
+  readonly hereIAmHeadingIcon: L.Icon;
   private hereIAmTetheredIcon: L.Icon;
   private hereIAmHeadingTetheredIcon: L.Icon;
   private headingMarker: any;
@@ -51,19 +51,19 @@ export class HeadingComponent {
      * See README.md for more details.
      * @type {L.Icon}
      */
-    this.hereIAmIcon = this.iconFromImage(
+    this.hereIAmIcon = HeadingComponent.iconFromImage(
       "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm.png",
     );
 
-    this.hereIAmHeadingIcon = this.iconFromImage(
+    this.hereIAmHeadingIcon = HeadingComponent.iconFromImage(
       "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading.png",
     );
 
-    this.hereIAmTetheredIcon = this.iconFromImage(
+    this.hereIAmTetheredIcon = HeadingComponent.iconFromImage(
       "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-tethered.png",
     );
 
-    this.hereIAmHeadingTetheredIcon = this.iconFromImage(
+    this.hereIAmHeadingTetheredIcon = HeadingComponent.iconFromImage(
       "https://www.clueride.com/wp-content/uploads/2017/07/hereIAm-heading-tethered.png",
     );
   }
@@ -88,7 +88,7 @@ export class HeadingComponent {
    */
   public checkCompassAvailability(): void {
     this.deviceHasCompass = false;
-    if (!this.platformStateService.runningLocal()) {
+    if (this.platformStateService.isNativeMode()) {
       this.deviceOrientation.getCurrentHeading().then(
         (data: DeviceOrientationCompassHeading) => {
           this.deviceHasCompass = true;
@@ -104,7 +104,7 @@ export class HeadingComponent {
     }
   }
 
-  private iconFromImage(iconUrl: string): L.Icon {
+  static iconFromImage(iconUrl: string): L.Icon {
     return icon({
       iconUrl: iconUrl,
       iconSize: commonIconSize,
@@ -154,7 +154,7 @@ export class HeadingComponent {
 
   private addHeadingSubscription() {
     if (this.deviceHasCompass) {
-      console.log("Adding Subscription to Compass Heading")
+      console.log("Adding Subscription to Compass Heading");
       this.subscription = this.deviceOrientation.watchHeading(headingOptions).subscribe(
         (data: DeviceOrientationCompassHeading) => this.updateHeadingMarkerHeading(data)
       );
