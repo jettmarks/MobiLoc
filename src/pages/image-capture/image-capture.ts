@@ -3,7 +3,7 @@ import {Component} from "@angular/core";
 import {App, IonicPage, LoadingController, NavController, NavParams} from "ionic-angular";
 import {ImageService} from "../../providers/image/image.service";
 import {Location} from "front-end-common";
-import {Observable} from "../../../../front-end-common/node_modules/rxjs";
+import {Observable} from "rxjs/Observable";
 
 /**
  * Generated class for the ImageCapturePage page.
