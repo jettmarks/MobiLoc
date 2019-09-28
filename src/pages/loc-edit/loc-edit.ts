@@ -73,10 +73,21 @@ export class LocEditPage {
     this.navCtrl.pop();
   }
 
+  /** Opens the Page that performs Camera operations passing the the location and the "Camera" flag. */
   captureImage() {
     console.log("Opening Camera");
     this.navCtrl.push(ImageCapturePage, {
-      location: this.location
+      location: this.location,
+      mode: 'camera'
+    });
+  }
+
+  /** Opens the Page that performs Camera operations passing the the location and the "Camera" flag. */
+  imageFromGallery() {
+    console.log("Opening Gallery");
+    this.navCtrl.push(ImageCapturePage, {
+      location: this.location,
+      mode: 'gallery'
     });
   }
 
